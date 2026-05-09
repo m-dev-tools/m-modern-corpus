@@ -3,8 +3,8 @@
 Snapshot collection of modern (non-VistA) M source from active open-source
 projects. Used as a validation corpus alongside the VistA corpus
 (`vista-meta/vista/vista-m-host/Packages/`) to confirm that
-[`m-cli`](https://github.com/rafael5/m-cli) lint rules and
-[`tree-sitter-m`](https://github.com/rafael5/tree-sitter-m) parsing don't
+[`m-cli`](https://github.com/m-dev-tools/m-cli) lint rules and
+[`tree-sitter-m`](https://github.com/m-dev-tools/tree-sitter-m) parsing don't
 break on idioms outside the VA legacy style.
 
 This project is **data only** — no code, no Makefile, no tests. It exists to
