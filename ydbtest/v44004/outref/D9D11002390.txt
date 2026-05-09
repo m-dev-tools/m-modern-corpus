@@ -1,0 +1,12 @@
+
+YDB>
+
+YDB>
+%YDB-I-BREAKZBA, Break instruction encountered during ZBREAK action
+		At M source location d002390+1^d002390
+
+YDB>
+%YDB-I-BREAKZST, Break instruction encountered during ZSTEP action
+		At M source location d002390+2^d002390
+
+YDB>

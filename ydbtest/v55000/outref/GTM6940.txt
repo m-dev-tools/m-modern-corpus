@@ -1,0 +1,21 @@
+spawn ##SOURCE_PATH##/mumps -dir
+
+YDB>f i=1:1:10 s a(i)=i*2,b(i)=i
+
+YDB>set $zinterrupt="zwr a m a=b"
+
+YDB>zsy "mupip intr "_$j
+##TEST_AWKINTRPT issued to process [0-9]*
+
+##SUSPEND_OUTPUT YDB_READLINE
+YDB>%YDB-E-ZINTRECURSEIO, Attempt to do IO to the active device in $ZINTERRUPT
+%YDB-E-ERRWZINTR, Error while processing $ZINTERRUPT
+
+##ALLOW_OUTPUT YDB_READLINE
+##SUSPEND_OUTPUT NON_YDB_READLINE
+%YDB-E-ZINTRECURSEIO, Attempt to do IO to the active device in $ZINTERRUPT
+%YDB-E-ERRWZINTR, Error while processing $ZINTERRUPT
+YDB>
+##ALLOW_OUTPUT NON_YDB_READLINE
+
+YDB>h

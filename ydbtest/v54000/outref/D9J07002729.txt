@@ -1,0 +1,15 @@
+# Try to list/compile file with errors
+		write "hello"!
+		              ^-----
+		At column 16, line 3, source module ##TEST_PATH##/badcomp.m
+%YDB-E-RHMISSING, Right-hand side of expression expected
+		set fl "banana"
+		      ^-----
+		At column 8, line 5, source module ##TEST_PATH##/badcomp.m
+%YDB-E-EQUAL, Equal sign expected but not found
+%YDB-E-LABELMISSING, Label referenced but not defined: xxxx
+%YDB-I-SRCNAM, in source module ##TEST_PATH##/badcomp.m
+%YDB-E-FMLLSTMISSING, The formal list is absent from a label called with an actual list: abc
+%YDB-I-SRCLOC, 		At column 9, line 4, source module ##TEST_PATH##/badcomp.m
+%YDB-E-ACTLSTTOOLONG, More actual parameters than formal parameters: lmn
+%YDB-I-SRCLOC, 		At column 13, line 7, source module ##TEST_PATH##/badcomp.m

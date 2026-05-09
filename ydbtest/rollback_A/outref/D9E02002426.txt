@@ -1,0 +1,87 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+c.dat
+d.dat
+mumps.dat
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+c.dat
+d.dat
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/a.mjl is renamed to ##TEST_PATH##/a.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/b.mjl is renamed to ##TEST_PATH##/b.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/c.mjl is renamed to ##TEST_PATH##/c.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/d.mjl is renamed to ##TEST_PATH##/d.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/mumps.mjl is renamed to ##TEST_PATH##/mumps.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/a.mjl created for region AREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/d.mjl created for region DREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+%YDB-I-JNLSTATE, Journaling state for region DREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##REMOTE_TEST_PATH##/a.mjl is renamed to ##REMOTE_TEST_PATH##/a.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##REMOTE_TEST_PATH##/b.mjl is renamed to ##REMOTE_TEST_PATH##/b.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##REMOTE_TEST_PATH##/c.mjl is renamed to ##REMOTE_TEST_PATH##/c.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##REMOTE_TEST_PATH##/d.mjl is renamed to ##REMOTE_TEST_PATH##/d.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##REMOTE_TEST_PATH##/mumps.mjl is renamed to ##REMOTE_TEST_PATH##/mumps.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##REMOTE_TEST_PATH##/a.mjl created for region AREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##REMOTE_TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##REMOTE_TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##REMOTE_TEST_PATH##/d.mjl created for region DREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##REMOTE_TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+%YDB-I-JNLSTATE, Journaling state for region DREG is now ON
+GTM Process starts 
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+Simulating crash on receiver in ##REMOTE_TEST_PATH##
+Receiver crashed!
+Simulating crash on primary in ##TEST_PATH##
+Primary crashed!
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Rollback successful
+Restarting Primary (A)...
+Restart gtm...
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Rollback successful
+Restarting Secondary (B)...
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

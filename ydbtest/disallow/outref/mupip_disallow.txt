@@ -1,0 +1,1399 @@
+
+YDB>
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!
+!! Lines beginning with ! are comments
+!! Lines beginning with p are Unix commands where to obtain the VMS equivalent we do the following
+!!	'-' is globally substituted with '/'
+!!	'"..."' is globally substituted with '(...)'
+!! Lines beginning with u are unix-specific commands
+!! Lines beginning with v are vvms-specific commands
+!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+!  MUPIP BACKUP
+!	DISALLOW((TRANSACTION OR SINCE) AND NOT(INCREMENTAL OR BYTESTREAM) )
+!
+! MUPIP BACKUP needs two parameters one for the region and one for the backup directory. If not specified VMS MUPIP will prompt.
+! To avoid that we provide dummy parameters. Similar case for other MUPIP commands too.
+!
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -transaction=10 -comprehensive  ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -transaction=10 -database ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -transaction=10 -dbg ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -transaction=10 -journal="off,enable" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -transaction=10 -nettimeout=5 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -transaction=10 -newjnlfiles ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -transaction=10 -bkupdbjnl="off" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -transaction=10 -online ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -transaction=10 -record ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -transaction=10 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -since="bytestream" -comprehensive  ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION SINCE INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -since="database" -database ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION SINCE INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -since="record" -dbg ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION SINCE INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -since="comprehensive" -journal="off,enable" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION SINCE INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -since="incremental" -nettimeout=5 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION SINCE INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -since="bytestream" -newjnlfiles ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION SINCE INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -since="comprehensive" -bkupdbjnl="off" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION SINCE INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -since="record" -online ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION SINCE INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -since="database" -record ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION SINCE INCREMENTAL BYTESTREAM
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -since="record" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION SINCE INCREMENTAL BYTESTREAM
+!
+!	DISALLOW(((INCREMENTAL OR BYTESTREAM) AND (COMPREHENSIVE OR DATABASE)) OR (TRANSACTION AND SINCE) )
+!
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -incremental -comprehensive  ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: INCREMENTAL COMPREHENSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -incremental -database ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: INCREMENTAL COMPREHENSIVE DATABASE
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -bytestream -comprehensive  ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: INCREMENTAL BYTESTREAM COMPREHENSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -bytestream -database ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: INCREMENTAL BYTESTREAM COMPREHENSIVE DATABASE
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -transaction=10 -incremental -since="bytestream" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRANSACTION SINCE
+!
+!	DISALLOW((BKUPDBJNL.DISABLE) AND (BKUPDBJNL.OFF))
+!
+--------- Testing : ##SOURCE_PATH##/mupip  backup dummy_region dummy_backup_dir -bkupdbjnl="disable,off" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE OFF
+!
+!	VMS : DISALLOW dstinstname
+!
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+!  MUPIP FREEZE
+!	DISALLOW(NOT(ON) AND NOT(OFF) )
+!
+--------- Testing : ##SOURCE_PATH##/mupip  freeze dummy_region -record ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ON OFF
+--------- Testing : ##SOURCE_PATH##/mupip  freeze dummy_region -override ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ON OFF
+--------- Testing : ##SOURCE_PATH##/mupip  freeze dummy_region ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ON OFF
+!
+!	DISALLOW(RECORD AND NOT(ON) )
+!
+--------- Testing : ##SOURCE_PATH##/mupip  freeze dummy_region -record -off -override ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: RECORD ON
+--------- Testing : ##SOURCE_PATH##/mupip  freeze dummy_region -record -off ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: RECORD ON
+!
+!	DISALLOW(OVERRIDE AND NOT(OFF) )
+!
+--------- Testing : ##SOURCE_PATH##/mupip  freeze dummy_region -override -on -record ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: OVERRIDE OFF
+--------- Testing : ##SOURCE_PATH##/mupip  freeze dummy_region -override -on ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: OVERRIDE OFF
+!
+!	DISALLOW(ON AND OFF )
+!
+--------- Testing : ##SOURCE_PATH##/mupip  freeze dummy_region -on -off ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ON OFF
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+!  MUPIP INTEG
+!	DISALLOW(BRIEF AND FULL)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  integ dummy_file -brief -full ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: BRIEF FULL
+!
+!	DISALLOW(FILE AND REGION)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  integ -file dummy_file -region dummy_region ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION
+!
+!	DISALLOW(TN_RESET AND (FAST OR BLOCK OR SUBSCRIPT OR REGION))
+!
+--------- Testing : ##SOURCE_PATH##/mupip  integ dummy_file -tn_reset -fast ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TN_RESET FAST
+--------- Testing : ##SOURCE_PATH##/mupip  integ dummy_file -tn_reset -block=10 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TN_RESET FAST BLOCK
+--------- Testing : ##SOURCE_PATH##/mupip  integ dummy_file -tn_reset -subs="abcd" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TN_RESET FAST BLOCK SUBSCRIPT
+--------- Testing : ##SOURCE_PATH##/mupip  integ -tn_reset -region dummy_region ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TN_RESET FAST BLOCK SUBSCRIPT REGION
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+!  MUPIP INTRPT
+!	VMS  : DISALLOW NOT(name OR id)
+!
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+!  MUPIP JOURNAL
+!	DISALLOW NOT (recover OR verify OR show OR extract OR rollback)
+!	DISALLOW recover and rollback
+!	DISALLOW NOT (forward OR backward)
+!	DISALLOW forward AND backward
+!	DISALLOW since AND forward
+!	DISALLOW lookback_limit AND forward
+!	DISALLOW redirect AND NOT recover
+!	DISALLOW checktn AND backward
+!	DISALLOW resync and fetchresync
+!	DISALLOW (resync OR fetchresync) AND NOT(rollback)
+!	DISALLOW losttrans AND NOT(recover OR rollback OR extract)
+!	DISALLOW brokentrans AND NOT(recover OR rollback OR extract)
+!	DISALLOW forward AND rollback
+!	DISALLOW full AND (recover OR rollback)
+!	DISALLOW detail AND NOT extract
+!	DISALLOW after and NOT forward
+!	DISALLOW after and (recover OR rollback)
+!	DISALLOW since and NOT backward
+!	DISALLOW lookback_limit AND NOT backward
+!	DISALLOW lookback_limit AND NOT (verify OR recover OR extract OR show)
+!	DISALLOW apply_after_image AND NOT (recover OR rollback)
+!	DISALLOW redirect AND NOT recover
+!	DISALLOW redirect AND NOT forward
+!	DISALLOW backward AND NEG chain
+!	DISALLOW (after OR before OR since OR lookback_limit) AND rollback
+!	DISALLOW (global OR user OR id OR process OR transaction) AND (recover OR rollback OR verify)
+!	DISALLOW output AND interactive
+!
+! Disallows for MUPIP JOURNAL are taken care of by the "mu_jnl_disallow" subtest of the mupjnl test.
+! See there for details.
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+!  MUPIP RUNDOWN
+!	DISALLOW(FILE AND REGION)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  rundown -file -region dummy_region ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+!  MUPIP SET
+!
+!	since the maximum number of parameters is 1 for MUPIP SET command, we specify only one dummy parameter in the following
+!	not specifying that one parameter will cause VMS MUPIP SET to prompt for input which we want to avoid.
+!
+!	DISALLOW ANY2(file, region, jnlfile)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  set -region dummy_region -file ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -file dummy_file -jnlfile ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -region dummy_region -jnlfile ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -region dummy_region -jnlfile -file ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+!
+!	DISALLOW(NOT(file OR region OR jnlfile))
+!
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -journal="enable,off" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -access="BG" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -defer_time=40 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -extension=30 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -flush_time ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -global_buffers=2048 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -lock_space=2048 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -reserved_bytes=2048 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -replication="on" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -bypass ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -partial_recov_bypass ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -dbfilename="abcd.dat" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -prevjnlfile="abcd.mjl" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -repl_state="off" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -standalonenot ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -wait_disk=10 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FILE REGION JNLFILE
+!
+!
+! In order to better test the following MUPIP SET DISALLOWs, we need to specify a dummy -reg as otherwise the previous
+!	DISALLOW(NOT(file OR region OR jnlfile)) will take effect below too. Hence you will see "p set -reg dummy_region" below.
+!
+!       DISALLOW -VERSION AND -ACCESS_METHOD
+!       DISALLOW -VERSION AND -GLOBAL_BUFFERS
+!       DISALLOW -VERSION AND -RESERVED_BYTES
+!       DISALLOW -VERSION AND -FLUSH_TIME
+!       DISALLOW -VERSION AND -LOCK_SPACE
+!       DISALLOW -VERSION AND -DEFER_TIME
+!       DISALLOW -VERSION AND -WAIT_DISK
+!       DISALLOW -VERSION AND -PARTIAL_RECOV_BYPASS
+!
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -version=V4 -access_method="BG" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: VERSION ACCESS_METHOD
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -version=V4 -global_buffers=2048 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: VERSION ACCESS_METHOD GLOBAL_BUFFERS
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -version=V4 -reserved_bytes=0 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: VERSION ACCESS_METHOD GLOBAL_BUFFERS RESERVED_BYTES
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -version=V4 -flush_time ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: VERSION ACCESS_METHOD GLOBAL_BUFFERS RESERVED_BYTES DATA_RESERVED_BYTES INDEX_RESERVED_BYTES FLUSH_TIME
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -version=V4 -lock_space=2048 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: VERSION ACCESS_METHOD GLOBAL_BUFFERS RESERVED_BYTES DATA_RESERVED_BYTES INDEX_RESERVED_BYTES FLUSH_TIME LOCK_SPACE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -version=V4 -defer_time=40 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: VERSION ACCESS_METHOD GLOBAL_BUFFERS RESERVED_BYTES DATA_RESERVED_BYTES INDEX_RESERVED_BYTES FLUSH_TIME LOCK_SPACE DEFER_TIME
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -version=V4 -wait_disk=10 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: VERSION ACCESS_METHOD GLOBAL_BUFFERS RESERVED_BYTES DATA_RESERVED_BYTES INDEX_RESERVED_BYTES FLUSH_TIME LOCK_SPACE DEFER_TIME WAIT_DISK
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -version=V4 -partial_recov_bypass ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: VERSION ACCESS_METHOD GLOBAL_BUFFERS RESERVED_BYTES DATA_RESERVED_BYTES INDEX_RESERVED_BYTES FLUSH_TIME LOCK_SPACE DEFER_TIME WAIT_DISK PARTIAL_RECOV_BYPASS
+!
+!
+!	DISALLOW(journal.on AND journal.off)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="off,on" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ON OFF
+!
+!	! --- disallow /NOJOURNAL=DISABLE ---
+!	DISALLOW(journal.disable AND NEG journal)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="disable" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+!
+!	! --- disallow any other journal options for both /NOJOURNAL and DISABLE (Unix CLI disallows assignment for /NOJOURNAL) ---
+!	DISALLOW((journal.disable OR NEG journal) AND (journal.on OR journal.off OR journal.enable OR journal.before_images
+!		OR journal.filename OR journal.allocation OR journal.extension OR journal.buffer_size OR journal.alignsize
+!		OR journal.epoch_interval OR journal.autoswitchlimit OR NEG journal.before_images))
+!
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,on" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,off" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON OFF
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,enable" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON OFF ENABLE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,before_images" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON OFF ENABLE BEFORE_IMAGES
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,filename=dummy.mjl" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON OFF ENABLE BEFORE_IMAGES BEFORE_IMAGES FILENAME
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,allocation=10" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON OFF ENABLE BEFORE_IMAGES BEFORE_IMAGES FILENAME ALLOCATION
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,extension=20" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON OFF ENABLE BEFORE_IMAGES BEFORE_IMAGES FILENAME ALLOCATION EXTENSION
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,buffer_size=40" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON OFF ENABLE BEFORE_IMAGES BEFORE_IMAGES FILENAME ALLOCATION EXTENSION BUFFER_SIZE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,alignsize=80" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON OFF ENABLE BEFORE_IMAGES BEFORE_IMAGES FILENAME ALLOCATION EXTENSION BUFFER_SIZE ALIGNSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,epoch_interval=100" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON OFF ENABLE BEFORE_IMAGES BEFORE_IMAGES FILENAME ALLOCATION EXTENSION BUFFER_SIZE ALIGNSIZE EPOCH_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,autoswitchlimit=2048" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON OFF ENABLE BEFORE_IMAGES BEFORE_IMAGES FILENAME ALLOCATION EXTENSION BUFFER_SIZE ALIGNSIZE EPOCH_INTERVAL AUTOSWITCHLIMIT
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -journal="disable,nobefore_images" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DISABLE ON OFF ENABLE BEFORE_IMAGES BEFORE_IMAGES
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="on" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="off" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="enable" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="before_images" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="filename=dummy.mjl" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="allocation=10" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="extension=20" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="buffer_size=40" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="alignsize=80" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="epoch_interval=100" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="autoswitchlimit=2048" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -nojournal="nobefore_images" ------------
+%YDB-E-CLIERR, Assignment is not allowed for this option : JOURNAL
+!
+!	DISALLOW(replication.on AND replication.off)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -replication="off,on" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ON OFF
+!
+!	DISALLOW(replication.on AND (journal.off OR journal.disable OR NEG journal OR NEG journal.before_images))
+!
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -replication="on" -journal="off" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ON OFF
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -replication="on" -journal="disable" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ON OFF DISABLE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -replication="on" -nojournal ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ON OFF DISABLE JOURNAL
+!
+!	DISALLOW(prevjnlfile AND NOT(jnlfile))
+!
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -journal="enable,off" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -access="BG" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -defer_time=40 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -extension=30 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -flush_time ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -global_buffers=2048 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -lock_space=2048 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -reserved_bytes=2048 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -replication="on" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -bypass ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -partial_recov_bypass ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -dbfilename="abcd.dat" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -prevjnlfile="abcd.mjl" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -repl_state="off" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -standalonenot ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" -wait_disk=10 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set -reg dummy_region -prevjnlfile="abcd.mjl" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+--------- Testing : ##SOURCE_PATH##/mupip  set dummy_region -file -prevjnlfile="abcd.mjl" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: PREVJNLFILE JNLFILE
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+!  MUPIP STOP
+!	VMS  : DISALLOW NOT(name OR id)
+!
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+!  MUPIP REPLICATE
+!	VMS  : DISALLOW NOT(RECEIVER OR SOURCE OR UPDATEPROC)
+!	Unix : DISALLOW NOT(RECEIVER OR SOURCE OR UPDATEPROC OR INSTANCE_CREATE)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: EDITINSTANCE INSTANCE_CREATE RECEIVER SOURCE UPDATEPROC UPDHELPER
+!
+!  MUPIP REPLICATE -RECEIVER (Receiver server)
+!	DISALLOW ANY2(start, shutdown, checkhealth, statslog, showbacklog, changelog)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -shutdown ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -checkhealth ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -statslog="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -shutdown -checkhealth ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -shutdown -statslog="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -shutdown -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -shutdown -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -checkhealth -statslog="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -checkhealth -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -checkhealth -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -statslog="dummylog" -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -statslog="dummylog" -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -showbacklog -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+!
+!	VMS : DISALLOW noresync OR loadinst
+!
+!
+!	DISALLOW NOT(start OR shutdown OR checkhealth OR statslog OR showbacklog OR changelog)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -buff=10 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -filter="abcd" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -listenport=15 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -log="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -timeout ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -notimeout ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -updateonly ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -updateresync ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPRECEIVERFILTER
+!
+!	DISALLOW (((start AND NOT(updateonly)) OR changelog) AND NOT(log))
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATEONLY HELPERS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -buff=10 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATEONLY HELPERS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -filter="abcd" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATEONLY HELPERS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -listenport=15 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT LOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATEONLY HELPERS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -timeout ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATEONLY HELPERS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -notimeout ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATEONLY HELPERS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -updateresync ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATEONLY HELPERS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGELOG LOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog -buff=10 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGELOG LOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog -filter="abcd" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGELOG LOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog -listenport=15 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGELOG LOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog -timeout ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGELOG LOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog -notimeout ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGELOG LOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog -updateonly ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN UPDATEONLY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog -updateresync ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATERESYNC
+!
+!	DISALLOW (statslog AND log)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -statslog=ON -log=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: STATSLOG LOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -statslog=OFF -log=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: STATSLOG LOG
+!
+!	DISALLOW (NOT(start) AND updateresync)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -updateresync -changelog -log="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATERESYNC
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -updateresync -checkhealth ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATERESYNC
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -updateresync -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATERESYNC
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -updateresync -shutdown ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATERESYNC
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -updateresync -statslog="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LISTENPORT UPDATERESYNC
+!
+!	disallow_return_value = (d_c_cli_present("UPDATERESYNC") && d_c_cli_present("NORESYNC"));
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -listenport=15 -log=receiver.log -updateresync -noresync ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: UPDATERESYNC NORESYNC
+!
+!	disallow_return_value = (!d_c_cli_present("UPDATERESYNC") && (d_c_cli_present("REUSE")
+!								|| d_c_cli_present("RESUME")
+!								|| d_c_cli_present("INITIALIZE")));
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -listenport=15 -log=receiver.log -reuse=INSTANCE2 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: UPDATERESYNC REUSE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -listenport=15 -log=receiver.log -resume=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: UPDATERESYNC REUSE RESUME
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -listenport=15 -log=receiver.log -initialize ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: UPDATERESYNC REUSE RESUME INITIALIZE
+!
+!	disallow_return_value = (d_c_cli_present("INITIALIZE") && d_c_cli_present("RESUME"));
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -listenport=15 -log=receiver.log -updateresync -initialize -resume=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: INITIALIZE RESUME
+!
+!	disallow_return_value = (d_c_cli_present("REUSE") && d_c_cli_present("RESUME"));
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -start -listenport=15 -log=receiver.log -updateresync -reuse=INSTANCE2 -resume=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: REUSE RESUME
+!
+!	/* ROOTPRIMARY (or UPDOK) and PROPAGATEPRIMARY (or UPDNOTOK) are mutually exclusive */
+!	disallow_return_value = ((d_c_cli_present("ROOTPRIMARY") || d_c_cli_present("UPDOK"))
+!					&& (d_c_cli_present("PROPAGATEPRIMARY") || d_c_cli_present("UPDNOTOK")));
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -passive -log=passive.log -rootprimary -updnotok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDNOTOK
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -passive -log=passive.log -rootprimary -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -passive -log=passive.log -propagateprimary -updok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY UPDOK PROPAGATEPRIMARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -passive -log=passive.log -propagateprimary -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY
+!
+!	/* ROOTPRIMARY and PROPAGATEPRIMARY are allowed only along with START, ACTIVATE or DEACTIVATE qualifiers */
+!	disallow_return_value = ((d_c_cli_present("ROOTPRIMARY") || d_c_cli_present("PROPAGATEPRIMARY")
+!						|| d_c_cli_present("UPDOK") || d_c_cli_present("UPDNOTOK"))
+!					&& !(d_c_cli_present("START")
+!						|| d_c_cli_present("ACTIVATE")
+!						|| d_c_cli_present("DEACTIVATE")));
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -updok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -updnotok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK UPDNOTOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -updok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -updnotok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK UPDNOTOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummylog" -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummylog" -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummylog" -updok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummylog" -updnotok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK UPDNOTOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -updok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -updnotok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK UPDNOTOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -log="dummylog" -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -log="dummylog" -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -log="dummylog" -updok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -log="dummylog" -updnotok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK UPDNOTOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -updok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -updnotok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK UPDNOTOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -updok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -updnotok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK UPDNOTOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -updok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -updnotok ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY UPDOK UPDNOTOK START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -jnlpool -rootprimary ------------
+%YDB-E-CLIERR, Unrecognized option : ROOTPRIMARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -jnlpool -propagateprimary ------------
+%YDB-E-CLIERR, Unrecognized option : PROPAGATEPRIMARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -jnlpool -updok ------------
+%YDB-E-CLIERR, Unrecognized option : UPDOK
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -jnlpool -updnotok ------------
+%YDB-E-CLIERR, Unrecognized option : UPDNOTOK
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -freeze -rootprimary ------------
+%YDB-E-CLIERR, Unrecognized option : ROOTPRIMARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -freeze -propagateprimary ------------
+%YDB-E-CLIERR, Unrecognized option : PROPAGATEPRIMARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -freeze -updok ------------
+%YDB-E-CLIERR, Unrecognized option : UPDOK
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -freeze -updnotok ------------
+%YDB-E-CLIERR, Unrecognized option : UPDNOTOK
+!
+! 	SECONDARY is a mandatory qualifier with TRIGUPDATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -passive -log=src.log -trigupdate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRIGUPDATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -trigupdate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ACTIVATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -trigupdate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRIGUPDATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -trigupdate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRIGUPDATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -trigupdate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRIGUPDATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummylog" -trigupdate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRIGUPDATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -trigupdate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRIGUPDATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -trigupdate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRIGUPDATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -trigupdate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRIGUPDATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -trigupdate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRIGUPDATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -trigupdate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: TRIGUPDATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -jnlpool -trigupdate ------------
+%YDB-E-CLIERR, Unrecognized option : TRIGUPDATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -freeze -trigupdate ------------
+%YDB-E-CLIERR, Unrecognized option : TRIGUPDATE
+!
+!	ZEROBACKLOG is supported only with SHUTDOWN qualifier
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -zerobacklog -start ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN ZEROBACKLOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -zerobacklog -activate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN ZEROBACKLOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -zerobacklog -deactivate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN ZEROBACKLOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -zerobacklog -checkhealth ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN ZEROBACKLOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -zerobacklog -statslog="dummy" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN ZEROBACKLOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -zerobacklog -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN ZEROBACKLOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -zerobacklog -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN ZEROBACKLOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -zerobacklog -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN ZEROBACKLOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -zerobacklog -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN ZEROBACKLOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -zerobacklog -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN ZEROBACKLOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -zerobacklog -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN ZEROBACKLOG
+!
+!  MUPIP REPLICATE -SOURCE (Receiver server)
+!	DISALLOW ANY2(start, shutdown, activate, deactivate, checkhealth, statslog, showbacklog, changelog, stopsourcefilter,losttncomplete,needrestart,jnlpool)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -shutdown ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -activate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -deactivate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -checkhealth ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -statslog="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START PASSIVE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -activate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -deactivate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -checkhealth ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -statslog="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+! output of below command might be different because of the following reason.
+! source has its disallows and -jnlpool has its own set of disallows. It is a design limitation of our parsing scheme
+! that we can have only one disallow active at any point in time. The moment -jnlpool is parsed,
+! -jnlpool's disallow takes over and that is why it expects either a CHANGE or SHOW in the command line and does not find any
+! keep this comment till the software gets fixed
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE SHOW NAME QDBRUNDOWN QDBRUNDOWN CLEANSLOTS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -deactivate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -checkhealth ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -statslog="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ACTIVATE SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -checkhealth ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -statslog="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+! output of below command might be different because of the following reason.
+! source has its disallows and -jnlpool has its own set of disallows. It is a design limitation of our parsing scheme
+! that we can have only one disallow active at any point in time. The moment -jnlpool is parsed,
+! -jnlpool's disallow takes over and that is why it expects either a CHANGE or SHOW in the command line and does not find any
+! keep this comment till the software gets fixed
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE SHOW NAME QDBRUNDOWN QDBRUNDOWN CLEANSLOTS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -statslog="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE SHOW NAME QDBRUNDOWN QDBRUNDOWN CLEANSLOTS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummylog" -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummylog" -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummylog" -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummylog" -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummylog" -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummylog" -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE SHOW NAME QDBRUNDOWN QDBRUNDOWN CLEANSLOTS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+! ##TODO##SHOW seems to collide with the SHOWBACKLOG qualifier, so we comment it out till the software gets fixed for this
+!u replicate -source -showbacklog -jnlpool
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGELOG LOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE SHOW NAME QDBRUNDOWN QDBRUNDOWN CLEANSLOTS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE SHOW NAME QDBRUNDOWN QDBRUNDOWN CLEANSLOTS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE SHOW NAME QDBRUNDOWN QDBRUNDOWN CLEANSLOTS
+!
+!	DISALLOW (statslog AND log)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog=ON -log=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: STATSLOG LOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog=OFF -log=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: STATSLOG LOG
+!
+!
+!	DISALLOW NOT(update OR start OR shutdown OR activate OR deactivate OR checkhealth
+!			OR statslog OR showbacklog OR changelog OR stopsourcefilter
+!			OR losttncomplete OR needrestart OR jnlpool)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source  ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -buff=10 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -connectparams="dummyparams" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -filter="abcd" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -log="dummylog" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -log_interval=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -secondary="dummysec" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -notimeout ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START SHUTDOWN ACTIVATE DEACTIVATE CHECKHEALTH STATSLOG SHOWBACKLOG CHANGELOG STOPSOURCEFILTER LOSTTNCOMPLETE NEEDRESTART JNLPOOL FREEZE
+! ## The below sections work only for unix, for now. Thought the commands run only in unix, the comments are displayed both in vms and unix. ##
+! C9G05-002793 MUPIP REPLIC disallows need to be fixed on VMS
+!
+!	DISALLOW (buffsize OR cmplvl OR filter OR passive) AND NOT(start)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -secondary=dummy -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummy" -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -secondary=dummy -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummy" -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -buff=1 -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -secondary=dummy -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummy" -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -filter=dummy -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER PASSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -secondary=dummy -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER PASSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER PASSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER PASSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummy" -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER PASSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER PASSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER PASSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER PASSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER PASSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER PASSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -passive -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER PASSIVE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -shutdown -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -checkhealth -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -showbacklog -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog -log=dummy -buff=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -shutdown -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -checkhealth -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -showbacklog -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog -log=dummy -cmplvl=8 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -shutdown -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -checkhealth -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -showbacklog -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -changelog -log=dummy -filter=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START BUFFSIZE CMPLVL FILTER
+!
+!	DISALLOW (connectparams OR secondary) AND NOT(start OR activate)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -connectparams=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -connectparams=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -connectparams=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummy" -connectparams=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -connectparams=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -connectparams=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -connectparams=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -connectparams=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -connectparams=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -connectparams=dummy -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -secondary=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -secondary=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -secondary=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummy" -secondary=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -secondary=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -secondary=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -secondary=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -secondary=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -secondary=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS SECONDARY
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -secondary=dummy -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START ACTIVATE CONNECTPARAMS SECONDARY
+!
+!	DISALLOW (log OR log_interval) AND NOT(start OR activate OR changelog)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -log=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE LOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -log=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE LOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -log=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE LOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -log=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE LOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -log=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE LOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -log=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE LOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -log=dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE LOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -log=dummy -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE LOG
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -log_interval=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE STATSLOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -log_interval=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE STATSLOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -log_interval=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE STATSLOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -log_interval=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE STATSLOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -log_interval=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE STATSLOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -log_interval=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE STATSLOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -log_interval=1 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE STATSLOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -log_interval=1 -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START CHANGELOG ACTIVATE STATSLOG LOG_INTERVAL
+!
+!	DISALLOW timeout AND NOT(shutdown)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout -start ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN TIMEOUT
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout -activate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN TIMEOUT
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout -deactivate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN TIMEOUT
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout -checkhealth ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN TIMEOUT
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout -statslog="dummy" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN TIMEOUT
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout -showbacklog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN TIMEOUT
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN TIMEOUT
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout -stopsourcefilter ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN TIMEOUT
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN TIMEOUT
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout -needrestart ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN TIMEOUT
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -timeout -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHUTDOWN TIMEOUT
+!
+!	DISALLOW start AND (passive AND secondary)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -secondary=dummy -buff=1 -instsecondary=dummy -passive ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START PASSIVE SECONDARY
+!
+!	DISALLOW start AND NOT(log)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -secondary="dummy" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: START LOG
+!
+!	DISALLOW activate AND NOT(secondary)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ACTIVATE SECONDARY
+!
+!	DISALLOW changelog AND NOT(log OR log_interval)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGELOG LOG LOG_INTERVAL
+!
+!	DISALLOW NOT(editinstance OR instance_create OR receiver OR source
+!			OR updateproc OR updhelper)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -start -secondary=dummysec -buffsize=dummy -instsecondary=dummy ------------
+%YDB-E-CLIERR, Unrecognized option : START
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -activate -secondary=dummysec -log=dummylog -instsecondary=dummy ------------
+%YDB-E-CLIERR, Unrecognized option : ACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -deactivate ------------
+%YDB-E-CLIERR, Unrecognized option : DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -changelog -log=dummylog ------------
+%YDB-E-CLIERR, Unrecognized option : CHANGELOG
+!
+!	DISALLOW ANY2 (editinstance,instance_create,receiver,
+!				source,updateproc,updhelper)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -instance_create -name=dummy -editinstance -show dummy ------------
+%YDB-E-CLIERR, Unrecognized option : EDITINSTANCE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -editinstance -show dummy ------------
+%YDB-E-CLIERR, Unrecognized option : EDITINSTANCE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -editinstance -show dummy ------------
+%YDB-E-CLIERR, Unrecognized option : EDITINSTANCE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -editinstance -show dummy -updateproc ------------
+%YDB-E-CLIERR, Unrecognized option : UPDATEPROC
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -editinstance -show dummy -updhelper ------------
+%YDB-E-CLIERR, Unrecognized option : UPDHELPER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -instance_create -name=dummy ------------
+%YDB-E-CLIERR, Unrecognized option : INSTANCE_CREATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -instance_create -name=dummy ------------
+%YDB-E-CLIERR, Unrecognized option : INSTANCE_CREATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -updateproc ------------
+%YDB-E-CLIERR, Unrecognized option : UPDATEPROC
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -updateproc ------------
+%YDB-E-CLIERR, Unrecognized option : UPDATEPROC
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -receiver -updhelper ------------
+%YDB-E-CLIERR, Unrecognized option : UPDHELPER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -updhelper ------------
+%YDB-E-CLIERR, Unrecognized option : UPDHELPER
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -updhelper -updateproc ------------
+%YDB-E-CLIERR, Unrecognized option : UPDATEPROC
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -updateproc -editinstance -show dummy ------------
+%YDB-E-CLIERR, Unrecognized option : EDITINSTANCE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -updateproc -instance_create -name=dummy ------------
+%YDB-E-CLIERR, Unrecognized option : INSTANCE_CREATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -updhelper -editinstance -show dummy ------------
+%YDB-E-CLIERR, Unrecognized option : EDITINSTANCE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -updhelper -instance_create -name=dummy ------------
+%YDB-E-CLIERR, Unrecognized option : INSTANCE_CREATE
+!
+!
+!	MUPIP REPLIC -EDITINSTANCE
+!
+!	DISALLOW NOT(change OR show)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -editinstance dummy ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE SHOW NAME QDBRUNDOWN QDBRUNDOWN CLEANSLOTS
+!	DISALLOW (change AND show)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -editinstance -show -change -offset=0xFFFFFFFF -value=0xFFFFFFFF -size=0x00000001 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE SHOW
+!	DISALLOW (offset OR size OR value) AND NOT(change)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -editinstance -show -offset=0xFFFFFFFF ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE OFFSET
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -editinstance -show -value=0xFFFFFFFF ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE OFFSET SIZE VALUE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -editinstance -show -size=0x00000001 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE OFFSET SIZE
+!	DISALLOW change AND NOT(offset OR size)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -editinstance -change -value=0xFFFFFFFF ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE OFFSET
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -editinstance -change -offset=0xFFFFFFFF -value=0xFFFFFFFF ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE OFFSET SIZE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -editinstance -change -value=0xFFFFFFFF -size=0x00000001 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGE OFFSET
+!	DISALLLOW detail AND NOT(show)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -editinstance -change -offset=0xFFFFFFFF -value=0xFFFFFFFF -size=0x00000001 -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SHOW DETAIL
+!
+!
+!	DISALLOW rootprimary AND propagateprimary
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -secondary=dummy -log=dummy.log -rootprimary -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY
+!
+!	DISALLOW (rootprimary OR propagateprimary) AND NOT(start OR activate OR deactivate)
+!
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummy" -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGELOG LOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -rootprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -rootprimary -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog="dummy" -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHANGELOG LOG LOG_INTERVAL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -propagateprimary ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -propagateprimary -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROOTPRIMARY PROPAGATEPRIMARY START ACTIVATE DEACTIVATE
+!
+!	VMS : DISALLOW showbacklog AND supplementary
+!
+!
+!	DISALLOW instsecondary AND (losttncomplete OR jnlpool)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -instsecondary=dummy -losttncomplete ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: INSTSECONDARY LOSTTNCOMPLETE
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -instsecondary=dummy -jnlpool ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: INSTSECONDARY LOSTTNCOMPLETE JNLPOOL
+!
+!	DISALLOW detail AND NOT(jnlpool)
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -start -secondary="dummy" -log=dummy -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: JNLPOOL DETAIL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -shutdown -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: JNLPOOL DETAIL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -activate -secondary=dummy -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: JNLPOOL DETAIL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -deactivate -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: JNLPOOL DETAIL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -statslog=dummy -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: JNLPOOL DETAIL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -showbacklog -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: JNLPOOL DETAIL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -changelog -log=dummy -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: JNLPOOL DETAIL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -checkhealth -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: JNLPOOL DETAIL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -stopsourcefilter -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: JNLPOOL DETAIL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -losttncomplete -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: JNLPOOL DETAIL
+--------- Testing : ##SOURCE_PATH##/mupip  replicate -source -needrestart -detail ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: JNLPOOL DETAIL
+!
+!	DISALLOW (MUPIP REORG -UPGRADE AND (EXCLUDE OR FILL_FACTOR
+!				OR INDEX_FILL_FACTOR OR RESUME OR SELECT OR USER_DEFINED_REORG OR DOWNGRADE))
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -upgrade -exclude="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE UPGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -upgrade -fill_factor=5 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE FILL_FACTOR UPGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -upgrade -index_fill_factor=5 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE FILL_FACTOR INDEX_FILL_FACTOR UPGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -upgrade -resume ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE FILL_FACTOR INDEX_FILL_FACTOR NOCOALESCE NOSPLIT NOSWAP RESUME UPGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -upgrade -select="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT UPGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -upgrade -user_defined_reorg="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE FILL_FACTOR INDEX_FILL_FACTOR NOCOALESCE NOSPLIT NOSWAP RESUME TRUNCATE USER_DEFINED_REORG UPGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -upgrade -downgrade ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: UPGRADE DOWNGRADE
+!
+!	DISALLOW (MUPIP REORG -DOWNGRADE AND (EXCLUDE OR FILL_FACTOR
+!				OR INDEX_FILL_FACTOR OR RESUME OR SELECT OR USER_DEFINED_REORG OR UPGRADE))
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -downgrade -exclude="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -downgrade -fill_factor=5 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE FILL_FACTOR UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -downgrade -index_fill_factor=5 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE FILL_FACTOR INDEX_FILL_FACTOR UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -downgrade -resume ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE FILL_FACTOR INDEX_FILL_FACTOR NOCOALESCE NOSPLIT NOSWAP RESUME UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -downgrade -select="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -downgrade -user_defined_reorg="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE FILL_FACTOR INDEX_FILL_FACTOR NOCOALESCE NOSPLIT NOSWAP RESUME TRUNCATE USER_DEFINED_REORG UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -downgrade -upgrade ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: UPGRADE DOWNGRADE
+!
+!	DISALLOW (MUPIP REORG -SAFEJNL AND (EXCLUDE OR FILL_FACTOR
+!				OR INDEX_FILL_FACTOR OR RESUME OR SELECT OR USER_DEFINED_REORG))
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -safejnl -exclude="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -safejnl -fill_factor=5 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -safejnl -index_fill_factor=5 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -safejnl -resume ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -safejnl -select="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -safejnl -user_defined_reorg="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL UPGRADE DOWNGRADE
+!
+!	DISALLOW (MUPIP REORG -NOSAFEJNL AND (EXCLUDE OR FILL_FACTOR
+!				OR INDEX_FILL_FACTOR OR RESUME OR SELECT OR USER_DEFINED_REORG))
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -nosafejnl -exclude="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL SAFEJNL UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -nosafejnl -fill_factor=5 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL SAFEJNL UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -nosafejnl -index_fill_factor=5 ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL SAFEJNL UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -nosafejnl -resume ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL SAFEJNL UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -nosafejnl -select="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL SAFEJNL UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -nosafejnl -user_defined_reorg="^*" ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL SAFEJNL UPGRADE DOWNGRADE
+!
+!	DISALLOW (MUPIP REORG -SAFEJNL -REGION )
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -safejnl -region DEFAULT ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL UPGRADE DOWNGRADE
+!
+!	DISALLOW (MUPIP REORG -NOSAFEJNL -REGION )
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -nosafejnl -region DEFAULT ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL SAFEJNL UPGRADE DOWNGRADE
+!
+!	DISALLOW (MUPIP REORG -UPGRADE )
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -upgrade ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: UPGRADE REGION FILE
+!
+!	DISALLOW (MUPIP REORG -DOWNGRADE )
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -downgrade ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: UPGRADE DOWNGRADE REGION FILE
+!
+!	DISALLOW (MUPIP REORG -TRUNCATE AND (UPGRADE OR DOWNGRADE OR SAFEJNL OR NOSAFEJNL))
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -upgrade -truncate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE FILL_FACTOR INDEX_FILL_FACTOR NOCOALESCE NOSPLIT NOSWAP RESUME TRUNCATE UPGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -downgrade -truncate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT ENCRYPT EXCLUDE FILL_FACTOR INDEX_FILL_FACTOR NOCOALESCE NOSPLIT NOSWAP RESUME TRUNCATE UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -safejnl -truncate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL UPGRADE DOWNGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  reorg -nosafejnl -truncate ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SAFEJNL SAFEJNL UPGRADE DOWNGRADE
+!
+! DISALLOW (MUPIP TRIGGER -NONSENSE)
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -nonsense ------------
+%YDB-E-CLIERR, Unrecognized option : NONSENSE
+!
+! DISALLOW (MUPIP TRIGGER -NOPROMPT AND (SELECT OR STDIN OR UPGRADE))
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -noprompt -select ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: NOPROMPT TRIGGERFILE
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -noprompt -stdin ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: NOPROMPT TRIGGERFILE
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -noprompt -upgrade ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: NOPROMPT TRIGGERFILE
+!
+! DISALLOW (MUPIP TRIGGER -STDOUT AND (TRIGGERFILE OR STDIN OR UPGRADE OR NOPROMPT))
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -stdout -triggerfile=foo.txt ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: STDOUT SELECT
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -stdout -stdin ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: STDOUT SELECT
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -stdout -upgrade ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: STDOUT SELECT
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -stdout -noprompt ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT TRIGGERFILE UPGRADE STDIN
+!
+! DISALLOW (MUPIP TRIGGER -SELECT AND (TRIGGERFILE OR STDIN OR UPGRADE OR NOPROMPT))
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -select -triggerfile=foo.txt ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT UPGRADE TRIGGERFILE
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -select -stdin ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT UPGRADE TRIGGERFILE STDIN
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -select -upgrade ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT UPGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -select -noprompt ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: NOPROMPT TRIGGERFILE
+!
+! DISALLOW (MUPIP TRIGGER -STDIN AND -TRIGGERFILE)
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -select -stdin -triggerfile=foo.txt ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT UPGRADE TRIGGERFILE
+!
+! DISALLOW (MUPIP UPGRADE AND (TRIGGERFILE OR STDIN OR NOPROMPT OR SELECT OR STDOUT))
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -upgrade -triggerfile=foo.txt ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: UPGRADE SELECT TRIGGERFILE
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -upgrade -stdin ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: UPGRADE SELECT TRIGGERFILE STDIN
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -upgrade -noprompt ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: NOPROMPT TRIGGERFILE
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -upgrade -select ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SELECT UPGRADE
+--------- Testing : ##SOURCE_PATH##/mupip  trigger -upgrade -stdout ------------
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: STDOUT SELECT
+
+YDB>

@@ -1,0 +1,11 @@
+Case 1: geteditor() says it cannot find an editor
+
+YDB>
+%YDB-E-NOEDITOR, Can't find an executable editor: editor
+
+YDB>
+Case 2: Let us try to execute an invalid executable path
+
+YDB>
+
+YDB>

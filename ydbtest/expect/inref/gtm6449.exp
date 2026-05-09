@@ -1,0 +1,51 @@
+#################################################################
+#								#
+# Copyright (c) 2018 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+# This module is derived from FIS GT.M.
+#################################################################
+
+set timeout 10
+if { $::env(alternate) == 1 } {
+    set leftkey "\033OD"
+} else {
+    set leftkey "\033\[D"
+}
+spawn /usr/local/bin/tcsh -f
+expect  ">" { send "set prompt=NEXT_COMM\r" }
+expect "NEXT_COMM"
+expect "NEXT_COMM" { send "setenv TERM vt220\r" }
+expect "NEXT_COMM"	{ send "infocmp > \$tmpfile\r" }
+# Remove kdch1 from the terminal (in case it exists)
+expect "NEXT_COMM"	{ send "sed 's/kdch1=\[^,\]*, //' \$tmpfile > \$nodelfile\r" }
+# Add the kdch1 entry
+expect "NEXT_COMM"	{ send "cp \$nodelfile \$withdelfile; printf '\\tkdch1=\\\\E\[3~, \\n' >> \$withdelfile\r" }
+# Update the terminfo database
+expect "NEXT_COMM"	{ send "setenv TERMINFO \$tmpdir\r" }
+expect "NEXT_COMM"	{ send "tic \$withdelfile\r" }
+expect "NEXT_COMM"	{ send "\$GTM\r" }
+# YDB>write "abcd"
+expect "YDB>"	{ send "write \"abcd\"" }
+# Three left arrows
+send -- $leftkey
+send -- $leftkey
+send -- $leftkey
+# Delete key
+send -- "\033\[3~"
+# This should execute: write "abd"
+send -- "\r"
+expect {
+    timeout { exit 1 }
+    -exact "abd"
+}
+expect "YDB>"	{ send "halt\r" }
+expect "NEXT_COMM"
+send -- "exit\r"
+expect eof

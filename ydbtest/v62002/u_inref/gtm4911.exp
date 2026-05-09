@@ -1,0 +1,30 @@
+#################################################################
+#								#
+# Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+# This module is derived from FIS GT.M.
+#################################################################
+
+set timeout 120
+spawn $env(SHELL)
+send -- "set prompt=\"READT>\"\r"
+expect "READT>"
+send -- "\$ydb_dist/yottadb -direct\r"
+expect "YDB>"
+send -- "set \$etrap=\"use \$principal:width=132 zshow \"\"v\"\"\"\r"
+expect "YDB>"
+send -- "set a=\$get(^ABC)\r"
+expect "YDB>"
+send -- "read x:10\r"
+expect "YDB>"
+send -- "zshow \"V\"\r"
+expect "YDB>"
+send -- halt\r
+expect "READT>"

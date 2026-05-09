@@ -1,0 +1,16 @@
+# Test that ASYNCIO writes in SimpleAPI/SimpleThreadAPI parent and child work fine (no DBIOERR error)
+
+# Create ASYNCIO=ON database
+# Verify flush timer is 1 second (ydb358.c relies on this when it waits for 2 seconds)
+  Cache freeze id                        0x00000000  Flush timer                    00:00:01:00
+
+# Compiling/Linking ydb358.c into executable ydb358 and executing it
+##TEST_AWK# Random choice : use_simplethreadapi = [01]
+Parent pid : Set ^parent=<parentpid> with ydb_set_s() : Cannot use ydb_set_st() here due to impending fork() (else STAPIFORKEXEC error)
+Parent pid : Sleep 2 seconds so flush timer will do AIO writes to DB
+Parent pid : Fork child after parent has done AIO writes
+Child pid : Set ^child=<childpid> with ydb_set_s()/ydb_set_st()
+Child pid : Sleep 2 seconds so flush timer in child will do AIO writes to DB
+Child pid : Halting
+Parent pid : Halting
+ydb358 returned with exit status : 0

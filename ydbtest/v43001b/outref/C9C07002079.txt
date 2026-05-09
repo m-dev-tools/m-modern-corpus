@@ -1,0 +1,127 @@
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+---------------------------------------------------------------------------------------------
+Iteration number : 0 
+---------------------------------------------------------------------------------------------
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+rm: No match.
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+
+YDB>
+##TEST_AWKzsy "kill -9 [0-9][0-9]*"
+Killed
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+##TEST_AWKDirectory           2               2           0....            NA
+Index               1              53          21.044             1
+Data               53            1000          95.837            53
+Free               44              NA              NA            NA
+Total             100            1055              NA            54
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/mumps.dat successfully rundown
+---------------------------------------------------------------------------------------------
+Iteration number : 1 
+---------------------------------------------------------------------------------------------
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+
+YDB>
+##TEST_AWKzsy "kill -9 [0-9][0-9]*"
+Killed
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+##TEST_AWKDirectory           2               2           0....            NA
+Index               1              53          21.044             1
+Data               53            1000          95.837            53
+Free               44              NA              NA            NA
+Total             100            1055              NA            54
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/mumps.dat successfully rundown
+---------------------------------------------------------------------------------------------
+Iteration number : 2 
+---------------------------------------------------------------------------------------------
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+
+YDB>
+##TEST_AWKzsy "kill -9 [0-9][0-9]*"
+Killed
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+##TEST_AWKDirectory           2               2           0....            NA
+Index               1              53          21.044             1
+Data               53            1000          95.837            53
+Free               44              NA              NA            NA
+Total             100            1055              NA            54
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/mumps.dat successfully rundown
+---------------------------------------------------------------------------------------------
+Iteration number : 3 
+---------------------------------------------------------------------------------------------
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+
+YDB>
+##TEST_AWKzsy "kill -9 [0-9][0-9]*"
+Killed
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+##TEST_AWKDirectory           2               2           0....            NA
+Index               1              53          21.044             1
+Data               53            1000          95.837            53
+Free               44              NA              NA            NA
+Total             100            1055              NA            54
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/mumps.dat successfully rundown
+---------------------------------------------------------------------------------------------
+Iteration number : 4 
+---------------------------------------------------------------------------------------------
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+
+YDB>
+##TEST_AWKzsy "kill -9 [0-9][0-9]*"
+Killed
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+##TEST_AWKDirectory           2               2           0....            NA
+Index               1              53          21.044             1
+Data               53            1000          95.837            53
+Free               44              NA              NA            NA
+Total             100            1055              NA            54
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/mumps.dat successfully rundown

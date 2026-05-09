@@ -1,0 +1,57 @@
+###################################################################
+Choose a random pre-encryption GT.M version
+###################################################################
+Random version choosen is - ##FILTERED##GTM_TEST_DEBUGINFO.*
+
+###################################################################
+Switch to the prior version and create databases
+###################################################################
+
+Files Created in ##TEST_PATH##:
+Using: ##GTM_LIBRARY_PATH##/##FILTERED##PRIORVER##/##TST_IMAGE##/mumps -run GDE
+mumps.gld
+Using: ##GTM_LIBRARY_PATH##/##FILTERED##PRIORVER##/##TST_IMAGE##/mupip
+mumps.dat
+
+###################################################################
+Some updates
+###################################################################
+
+GTM>
+do in0^dbfill("set")
+set PASS
+
+GTM>
+
+###################################################################
+Verify database integrity before BACKUP
+###################################################################
+##GTM_LIBRARY_PATH##/##FILTERED##PRIORVER##/##TST_IMAGE##/mupip
+##GTM_LIBRARY_PATH##/##FILTERED##PRIORVER##/##TST_IMAGE##/mupip integ -REG *
+No errors detected by integ.
+
+###################################################################
+Do BYTESTREAM BACKUP and redirect output to [backup.out]
+###################################################################
+
+###################################################################
+Switch to current GT.M version and create fresh encrypted databases
+###################################################################
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+###################################################################
+Do MUPIP RESTORE from ##FILTERED##GTM_TEST_DEBUGINFO.*
+###################################################################
+##TEST_AWKMinor DB version in the extract (\(GDSM.*\) is different from|predates) that in the database \(GDSMR.*\)
+%GTM-E-MUPRESTERR, MUPIP restore aborted due to preceding errors
+
+###################################################################
+Do dbcheck
+###################################################################
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

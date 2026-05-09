@@ -1,0 +1,86 @@
+---------------------------------------------------------------------------------------
+BEGIN 1 :-) Choose randomly between -reg OR -file qualifier
+
+
+END 1
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+BEGIN 2 :-) create backup.dat and mumps.dat database
+
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+backup.gld
+Using: ##SOURCE_PATH##/mupip
+backup.dat
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+END 2
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+BEGIN 3 :-) access database mumps.dat and crash it
+
+
+YDB>
+
+YDB>
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+
+YDB>
+Killed
+
+END 3
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+BEGIN 4 :-) move mumps database to backup to trigger DBNAMEMISMATCH error
+
+
+YDB>
+%YDB-E-REQRUNDOWN, Error accessing database ##TEST_PATH##/backup.dat.  Must be rundown on cluster node ##TEST_HOST_SHORT####TEST_AWK[A-Za-z.]*.
+##TEST_AWK.YDB-E-DBNAMEMISMATCH, Database file ##TEST_PATH##.backup.dat points to shared memory .id = [0-9]+. which in turn points to an inaccessible database file ##TEST_PATH##.mumps.dat
+%SYSTEM-E-ENO2, No such file or directory
+
+YDB>
+
+END 4
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+BEGIN 5 :-) Do mupip rundown on backup.dat and then access it. Database access should be clean
+
+##TEST_AWKmupip rundown .*
+##TEST_AWK.YDB-I-DBNAMEMISMATCH, Database file .*backup.dat points to shared memory .id = [0-9]+. which in turn points to an inaccessible database file ##TEST_PATH##.mumps.dat
+##TEST_AWK%YDB-I-SHMREMOVED, Removed Shared Memory id [0-9]* corresponding to file .*backup.dat
+##TEST_AWK.YDB-I-MUFILRNDWNSUC, File .*backup.dat successfully rundown
+
+YDB>
+set ^x=1
+YDB>
+
+YDB>
+Clean database access
+YDB>
+
+END 5
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+BEGIN 6 :-) do mupip rundown on mumps.dat to remove leftover ipcs
+
+mupip rundown -reg "*"
+##SUSPEND_OUTPUT NON_STATSHARE
+##TEST_AWK%YDB-I-SHMREMOVED, Removed Shared Memory id [0-9][0-9]* corresponding to file ##TEST_PATH##/.*.mumps.dat.gst
+##TEST_AWK%YDB-I-SEMREMOVED, Semaphore id [0-9][0-9]* removed from the system
+##TEST_AWK%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/.*.mumps.dat.gst successfully rundown
+##ALLOW_OUTPUT NON_STATSHARE
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/mumps.dat successfully rundown
+
+END 6
+---------------------------------------------------------------------------------------
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

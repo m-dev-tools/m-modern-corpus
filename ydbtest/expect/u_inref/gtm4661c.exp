@@ -1,0 +1,51 @@
+#!/usr/bin/expect -f
+#################################################################
+#								#
+# Copyright (c) 2012-2016 Fidelity National Information		#
+# Services, Inc. and/or its subsidiaries. All rights reserved.	#
+#								#
+# Copyright (c) 2018 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+
+set timeout 180
+spawn /usr/local/bin/tcsh -f
+match_max 100000
+
+# Expect the spawned prompt
+expect ">"
+# Set the prompt
+send -- "set prompt=\"termmumps > \"\r"
+# Expect the clean prompt
+expect "termmumps >"
+# SET, followed by a VIEW "JNLWAIT" along with WHITE-BOX code change and EPOCH interval of 1 seconds ensures that
+# process gets suspended but due to changes in GT.M V6.3-005, the suspend occurs only after releasing the lock on
+# the journal buffer (now_writer).
+send -- "\$gtm_exe/mumps -run %XCMD 'write \"proc1=\"_\$j,! set ^a=1 view \"jnlwait\"'\r"
+expect "proc1=*\r"
+expect {
+	"*Suspended (signal)\r" {puts "Suspended (signal)"}
+	timeout                 {puts "TEST-W-WARN: suspend message not seen"}
+}
+# We don't want second process also to be suspended because of WHITE-BOX code change. Hence disable white-box test case
+# before starting second mumps process.
+expect "*termmumps >"
+send -- "unsetenv gtm_white_box_test_case_enable\r"
+expect "termmumps >"
+send -- "unsetenv gtm_white_box_test_case_number\r"
+expect "termmumps >"
+# Do set operation on ^a. This process will NOT need to wait for the journal buffer lock to be released by proc1.
+# And therefore it will NOT send CONT signal to proc1 (since it is not stuck by proc1).
+# While here, also verify that the jnl qio lock is not owned by proc1.
+send -- "\$gtm_exe/mumps -run %XCMD 'write \"jnl qio lock owner pid = \"_\$\$^%PEEKBYNAME(\"jnl_buffer.now_writer\",\"DEFAULT\"),! write \"proc2=\"_\$j,! set ^a=3'\r"
+expect "proc2=*\r"
+send -- "fg\r"
+expect "*"
+send -- "exit\r"
+expect eof

@@ -1,0 +1,103 @@
+MUPIP RUNDOWN
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/rundown.gld
+
+GDE> 
+%GDE-I-EXECOM, Executing command file ##TEST_PATH##/tempru.com
+
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/rundown.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/rundown.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/rundowna.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/rundownb.dat created
+
+YDB>
+PASS from fill1^myfill("set")
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceeded
+%YDB-I-GVIS, 		Global variable: ^b("a123456789a123456789a123456789a123456789a123456789a123456789")
+
+YDB>
+ok
+
+YDB>
+%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceeded
+%YDB-I-GVIS, 		Global variable: ^b("a123456789a123456789a123456789a123456789a123456789a123456789")
+
+YDB>
+
+YDB>
+%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceeded
+%YDB-I-GVIS, 		Global variable: ^c("a123456789a123456789a123456789a123456789a123456789a123456789")
+
+YDB>
+ok
+
+YDB>
+%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceeded
+%YDB-I-GVIS, 		Global variable: ^c("a123456789a123456789a123456789a123456789a123456789a123456789")
+
+YDB>
+
+YDB>
+%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceeded
+%YDB-I-GVIS, 		Global variable: ^d("a123456789a123456789a123456789a123456789a123456789a123456789")
+
+YDB>
+ok
+
+YDB>
+%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceeded
+%YDB-I-GVIS, 		Global variable: ^d("a123456789a123456789a123456789a123456789a123456789a123456789")
+
+YDB>
+%YDB-I-MUFILRNDWNSUC, File rundown.dat successfully rundown
+#
+# Rundown with a bad region
+#
+%YDB-E-NOREGION, REGION not found: FREELUNCH
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/rundown.dat successfully rundown
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/rundown.dat successfully rundown
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/rundowna.dat successfully rundown
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/rundownb.dat successfully rundown
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  L
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/rundown.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/rundowna.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/rundownb.dat created
+
+YDB>
+
+YDB>
+I am done my dear parent ....
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/rundown.dat successfully rundown
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/rundowna.dat successfully rundown
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/rundownb.dat successfully rundown
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

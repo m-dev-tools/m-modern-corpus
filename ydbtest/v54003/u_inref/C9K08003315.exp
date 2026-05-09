@@ -1,0 +1,30 @@
+#################################################################
+#								#
+# Copyright (c) 2018-2026 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+# This module is derived from FIS GT.M.
+#################################################################
+
+set gtm_dist [lrange $argv 0 0]
+spawn $gtm_dist/mupip journal -recover -forward mumps.mjl,copy.mjl -nochecktn
+puts "# Wait until the recover prompts for input, and to be sure that the prompt won't be reprinted upon EINTR"
+# Use {} syntax below to avoid escaping [ and ] which are special characters if used within double-quotes
+expect -exact {Proceed? [Y/N]: \r\n}
+puts "# Check that CTRL-D is considered as a NO"
+send -- \004
+expect eof
+spawn $gtm_dist/mupip journal -recover -forward mumps.mjl,copy.mjl -nochecktn
+# Use {} syntax below to avoid escaping [ and ] which are special characters if used within double-quotes
+expect -exact {Proceed? [Y/N]: \r\n}
+puts "# Check that pressing ENTER gets the prompt reprinted"
+send -- "\r"
+expect -exact "Please enter Y or N: \r\n"
+send -- "N\r"
+expect eof

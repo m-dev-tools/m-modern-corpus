@@ -1,0 +1,11 @@
+# Compiling in the directory : ##FILTERED##GTM_TEST_DEBUGINFO.*
+
+YDB>
+
+YDB>
+PASSED
+YDB>
+
+YDB>
+
+YDB>

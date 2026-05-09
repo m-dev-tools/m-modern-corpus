@@ -1,0 +1,231 @@
+setenv gtm_chset UTF-8
+unset echo
+MUPIP BACKUP
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+ＡＢＣＤ.gld
+Using: ##SOURCE_PATH##/mupip
+ＡＢＣＤ.dat
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/ＡＢＣＤ.mjl created for region DEFAULT with (NO|)BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+
+YDB>
+Do in0^udbfill("set")
+
+YDB>
+set PASS
+
+YDB>
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/ＡＢＣＤ.mjl is renamed to ##TEST_PATH##/ＡＢＣＤ.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/ＡＢＣＤ.mjl created for region DEFAULT with (NO|)BEFORE_IMAGES
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/ＡＢＣＤ.dat backed up in file ##TEST_PATH##/ＡＤＩＲ/ＡＢＣＤ.dat
+##SUSPEND_OUTPUT MM_FILE_NO_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x000000000000040C are backed up
+##ALLOW_OUTPUT   MM_FILE_NO_EXT
+##SUSPEND_OUTPUT MM_FILE_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x0000000000000400 are backed up
+##ALLOW_OUTPUT   MM_FILE_EXT
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+
+YDB>
+Do in0^udbfill("kill")
+
+YDB>
+kill PASS
+
+YDB>
+Do in1^udbfill("set")
+
+YDB>
+set PASS
+
+YDB>
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/ＡＢＣＤ.mjl is renamed to ##TEST_PATH##/ＡＢＣＤ.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/ＡＢＣＤ.mjl created for region DEFAULT with (NO|)BEFORE_IMAGES
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/ＡＢＣＤ.dat backed up in file ##TEST_PATH##/αβγδε/backup.bak2
+##SUSPEND_OUTPUT  NON_COLLATION
+1345 blocks saved.
+##ALLOW_OUTPUT  NON_COLLATION
+##SUSPEND_OUTPUT  COLLATION
+1350 blocks saved.
+##ALLOW_OUTPUT  COLLATION
+##SUSPEND_OUTPUT MM_FILE_NO_EXT
+%YDB-I-BACKUPTN, Transactions from 0x000000000000040C to 0x0000000000001A92 are backed up
+##ALLOW_OUTPUT   MM_FILE_NO_EXT
+##SUSPEND_OUTPUT MM_FILE_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000400 to 0x0000000000001A85 are backed up
+##ALLOW_OUTPUT   MM_FILE_EXT
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+
+YDB>
+Do in1^udbfill("kill")
+
+YDB>
+kill PASS
+
+YDB>
+Do in2^udbfill("set")
+
+YDB>
+set PASS
+
+YDB>
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/ＡＢＣＤ.mjl is renamed to ##TEST_PATH##/ＡＢＣＤ.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/ＡＢＣＤ.mjl created for region DEFAULT with (NO|)BEFORE_IMAGES
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/ＡＢＣＤ.dat backed up in file ##TEST_PATH##/我能吞下玻璃而不伤身体/backup.bak3
+##SUSPEND_OUTPUT  NON_COLLATION
+##SUSPEND_OUTPUT 4G_ABOVE_DB_BLKS
+5150 blocks saved.
+##ALLOW_OUTPUT 4G_ABOVE_DB_BLKS
+##SUSPEND_OUTPUT 4G_BELOW_DB_BLKS
+5151 blocks saved.
+##ALLOW_OUTPUT 4G_BELOW_DB_BLKS
+##SUSPEND_OUTPUT MM_FILE_NO_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000001A92 to 0x00000000000862AF are backed up
+##ALLOW_OUTPUT   MM_FILE_NO_EXT
+##SUSPEND_OUTPUT MM_FILE_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000001A85 to 0x0000000000086318 are backed up
+##ALLOW_OUTPUT   MM_FILE_EXT
+##SUSPEND_OUTPUT  COLLATION
+##ALLOW_OUTPUT  NON_COLLATION
+##SUSPEND_OUTPUT 4G_ABOVE_DB_BLKS
+5172 blocks saved.
+##ALLOW_OUTPUT 4G_ABOVE_DB_BLKS
+##SUSPEND_OUTPUT 4G_BELOW_DB_BLKS
+5173 blocks saved.
+##ALLOW_OUTPUT 4G_BELOW_DB_BLKS
+##SUSPEND_OUTPUT MM_FILE_NO_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000001A92 to 0x00000000000862B4 are backed up
+##ALLOW_OUTPUT   MM_FILE_NO_EXT
+##SUSPEND_OUTPUT MM_FILE_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000001A85 to 0x0000000000086318 are backed up
+##ALLOW_OUTPUT   MM_FILE_EXT
+##ALLOW_OUTPUT  COLLATION
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/ＡＢＣＤ.dat backed up in file ##TEST_PATH##/我能吞下玻璃而不伤身体/backup.bak33
+##SUSPEND_OUTPUT  NON_COLLATION
+5864 blocks saved.
+##SUSPEND_OUTPUT MM_FILE_NO_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x00000000000862AF are backed up
+##ALLOW_OUTPUT   MM_FILE_NO_EXT
+##SUSPEND_OUTPUT MM_FILE_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x0000000000086308 are backed up
+##ALLOW_OUTPUT   MM_FILE_EXT
+##SUSPEND_OUTPUT  COLLATION
+##ALLOW_OUTPUT  NON_COLLATION
+5886 blocks saved.
+##SUSPEND_OUTPUT MM_FILE_NO_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x00000000000862B4 are backed up
+##ALLOW_OUTPUT   MM_FILE_NO_EXT
+##SUSPEND_OUTPUT MM_FILE_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x0000000000086318 are backed up
+##ALLOW_OUTPUT   MM_FILE_EXT
+##ALLOW_OUTPUT  COLLATION
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/ＡＢＣＤ.dat backed up in file ##TEST_PATH##/我能吞下玻璃而不伤身体/backup.bak333
+##SUSPEND_OUTPUT  NON_COLLATION
+5864 blocks saved.
+##SUSPEND_OUTPUT MM_FILE_NO_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x00000000000862AF are backed up
+##ALLOW_OUTPUT   MM_FILE_NO_EXT
+##SUSPEND_OUTPUT MM_FILE_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x0000000000086308 are backed up
+##ALLOW_OUTPUT   MM_FILE_EXT
+##SUSPEND_OUTPUT  COLLATION
+##ALLOW_OUTPUT  NON_COLLATION
+5886 blocks saved.
+##SUSPEND_OUTPUT MM_FILE_NO_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x00000000000862B4 are backed up
+##ALLOW_OUTPUT   MM_FILE_NO_EXT
+##SUSPEND_OUTPUT MM_FILE_EXT
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x0000000000086318 are backed up
+##ALLOW_OUTPUT   MM_FILE_EXT
+##ALLOW_OUTPUT  COLLATION
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+
+YDB>
+Do in0^udbfill("ver")
+
+YDB>
+ver PASS
+
+YDB>
+%YDB-I-RESTORESUCCESS, Restore completed successfully
+##TEST_AWK13(45|50) blocks restored
+
+YDB>
+Do in1^udbfill("ver")
+
+YDB>
+ver PASS
+
+YDB>
+%YDB-I-RESTORESUCCESS, Restore completed successfully
+##SUSPEND_OUTPUT  NON_COLLATION
+##SUSPEND_OUTPUT 4G_ABOVE_DB_BLKS
+5150 blocks restored
+##ALLOW_OUTPUT 4G_ABOVE_DB_BLKS
+##SUSPEND_OUTPUT 4G_BELOW_DB_BLKS
+5151 blocks restored
+##ALLOW_OUTPUT 4G_BELOW_DB_BLKS
+##SUSPEND_OUTPUT  COLLATION
+##ALLOW_OUTPUT  NON_COLLATION
+##SUSPEND_OUTPUT 4G_ABOVE_DB_BLKS
+5172 blocks restored
+##ALLOW_OUTPUT 4G_ABOVE_DB_BLKS
+##SUSPEND_OUTPUT 4G_BELOW_DB_BLKS
+5173 blocks restored
+##ALLOW_OUTPUT 4G_BELOW_DB_BLKS
+##ALLOW_OUTPUT  COLLATION
+
+YDB>
+Do in2^udbfill("ver")
+
+YDB>
+ver PASS
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/ＡＢＣＤ.dat created
+%YDB-I-RESTORESUCCESS, Restore completed successfully
+##SUSPEND_OUTPUT  NON_COLLATION
+5864 blocks restored
+##SUSPEND_OUTPUT  COLLATION
+##ALLOW_OUTPUT  NON_COLLATION
+5886 blocks restored
+##ALLOW_OUTPUT  COLLATION
+
+YDB>
+Do in2^udbfill("ver")
+
+YDB>
+ver PASS
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/ＡＢＣＤ.dat created
+%YDB-I-RESTORESUCCESS, Restore completed successfully
+##SUSPEND_OUTPUT  NON_COLLATION
+5864 blocks restored
+##SUSPEND_OUTPUT  COLLATION
+##ALLOW_OUTPUT  NON_COLLATION
+5886 blocks restored
+##ALLOW_OUTPUT  COLLATION
+
+YDB>
+Do in2^udbfill("ver")
+
+YDB>
+ver PASS
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

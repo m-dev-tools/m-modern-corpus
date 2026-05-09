@@ -1,0 +1,69 @@
+#################################################################
+#								#
+# Copyright (c) 2020-2025 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+
+stages:
+  - build
+  - docker-create
+  - docker-manifest
+
+commit-verify:
+  image: ubuntu:22.04
+  stage: build
+  script:
+    - apt-get update
+    - apt-get install -yq git wget gnupg
+    # Copy commit script to build directory and execute
+    - wget https://gitlab.com/YottaDB/DB/YDB/-/raw/master/ci/commit_verify.sh
+    - chmod +x commit_verify.sh
+    - ./commit_verify.sh com/needs_copyright.sh https://gitlab.com/YottaDB/DB/YDBTest/
+
+# Test that imptp.rs builds with the latest commit of YDBRust
+build-imptp-rs:
+  image:
+      name: yottadb/yottadb-debian:latest-master
+      entrypoint: [""]
+  stage: build
+  script:
+    - apt-get update
+    - apt-get install -yq --no-install-recommends build-essential bindgen
+    - cd com/imptp-rs; . $HOME/.cargo/env; cargo check
+
+# Run changed tests on every push
+run-tests:
+  image:
+       name: registry.gitlab.com/yottadb/db/ydbtest
+       entrypoint: [""]
+  stage: build
+  interruptible: true
+  artifacts:
+    paths:
+      - testarea1/
+      - testarea2/
+      - testarea3/
+      - pipeline-test-ydbtest-build.out
+    expire_in: 1 month
+    when: always
+  script:
+    - docker/pipeline-test-ydbtest.csh
+
+# Build test system on docker
+docker-ydbtest-image:
+  image: docker:latest
+  stage: docker-create
+  services:
+    - docker:dind
+  script:
+    - docker image build -f docker/Dockerfile --progress=plain -t registry.gitlab.com/yottadb/db/ydbtest .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push registry.gitlab.com/yottadb/db/ydbtest
+  only:
+    - master@YottaDB/DB/YDBTest

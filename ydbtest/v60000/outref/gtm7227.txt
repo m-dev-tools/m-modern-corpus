@@ -1,0 +1,28 @@
+
+YDB>
+
+YDB>
+%YDB-E-MAXSTRLEN, Maximum string length exceeded
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-MAXSTRLEN, Maximum string length exceeded
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-MAXSTRLEN, Maximum string length exceeded
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-MAXSTRLEN, Maximum string length exceeded
+
+YDB>

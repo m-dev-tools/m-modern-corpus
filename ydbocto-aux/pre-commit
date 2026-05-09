@@ -1,0 +1,255 @@
+#!/usr/bin/env tcsh
+#
+#################################################################
+#                                                               #
+# Copyright (c) 2020-2025 YottaDB LLC and/or its subsidiaries.  #
+# All rights reserved.                                          #
+#                                                               #
+#       This source code contains the intellectual property     #
+#       of its copyright holder(s), and is made available       #
+#       under a license.  If you do not know the terms of       #
+#       the license, please stop and do not read further.       #
+#                                                               #
+#################################################################
+#
+# -----------------------------------------------------------------
+# Pre-commit hook
+# -----------------------------------------------------------------
+cd `git rev-parse --show-toplevel`
+set filelist = `git diff --name-only --cached HEAD`
+set fixlist = ""
+set curyear = `date +%Y`
+@ exitstatus = 0
+
+# ------------------------------------------------
+# 1) Check that pre-rebase hook is set up properly
+# ------------------------------------------------
+# The fact that this pre-commit hook got invoked implies it is properly setup in the current repository.
+# Use this opportunity to check that the pre-rebase hook is also setup the same way. If not issue an error.
+set rebase_hook_path = `readlink -f .git/hooks/pre-rebase`
+if ("" != "$rebase_hook_path") then
+	set rebase_hook_actual = `realpath $rebase_hook_path`
+else
+	set rebase_hook_actual = "$rebase_hook_path"
+endif
+set rebase_hook_expect = `realpath ./pre-rebase`
+if ($rebase_hook_expect != $rebase_hook_actual) then
+	echo "  --> Hook $0 returned non-zero status"
+	echo "  --> pre-rebase hook is not properly setup."
+	echo "  --> Expecting [$PWD/.git/hooks/pre-rebase] to point to [../../pre-rebase]. Actual value is [$rebase_hook_actual]."
+	echo "  --> Run [ln -s ../../pre-rebase $PWD/.git/hooks/pre-rebase] to set it up first."
+	@ exitstatus = 1
+	exit $exitstatus
+endif
+
+# -----------------------------------------------------------------
+# 2) Enforce YottaDB Copyright in changed modules
+# -----------------------------------------------------------------
+foreach file ($filelist)
+	tools/ci/needs_copyright.sh $file
+	if ($status != 0) then
+		continue
+	endif
+	# Optimization: don't run the python script unless necessary
+	grep 'Copyright (c) .*'$curyear' YottaDB LLC' $file >& /dev/null
+	if ($status == 0) then
+		continue
+	endif
+	# Try to automatically add a copyright to the file
+	set tempfile = `mktemp`
+	./tools/ci/copyright.py $file > $tempfile
+	set copyright_status = $status
+	if ($copyright_status == 1) then
+		echo "note: automatically committing copyright updates to $file"
+		# Preserve the original file permissions
+		chmod --reference=$file $tempfile
+		cp $tempfile $file
+		git add $file
+	else if ($copyright_status != 0) then
+		set fixlist = "$fixlist $file"
+	endif
+	rm $tempfile
+end
+if ("" != "$fixlist") then
+	echo "  --> Hook $0 returned non-zero status"
+	echo "  --> Below files are missing YottaDB Copyright notice and/or current year $curyear. Fix and retry commit"
+	foreach file ($fixlist)
+		echo "	$file"
+	end
+	@ exitstatus = 1
+endif
+
+# -----------------------------------------------------------------
+# 3) Remove trailing white space
+# -----------------------------------------------------------------
+set nowhitespace_extensions = "ref"	# List of extensions that cannot have trailing white space removed.
+	# .ref -> reference files used by the test cases (e.g. tests/outref/TUF001.ref).
+	#		Those have a fixed format and should not go through any white-space changes.
+
+set filelist = `git diff --name-only --cached HEAD`	# recompute "filelist" in case Step (1) had regenerated new files
+foreach file ($filelist)
+	if (! -e $file) then
+		# If file is being deleted as part of this commit, skip whitespace conversion on it
+		continue
+	endif
+	if ("" != "$nowhitespace_extensions") then
+		set extension = $file:e
+		set skip = 0
+		foreach ext ($nowhitespace_extensions)
+			if ($ext == $extension) then
+				set skip = 1
+				break
+			endif
+		end
+		file --mime $file | grep "binary" > /dev/null
+		if ($status == 0) then
+			set skip = 1
+			break
+		endif
+		if ($skip) then
+			continue
+		endif
+	endif
+	grep -q '[ 	][ 	]*$' $file
+	if ! ($status) then
+		echo $file
+		sed -i 's/[ 	][ 	]*$//' $file
+		git add $file
+		if ($status) then
+			@ exitstatus = 1
+			echo "GITADD-E-FAIL : Command failed after removing trailing whitespace : git add $file"
+		endif
+	endif
+end
+
+# ---------------------------------------------------------------------------
+# 4) Runs clang-format on all changed lines and commit any differences.
+# ---------------------------------------------------------------------------
+if ( `where clang-format-diff` == "" ) then
+	echo "clang-format (including clang-format-diff) is required to commit" && exit 1
+else
+	# Run clang-format on any modified lines
+	git diff -U0 --no-color --cached HEAD | clang-format-diff -p1 -i -regex=".*\.(c|h)"
+	# Check if there are unstaged changes (as opposed to staged and uncommitted)
+	foreach file ($filelist)
+		if (! -e $file) then
+			continue
+		endif
+		set extension = $file:e
+		set fixlist = ""
+		if ( "c" == "$extension" || "h" == "$extension" ) then
+			# Check if there are unstaged changes (as opposed to staged and uncommitted)
+			git diff-files --exit-code --name-only -- "$file" >/dev/null
+			if ($status) then
+				git add "$file"
+				set fixlist = "$fixlist $file"
+			endif
+		endif
+		if ("" != "$fixlist") then
+			echo "note: automatically committing clang-format changes for the following files:"
+			echo "$fixlist"
+		endif
+	end
+endif
+
+# ---------------------------------------------------------------------------
+# 5) Verify all error mnemonics and error message text included in errors.rst
+# ---------------------------------------------------------------------------
+
+tools/ci/doc_error_update.sh
+if ($status) then
+	echo "  --> Hook $0 returned non-zero status"
+	echo "  --> HOOK-E-FAIL : Non-zero exit status returned by tools/ci/doc_error_update.sh"
+	@ exitstatus = 1
+endif
+
+# -----------------------------------------------------------
+# 6) Verify all code base related assertions are still valid
+# -----------------------------------------------------------
+
+tools/ci/check_code_base_assertions.sh
+if ($status) then
+	echo "  --> Hook $0 returned non-zero status"
+	echo "  --> HOOK-E-FAIL : Non-zero exit status returned by tools/ci/check_code_base_assertions.sh"
+	@ exitstatus = 1
+endif
+
+# -----------------------------------------------------------
+# 7) Verify no UTF characters are present in source code
+# -----------------------------------------------------------
+
+foreach file ($filelist)
+	if (! -e $file) then
+		continue
+	endif
+	set extension = $file:e
+	# Do not check SQL, ZWRITE, or reference files for UTF characters, as these contain data
+	# and not source code, and so it is acceptable if they contain UTF characters.
+	if ( "sql" == "$extension" || "ref" == "$extension" || "zwr" == "$extension" || "md" == "$extension" || "rst" == "$extension" ) then
+		continue
+	endif
+	set fixfile = ""
+	if  (0 != `file $file | grep UTF | wc -l` ) then
+		set fixfile = "$file"
+	endif
+	if ("" != "$fixfile") then
+		echo "--> HOOK-E-FAIL : File $fixfile contains UTF characters. Must be ASCII only."
+		@ exitstatus = 1
+	endif
+end
+
+#--------------------------------------------------------------------------------------------------
+# 8) Verify that FMT_SEED_DEFINITION is bumped if there is a change to tests/fixtures/octo-seed.sql
+#--------------------------------------------------------------------------------------------------
+
+set tipcommit = "HEAD"
+set octo_seed_change = `git diff --cached $tipcommit -- tests/fixtures/octo-seed.sql`
+if ("" != "$octo_seed_change")  then
+	set octo_header_change=`git diff --cached $tipcommit -- src/octo.h`
+	if ("" != "$octo_header_change") then
+		# Get the FMT_SEED_DEFINITION value in the latest commit
+		set current_seed_fmt_value=`git diff --cached -G "\#define\ FMT\_SEED\_DEFINITION" $tipcommit -- src/octo.h | grep -o "\+\#define\ FMT\_SEED\_DEFINITION\ [0-9]*" | awk '{print $3}'`
+		# Get the previous FMT_SEED_DEFINITION value
+		set prior_seed_fmt_value=`git diff --cached -G "\#define\ FMT\_SEED\_DEFINITION" $tipcommit -- src/octo.h | grep -o "\-\#define\ FMT\_SEED\_DEFINITION\ [0-9]*" | awk '{print $3}'`
+		# Check if FMT_SEED_DEFINITION value is bumped
+		@ incr_prior_seed_fmt_value = $prior_seed_fmt_value + 1
+		if ("$incr_prior_seed_fmt_value" != "$current_seed_fmt_value") then
+			# octo-seed has changed but FMT_SEED_DEFINITION is not issue an error
+			echo "--> HOOK-E-FAIL : File octo-seed.sql has changed but no update to FMT_SEED_DEFINITION. FMT_SEED_DEFINITION must be bumped."
+			@ exitstatus = 1
+		endif
+	else
+		# octo-seed has changed but FMT_SEED_DEFINITION is not issue an error
+		echo "--> HOOK-E-FAIL : File octo-seed.sql has changed but no update to FMT_SEED_DEFINITION. FMT_SEED_DEFINITION must be bumped."
+		@ exitstatus = 1
+	endif
+endif
+
+#--------------------------------------------------------------------------------------------------
+# 9) Verify that CREATE VIEW command is not seen in tests/fixtures/octo-seed.sql
+#--------------------------------------------------------------------------------------------------
+# Refer to https://gitlab.com/YottaDB/DBMS/YDBOcto/-/merge_requests/1244#note_1230614504 for more details.
+
+set tipcommit = "HEAD"
+set octo_seed_change = `git diff --regexp-ignore-case -G"^[ \t]*create view" --cached $tipcommit -- tests/fixtures/octo-seed.sql`
+if ("" != "$octo_seed_change")  then
+	echo "--> HOOK-E-FAIL : CREATE VIEW usage is found in octo-seed.sql. Refer to https://gitlab.com/YottaDB/DBMS/YDBOcto/-/merge_requests/1244#note_1230614504 for why this is bad."
+	@ exitstatus = 1
+endif
+
+#--------------------------------------------------------------------------------------------------
+# 10) Check if a new token is being returned by src/lexer.l. If so alert about potential update to src/parser/sql_identifier.y
+#--------------------------------------------------------------------------------------------------
+foreach file ($filelist)
+	if ($file != "src/lexer.l") then
+		continue
+	endif
+	echo "--> HOOK-E-FAIL : src/lexer.l has been updated."
+	echo "--> Check if a new token was added as part of this commit."
+	echo "--> If so, check if this token needs to also be added to src/parser/sql_identifier.y."
+	echo "--> If the latter needs to also be updated, do it first. If not, skip to next step."
+	echo "--> Assuming this is the only error, rerun commit using [git commit -n] to skip the pre-commit hook"
+	@ exitstatus = 1
+end
+
+exit $exitstatus

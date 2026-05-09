@@ -1,0 +1,65 @@
+Testing plugin Error messages with  Mupip create functionality
+# Enable WHITE BOX TESTING
+#########TEST CONDITION:ALL TRUE###########
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+create.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+create.dat
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/create.gld
+%GDE-I-VERIFY, Verification OK
+
+
+GDE> 
+%GDE-I-EXECOM, Executing command file ##TEST_PATH##/temp.gde
+
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/create.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/a.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/y.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/create.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/z.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/b.dat created
+#########TEST CONDITION:BAD PASSPHRASE###########
+%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file a.dat. Incorrect password or error while obtaining password
+%YDB-F-DBNOCRE, Not all specified database files, or their associated journal files were created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/y.dat created
+%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file create.dat. Incorrect password or error while obtaining password
+%YDB-F-DBNOCRE, Not all specified database files, or their associated journal files were created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/z.dat created
+%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file b.dat. Incorrect password or error while obtaining password
+%YDB-F-DBNOCRE, Not all specified database files, or their associated journal files were created
+#########TEST CONDITION:gtm_passwd unset#########
+%YDB-E-CRYPTINIT, Could not initialize encryption library while opening encrypted file a.dat. Environment variable ydb_passwd/gtm_passwd not set
+%YDB-F-DBNOCRE, Not all specified database files, or their associated journal files were created
+%YDB-E-CRYPTINIT, Could not initialize encryption library while opening encrypted file b.dat. Environment variable ydb_passwd/gtm_passwd not set
+%YDB-F-DBNOCRE, Not all specified database files, or their associated journal files were created
+%YDB-E-CRYPTINIT, Could not initialize encryption library while opening encrypted file create.dat. Environment variable ydb_passwd/gtm_passwd not set
+%YDB-F-DBNOCRE, Not all specified database files, or their associated journal files were created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/y.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/z.dat created
+#########TEST CONDITION:gtm_passwd restored to the true value########
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/a.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/b.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/create.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/y.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/z.dat created
+HASH DUMP ON ENCRYPTED DATABASE
+  DB encryption hash cutoff                      -1
+  DB encr hash2 start TN         0x0000000000000000
+##TEST_AWK  Database file encryption hash                   [A-Z|0-9]*
+##TEST_AWK  Database file encryption hash2                  [A-Z|0-9]*
+HASH DUMP ON NONENCRYPTED DATABASE
+  DB encryption hash cutoff                      -1
+  DB encr hash2 start TN         0x0000000000000000
+  Database file encryption hash                   00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  Database file encryption hash2                  00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

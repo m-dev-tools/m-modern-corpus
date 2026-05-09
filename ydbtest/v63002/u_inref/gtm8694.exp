@@ -1,0 +1,43 @@
+#################################################################
+#								#
+# Copyright (c) 2018 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+#
+set timeout 60
+
+spawn /usr/local/bin/tcsh -f
+source $::env(gtm_tst)/com/expectinit.exp
+
+send -- "\$ydb_dist/mumps -dir\r"
+expect "YDB>"
+send "use \$principal:(cenable)\r"
+expect "YDB>"
+puts "#<CTRL-C>"
+# The parent script (gtm8694.csh) invokes this expect script twice. One with CENABLE in the restrict.txt file
+# and another without. For the first invocation, we need to send a Ctrl-C followed by a newline in order to
+# see the YDB> prompt. For the second invocation, we do not need the newline. Sending the newline for the
+# second invocation gives a sequences of two YDB> prompts (one for the Ctrl-C press) and one for the newline.
+# If we do an expect of "YDB>" after the send, it is possible we get control back after the first "YDB>" gets
+# displayed in which case it is possible (after the recent #350 code changes) that the "halt" we issue afterwards
+# will be sent while the terminal has ECHO set which means it will show up in the output and cause a test failure.
+# To avoid that, we wait for the "YDB>" prompt after a specific string shows up. We cannot print the string as is
+# as it can cause incorrect match when we later wait for that (same issue as SHELL prompt dealt with in com/expectinit.exp)
+# and hence we use $char() notation to print it first.
+send -- "\x03"
+# Ensure ECHO is turned OFF in terminal (i.e. we are inside direct mode read) before sending in keystrokes
+# as this avoids false test failures due to the keystrokes being displayed more than once.
+system $::env(gtm_tst)/com/wait_for_stty_echo_off.csh
+send -- "write \$char(65,66,67,68),!\r"
+expect "ABCD"
+expect "YDB>"
+send "halt\r"
+expect "SHELL"
+
+

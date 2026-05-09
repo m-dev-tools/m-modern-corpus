@@ -1,0 +1,71 @@
+Test that encryption plugin issues appropriate errors when MUPIP INTEG is run with a bad configuration.
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+mumps.dat
+
+##############################################################
+Test Scenario 1: Environment variable gtmcrypt_config not set.
+##############################################################
+
+
+
+
+
+
+%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/a.dat. Environment variable ydb_crypt_config/gtmcrypt_config not set
+%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/b.dat. Environment variable ydb_crypt_config/gtmcrypt_config not set
+%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/mumps.dat. Environment variable ydb_crypt_config/gtmcrypt_config not set
+%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/a.dat. Environment variable ydb_crypt_config/gtmcrypt_config not set
+%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/b.dat. Environment variable ydb_crypt_config/gtmcrypt_config not set
+%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/mumps.dat. Environment variable ydb_crypt_config/gtmcrypt_config not set
+%YDB-W-MUNOTALLINTEG, At least one region skipped. See the earlier messages
+Integ of region AREG
+Integ of region BREG
+Integ of region DEFAULT
+
+#####################################################################
+Test Scenario 2: Environment variable gtm_passwd set to bad password.
+#####################################################################
+
+
+
+
+
+
+##TEST_AWK%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/a.dat. .*
+##TEST_AWK%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/b.dat. .*
+##TEST_AWK%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/mumps.dat. .*
+##TEST_AWK%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/a.dat. .*
+##TEST_AWK%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/b.dat. .*
+##TEST_AWK%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/mumps.dat. .*
+%YDB-W-MUNOTALLINTEG, At least one region skipped. See the earlier messages
+Integ of region AREG
+Integ of region BREG
+Integ of region DEFAULT
+
+##################################################################################
+Test Scenario 3: Environment variable gtmcrypt_config points to non-existent file.
+##################################################################################
+
+
+
+
+
+
+%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/a.dat. Cannot stat configuration file: ./foobar.cfg. No such file or directory
+%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/b.dat. Cannot stat configuration file: ./foobar.cfg. No such file or directory
+%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/mumps.dat. Cannot stat configuration file: ./foobar.cfg. No such file or directory
+%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/a.dat. Cannot stat configuration file: ./foobar.cfg. No such file or directory
+%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/b.dat. Cannot stat configuration file: ./foobar.cfg. No such file or directory
+%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/mumps.dat. Cannot stat configuration file: ./foobar.cfg. No such file or directory
+%YDB-W-MUNOTALLINTEG, At least one region skipped. See the earlier messages
+Integ of region AREG
+Integ of region BREG
+Integ of region DEFAULT
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

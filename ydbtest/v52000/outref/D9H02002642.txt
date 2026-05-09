@@ -1,0 +1,8 @@
+spawn ##SOURCE_PATH##/mumps -direct
+
+YDB>use $principal:escape  hang 1  read *x  set z=$zb  write !  zwrite
+
+x=27
+z=$C(27)_"[23~"
+
+YDB>h

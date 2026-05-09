@@ -1,0 +1,97 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+mumps.dat
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with NOBEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/a.mjl created for database file ##TEST_PATH##/a.dat with NOBEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/a.dat is now ON
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for database file ##TEST_PATH##/b.dat with NOBEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/b.dat is now ON
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file extd1.out created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file exta1.out created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file extb1.out created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+YDB>
+
+Starting tests via viagtcm^tstswjnl
+In the init routine
+do sets for all regions to exercise the journalling code
+
+YDB>
+h
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file extd2.out created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file exta2.out created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file extb2.out created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/mumps.mjl is renamed to ##TEST_PATH##/mumps.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with NOBEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+
+YDB>
+
+Starting tests via viagtcm^tstswjnl
+In the init routine
+do sets for all regions to exercise the journalling code
+
+YDB>
+h
+
+YDB>
+
+YDB>
+h
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file extd3.out created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file exta3.out created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file extb3.out created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

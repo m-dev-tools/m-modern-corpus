@@ -1,0 +1,8 @@
+
+YDB>
+
+PASS from zcmdltst
+
+YDB>
+
+PASS from zcmdltst

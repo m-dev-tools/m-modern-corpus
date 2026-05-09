@@ -1,0 +1,32 @@
+#################################################################
+#								#
+# Copyright (c) 2014-2016 Fidelity National Information		#
+# Services, Inc. and/or its subsidiaries. All rights reserved.	#
+#								#
+# Copyright (c) 2017-2018 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+set timeout 120
+spawn $env(SHELL)
+send -- "set prompt=\"CTRLC>\"\r"
+expect "CTRLC>"
+send -- "\$ydb_dist/mumps -direct\r"
+expect "YDB>"
+send -- "set \$etrap=\"set x=\$zjobexam(),\$ecode=\"\"\"\"\"\r"
+expect "YDB>"
+send -- "for i=1:1:1000 set a(i)=i\r"
+expect "YDB>"
+send -- "write \$char(77,69,82,71,69) xecute \"for i=1:1 merge b(i)=a\"\r"
+# send ctrl-c
+expect "MERGE"
+send -- "\003\r"
+# since cenable is the default we should see the CTRL_C message (searched for in gtm8206.csh)
+expect "YDB>"
+send -- "halt\r"
+expect "CTRLC>"

@@ -1,0 +1,75 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+mumps.dat
+echo This should error out, since effectively, ENABLE is not specified in the second (and overriding) -journal= specification
+This should error out, since effectively, ENABLE is not specified in the second (and overriding) -journal= specification
+##SOURCE_PATH##/mupip set -journal=on,before,enable -file mumps.dat -journal=on
+%YDB-W-JNLDISABLE, Specified journal option(s) cannot take effect as journaling is DISABLED on database file ##TEST_PATH##/mumps.dat
+%YDB-W-MUNOFINISH, MUPIP unable to finish all requested actions
+echo 
+
+echo This should start journalling with BEFORE images
+This should start journalling with BEFORE images
+##SOURCE_PATH##/mupip set -journal=on,nobefore -file mumps.dat -journal=on,before,enable
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+echo 
+
+echo This should not error out
+This should not error out
+##SOURCE_PATH##/mupip set -journal=on,off -file mumps.dat -journal=on,before,enable
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/mumps.mjl is renamed to ##TEST_PATH##/mumps.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+echo 
+
+echo This should not error out
+This should not error out
+##SOURCE_PATH##/mupip set -journal=alloc=a -file mumps.dat
+%YDB-E-CLIERR, Unrecognized value: a, A non-negative decimal or hexadecimal integer required
+echo 
+
+echo This should error out
+This should error out
+##SOURCE_PATH##/mumps -bad
+%YDB-E-CLIERR, Unrecognized option : BAD
+echo 
+
+##SOURCE_PATH##/mupip set -journal=on,enable,before -file mumps.dat
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/mumps.mjl is renamed to ##TEST_PATH##/mumps.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+##SOURCE_PATH##/mumps -direct
+
+YDB>
+
+YDB>
+
+YDB>
+rm a.dat b.dat mumps.dat
+##SOURCE_PATH##/mupip create
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/a.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/b.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+##SOURCE_PATH##/mupip journal -recover -noapply_after_image -forward mumps.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+##SOURCE_PATH##/mumps -direct
+
+YDB>
+3
+YDB>
+4
+YDB>
+unset echo
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

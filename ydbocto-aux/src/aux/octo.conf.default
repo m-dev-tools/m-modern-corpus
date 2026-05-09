@@ -1,0 +1,105 @@
+//////////////////////////////////////////////////////////////////
+//								//
+// Copyright (c) 2019-2023 YottaDB LLC and/or its subsidiaries.	//
+// All rights reserved.						//
+//								//
+//	This source code contains the intellectual property	//
+//	of its copyright holder(s), and is made available	//
+//	under a license.  If you do not know the terms of	//
+//	the license, please stop and do not read further.	//
+//								//
+//////////////////////////////////////////////////////////////////
+
+/* Below setting specifies the SQL database Octo will emulate. The valid options are:
+ * POSTGRES and MYSQL. The default is POSTGRES.
+ */
+emulate = "POSTGRES"
+
+/* Below setting specifies the verbosity for logging. The valid options are, in order of decreasing verbosity:
+ * TRACE, DEBUG, INFO, and ERROR. The default is ERROR.
+ */
+verbosity = "ERROR"
+
+/* Below setting specifies the default table type of a table created by CREATE TABLE if neither READONLY or READWRITE
+ * keywords are specified in the CREATE TABLE. Valid options are READONLY and READWRITE. The default is READWRITE.
+ */
+// tabletype = "READWRITE"
+
+/* If octo_zroutines is set (default is unset), a process prepends it to ydb_routines (and in turn to $ZROUTINES). As
+ * Octo places the M routines generated from SQL queries in the first source directory in $ydb_routines/$ZROUTINES and
+ * YottaDB places the object code for M routines as specified by $ZROUTINES, octo_zroutines should not normally be
+ * uncommented when Octo is installed as a YottaDB plugin under $ydb_dist. It is also unwise to set it in any octo.conf
+ * that is shared between Octo environments, because that has the potential for the SQL for one Octo environment being
+ * executed against another. Note that if YottaDB's ydb_env_set is being sourced to set up & manage an environment,
+ * there is no need to assign a value to octo_zroutines.
+ */
+// octo_zroutines = "./"
+
+// Settings related to the rocto process
+rocto = {
+  /* Specify IP address and port to listen on for connections.
+   * The default is 0.0.0.0 which allows external connections;
+   * configure your firewall and/or network routes to limit access.
+   * To restrict access to just the local machine, set it to
+   * 127.0.0.1.
+   */
+  address = "0.0.0.0"
+  port = 1337
+  // Set to use DNS to resolve numeric IP addresses
+  use_dns = false
+  // Set to true to enable usage of the Nagle algorithm on TCP connections and disable the TCP_NODELAY socket option.
+  // Default is false (i.e. no delay) as it speeds up rocto response times
+  tcp_delay = false
+  // Authentication methods; supported options are "md5"
+  authentication_method = "md5"
+  // Set to 'true' to enable SSL/TLS session encryption for remote connections when clients requests it,
+  // or to 'false' to disable SSL/TLS entirely. Note that even when set to 'true' unencrypted
+  // connections are accepted when the client requests them. To force SSL/TLS connections, use ssl_required.
+  ssl_on = false
+  // Set to 'true' to require SSL/TLS session encryption for all remote connections and
+  // refuse any client connection that does not request or support SSL/TLS encryption.
+  // If set to 'false', unencrypted connections will be accepted.
+  // Note that ssl_on must be set to 'true' when ssl_required is set to 'true'.
+  ssl_required = false
+}
+
+/* Settings controlling YottaDB; these get set as environment variables during startup
+ * Defined environment variables will take precedence
+ */
+/*yottadb = {
+  ydb_gbldir = "yottadb.gld"
+  ydb_ci = "calltab.ci"
+  ydb_routines = "."
+}*/
+
+tls: {
+  // Max number of certificate authorities to check when verifying certificate
+  verify-depth: 7;
+  // Name of certificate authority file
+  CAfile: "server.crt";
+  // Path to certificate authority file
+  CApath: "/home/jon/YDBOcto/build/";
+  // Session timeout limit, in seconds
+  session-timeout: 600;
+
+  /* List of certificate/key pairs specified by identifiers.
+   * Currently only the OCTOSERVER identifier is supported.
+   */
+  OCTOSERVER: {
+    format: "PEM";
+    cert: "server.crt";
+    key: "server.key";
+  };
+};
+
+/* Octo History location. By default it's in "~/.octo_history".
+ * You can override it here.
+ * More information can be found here: https://docs.yottadb.com/Octo/history.html
+ */
+octo_history = "~/.octo_history"
+
+/* Octo History Maximum Length. By default it's 500. You can override it
+ * here.
+ * More information can be found here: https://docs.yottadb.com/Octo/history.html
+ */
+octo_history_max_length = 500

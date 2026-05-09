@@ -1,0 +1,244 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+
+YDB>
+
+YDB>
+TEST DSE - FIND COMMAND
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> %YDB-E-CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
+DSE> 
+    Directory path
+    Path--blk:off
+	1:10,	2:10,
+    Global tree path
+    Path--blk:off
+	4
+
+DSE> %YDB-E-BLKINVALID, 0x0000000000000232 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+Next free block is 28.
+
+DSE> 
+Next free block is 28.
+
+DSE> %YDB-E-BLKINVALID, 0x0000000000000232 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+Key found in block  27.
+    Directory path
+    Path--blk:off
+	1:10,	2:10,
+    Global tree path
+    Path--blk:off
+	4:24C,	27:70,
+DSE> 
+Key not found, would be in block  27.
+    Directory path
+    Path--blk:off
+	1:10,	2:10,
+    Global tree path
+    Path--blk:off
+	4:24C,	27:11B,
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+Key not found, no root present.
+Key ^notglobal maps to Region DEFAULT; Run "find -region=DEFAULT" before looking for this node
+
+DSE> Error:  invalid key.
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> List of global directory:	##TEST_PATH##/mumps.gld
+
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+##SUSPEND_OUTPUT NON_REPLIC
+##SUSPEND_OUTPUT NON_STATSHARE
+
+##TEST_AWKFile  	##TEST_PATH##/.*.a.dat.gst
+Region	areg
+
+##TEST_AWKFile  	##TEST_PATH##/.*.mumps.dat.gst
+Region	default
+##ALLOW_OUTPUT NON_STATSHARE
+##ALLOW_OUTPUT NON_REPLIC
+DSE> List of global directory:	##TEST_PATH##/mumps.gld
+
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+##SUSPEND_OUTPUT NON_REPLIC
+##SUSPEND_OUTPUT NON_STATSHARE
+
+##TEST_AWKFile  	##TEST_PATH##/.*.a.dat.gst
+Region	areg
+
+##TEST_AWKFile  	##TEST_PATH##/.*.mumps.dat.gst
+Region	default
+##ALLOW_OUTPUT NON_STATSHARE
+##ALLOW_OUTPUT NON_REPLIC
+DSE> Error:  already in region: AREG
+DSE> Error:  already in region: AREG
+DSE> 
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> %YDB-E-NOREGION, REGION not found: NOREG
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+	Left sibling		Current block		Right sibling
+	none			0x0000000000000003	0x0000000000000005
+
+DSE> 
+	Left sibling		Current block		Right sibling
+	0x0000000000000026	0x0000000000000027	none
+
+DSE> 
+	Left sibling		Current block		Right sibling
+	0x0000000000000025	0x0000000000000026	0x0000000000000027
+
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> %YDB-E-CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
+DSE> %YDB-E-BLKINVALID, 0x0000000000000230 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> 
+Key found in block  3.
+    Directory path
+    Path--blk:off
+	1:10,	2:26,
+    Global tree path
+    Path--blk:off
+	4:10,	3:5A,
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> 
+Key found in block  3.
+    Directory path
+    Path--blk:off
+	1:10,	2:26,
+    Global tree path
+    Path--blk:off
+	4:10,	3:4D,
+DSE> DSE> grep "Key found in block find.log"
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+Key found in block  5.
+
+# Test of YDB@198872d1 (test invalid command in DSE does not cause ASAN global-buffer-overflow error in Debug build)
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> %YDB-E-CLIERR, Unrecognized command: INVALIDCMD
+DSE> 
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##ALLOW_OUTPUT  NON_REPLIC
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> %YDB-E-NOGTCMDB, DSE does not support operation on GT.CM database region: DEFAULT
+DSE> DSE> %GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+%YDB-E-DBFILERR, Error with database file /testarea1/foo.dat
+%SYSTEM-E-ENO2, No such file or directory
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> %YDB-E-DSENOTOPEN, DSE could not open region DEFAULT - see DSE startup error message for cause
+DSE> DSE> 

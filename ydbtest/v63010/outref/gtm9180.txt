@@ -1,0 +1,311 @@
+# Create a global directory with two regions -- DEFAULT, REGX
+###################################################################
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+# Set some global variables - to fill some blocks
+###################################################################
+# Test the dse -add and -dump commands with 64 bit block numbers
+# Without the V7.0-000 changes, this should produce an error message.
+###################################################################
+running DSE command: add -block=2147483648 -data="Too large for V6" -key="^y(1)" -data="abc"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000002147483648 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: add -block=2200000000 -data="Too large for V6" -key="^y(2)" -data="def"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000002200000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: add -block=2500000000 -data="Too large for V6" -key="^y(3)" -data="ghi"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000002500000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: add -block=5000000000 -data="Too large for V6" -key="^y(4)" -data="jkl"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000005000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: add -block=50000000000 -data="Too large for V6" -key="^y(5)" -data="mno"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000050000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: add -block=500000000000 -data="Too large for V6" -key="^y(6)" -data="pqr"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000500000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: add -block=5000000000000 -data="Too large for V6" -key="^y(7)" -data="stu"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0005000000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: add -block=50000000000000 -data="Too large for V6" -key="^y(8)" -data="vwx"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0050000000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: add -block=500000000000000 -data="Too large for V6" -key="^y(9)" -data="yza"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0500000000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: add -block=5000000000000000 -data="Too large for V6" -key="^y(10)" -data="bcd"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x5000000000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: add -block=50000000000000000 -data="Too large for V6" -key="^y(11)" -data="efg"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-HEX64ERR, Error: cannot convert 50000000000000000 value to 64 bit hexadecimal number
+Error: block pointer must be specified for this index block record.
+
+###################################################################
+running DSE command: add -block=500000000000000000 -data="Too large for V6" -key="^y(12)" -data="hij"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-HEX64ERR, Error: cannot convert 500000000000000000 value to 64 bit hexadecimal number
+Error: block pointer must be specified for this index block record.
+
+###################################################################
+running DSE command: add -block=5000000000000000000 -data="Too large for V6" -key="^y(13)" -data="klm"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-HEX64ERR, Error: cannot convert 5000000000000000000 value to 64 bit hexadecimal number
+Error: block pointer must be specified for this index block record.
+
+###################################################################
+running DSE command: add -block=9223372036854775807 -data="Too large for V6" -key="^y(14)" -data="nop"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-HEX64ERR, Error: cannot convert 9223372036854775807 value to 64 bit hexadecimal number
+Error: block pointer must be specified for this index block record.
+
+###################################################################
+running DSE command: add -block=9223372036854775808 -data="Too large for V6" -key="^y(15)" -data="qrs"
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-HEX64ERR, Error: cannot convert 9223372036854775808 value to 64 bit hexadecimal number
+Error: block pointer must be specified for this index block record.
+
+###################################################################
+running DSE command: dump -block=2147483648
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000002147483648 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: dump -block=2200000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000002200000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: dump -block=2500000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000002500000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: dump -block=5000000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000005000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: dump -block=50000000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000050000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: dump -block=500000000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0000500000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: dump -block=5000000000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0005000000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: dump -block=50000000000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0050000000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: dump -block=500000000000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x0500000000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: dump -block=5000000000000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-BLKINVALID, 0x5000000000000000 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+
+###################################################################
+running DSE command: dump -block=50000000000000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-HEX64ERR, Error: cannot convert 50000000000000000 value to 64 bit hexadecimal number
+
+Block 1   Size 1C   Level 1   TN 0 V7
+
+Rec:1  Blk 1  Off 10  Size C  Cmpc 0  Ptr 2  Key *
+##TEST_AWK      10 : \|  C  0  0 ..  2  0  0  0  0  0  0  0                        \|
+##TEST_AWK           \|  \.  \.  \.  .  \.  \.  \.  \.  \.  \.  \.  \.                        \|
+
+
+###################################################################
+running DSE command: dump -block=500000000000000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-HEX64ERR, Error: cannot convert 500000000000000000 value to 64 bit hexadecimal number
+
+Block 1   Size 1C   Level 1   TN 0 V7
+
+Rec:1  Blk 1  Off 10  Size C  Cmpc 0  Ptr 2  Key *
+##TEST_AWK      10 : \|  C  0  0 ..  2  0  0  0  0  0  0  0                        \|
+##TEST_AWK           \|  \.  \.  \.  .  \.  \.  \.  \.  \.  \.  \.  \.                        \|
+
+
+###################################################################
+running DSE command: dump -block=5000000000000000000
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-HEX64ERR, Error: cannot convert 5000000000000000000 value to 64 bit hexadecimal number
+
+Block 1   Size 1C   Level 1   TN 0 V7
+
+Rec:1  Blk 1  Off 10  Size C  Cmpc 0  Ptr 2  Key *
+##TEST_AWK      10 : \|  C  0  0 ..  2  0  0  0  0  0  0  0                        \|
+##TEST_AWK           \|  \.  \.  \.  .  \.  \.  \.  \.  \.  \.  \.  \.                        \|
+
+
+###################################################################
+running DSE command: dump -block=9223372036854775807
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-HEX64ERR, Error: cannot convert 9223372036854775807 value to 64 bit hexadecimal number
+
+Block 1   Size 1C   Level 1   TN 0 V7
+
+Rec:1  Blk 1  Off 10  Size C  Cmpc 0  Ptr 2  Key *
+##TEST_AWK      10 : \|  C  0  0 ..  2  0  0  0  0  0  0  0                        \|
+##TEST_AWK           \|  \.  \.  \.  .  \.  \.  \.  \.  \.  \.  \.  \.                        \|
+
+
+###################################################################
+running DSE command: dump -block=9223372036854775808
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-HEX64ERR, Error: cannot convert 9223372036854775808 value to 64 bit hexadecimal number
+
+Block 1   Size 1C   Level 1   TN 0 V7
+
+Rec:1  Blk 1  Off 10  Size C  Cmpc 0  Ptr 2  Key *
+##TEST_AWK      10 : \|  C  0  0 ..  2  0  0  0  0  0  0  0                        \|
+##TEST_AWK           \|  \.  \.  \.  .  \.  \.  \.  \.  \.  \.  \.  \.                        \|
+
+
+###################################################################
+running DSE command: dump -block=9223372036854775806
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+%YDB-E-HEX64ERR, Error: cannot convert 9223372036854775806 value to 64 bit hexadecimal number
+
+Block 1   Size 1C   Level 1   TN 0 V7
+
+Rec:1  Blk 1  Off 10  Size C  Cmpc 0  Ptr 2  Key *
+##TEST_AWK      10 : \|  C  0  0 ..  2  0  0  0  0  0  0  0                        \|
+##TEST_AWK           \|  \.  \.  \.  .  \.  \.  \.  \.  \.  \.  \.  \.                        \|
+
+
+###################################################################
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

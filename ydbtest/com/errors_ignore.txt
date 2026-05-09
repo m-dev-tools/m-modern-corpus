@@ -1,0 +1,12 @@
+REPLALERT, Source Server could not connect to replicating instance
+Incorrectly built binary which accesses errno, h_errno or _res directly. Needs to be fixed.
+REPLWARN, No response received for heartbeat sent at
+MUPIP INFO:   Temp file name:
+  Temp File:
+GTM-E-REPLINSTFROZEN
+YDB-E-REPLINSTFROZEN
+GTM-W-REPLNOTLS
+YDB-W-REPLNOTLS
+YDB-E-REPLAHEAD, Replicating instance is ahead of the originating instance
+GTM-E-REPLAHEAD, Replicating instance is ahead of the originating instance
+/proc/[0-9]*/exe: Permission denied.

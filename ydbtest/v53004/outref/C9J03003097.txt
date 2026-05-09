@@ -1,0 +1,6 @@
+
+YDB>
+PASS from c003097
+
+YDB>
+End of C9J03003097 test...

@@ -1,0 +1,77 @@
+comstr=" Do foo^bar"
+comstr=" Do foo^@""bar"""
+comstr=" Do @""foo""^bar"
+comstr=" Do @""foo""^@""bar"""
+comstr=" Do @""foo^bar"""
+comstr=" Xecute ""Do foo^bar"""
+comstr=" Do foo"
+comstr=" Do foo(213)"
+comstr=" Do @""foo(213)"""
+comstr=" Set %=$$foo"
+comstr=" Set %=$$foo^bar"
+comstr=" Set %=$$foo(213)"
+comstr=" Set %=$$foo^bar(213)"
+comstr=" Set %=$$@""foo"""
+comstr=" Set %=$$@""foo""(213)"
+comstr=" Set %=$$@""foo""^@""bar""(213)"
+comstr=" Goto foo"
+comstr=" Goto foo^bar"
+comstr=" Goto @""foo""^bar"
+comstr=" ZGoto $ZLevel:foo"
+comstr=" ZGoto $ZLevel:foo^bar"
+comstr=" Write $Text(+11),!"
+comstr=" Write $Text(+0),!"
+comstr=" Write $Text(+11^bar),!"
+comstr=" Write $Text(+0^bar),!"
+comstr=" Write $Text(+11^@""bar""),!"
+comstr=" Write $Text(+0^@""bar""),!"
+comstr=" ZPrint"
+comstr=" ZPrint ^bar"
+comstr=" ZPrint ^@""bar"""
+comstr=" ZPrint @""^bar"""
+comstr=" Xecute ""ZPrint ^bar"""
+Tests complete.
+
+# Checksum value matches MUPIP HASH
+viewrecurlink.m: 1c4c301f6aa93b12bd1901306ca83ca2
+1c4c301f6aa93b12bd1901306ca83ca2
+
+# Test VIEW and ZSHOW R
+viewrecurlink+2^viewrecurlink:1c4c301f6aa93b12bd1901306ca83ca2
+RECURSIVE
+1c4c301f6aa93b12bd1901306ca83ca2
+recurse+1^viewrecurlink:836d959ed98fad060b4a11cdba8ef8fe
+viewrecurlink+8^viewrecurlink:1c4c301f6aa93b12bd1901306ca83ca2
+NORECURSIVE
+836d959ed98fad060b4a11cdba8ef8fe
+DONE
+
+# Another ZSHOW R test
+version 1
+version 2
+a+2^a:3f2a2bbbfb71490b4c17f54580f9da51
+b+1^b:45c88041e8eda2269c4f22f28465f055
+a+7^a:1da5fa8c009ad1788da49aac091d277b
+3f2a2bbbfb71490b4c17f54580f9da51
+3f2a2bbbfb71490b4c17f54580f9da51
+
+# Test UNDEF error handles symb_line safely
+%YDB-E-LVUNDEF, Undefined local variable: x(0)
+		At M source location undefindr+2^undefindr
+
+YDB>
+
+# More than 2 versions on the stack at once
+1
+2
+3
+3 (done)
+2 (done)
+1 (done)
+
+# Test recursive relink + shared libraries
+c ; version 1
+c ; version 2
+c+2^c:32b1d2455e50a854965dfbbb143201d4
+c+3^c:1775f073a3eb1ca6ee09e540b2104348
+crun+4^crun:697faf60156d9e087b77cddc5e67276d

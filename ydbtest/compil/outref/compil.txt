@@ -1,0 +1,96 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+do ^actundef
+
+OK from actundef.m
+
+YDB>
+do ^donargl
+		.. w !,"too many levels"
+		   ^-----
+		At column 5, line 15, source module ##IN_TEST_PATH##/inref/donargl.m
+%YDB-W-BLKTOODEEP, Block level too deep
+		. d
+		   ^-----
+		At column 5, line 6, source module ##IN_TEST_PATH##/inref/donargl.m
+%YDB-W-DONOBLOCK, Argumentless DO not followed by a block
+		. d
+		   ^-----
+		At column 5, line 10, source module ##IN_TEST_PATH##/inref/donargl.m
+%YDB-W-DONOBLOCK, Argumentless DO not followed by a block
+		d
+		 ^-----
+		At column 3, line 14, source module ##IN_TEST_PATH##/inref/donargl.m
+%YDB-W-DONOBLOCK, Argumentless DO not followed by a block
+
+PASS from donargl
+YDB>
+do ^extgot1
+
+PASS from extgot1
+YDB>
+do ^newpara
+
+PASS from newpara
+YDB>
+do ^qt
+
+PASS from qt
+YDB>
+do ^undefi
+
+PASS from undefi
+YDB>
+do ^zgonolab
+
+PASS from zgonolab
+YDB>
+do ^zlirout
+
+PASS from zlirout
+YDB>
+do ^zstfor1
+
+PASS from zstfor1
+YDB>
+do ^compstress
+
+YDB>
+do ^compstrsA
+compstrsA.m started
+PASS
+
+YDB>
+do ^compstrsB
+compstrsB.m started
+PASS
+
+YDB>
+do ^C9L06003432
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

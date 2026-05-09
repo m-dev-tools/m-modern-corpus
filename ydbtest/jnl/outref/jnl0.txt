@@ -1,0 +1,76 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+myjnl0.gld
+Using: ##SOURCE_PATH##/mupip
+myjnl0.dat
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+myjnl0.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+myjnl0.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##SUSPEND_OUTPUT  REPLIC
+##ALLOW_OUTPUT  NON_REPLIC
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/myjnl0.mjl created for database file ##TEST_PATH##/myjnl0.dat with BEFORE_IMAGES
+%YDB-W-JNLBUFFDBUPD, Journal file buffer size for database file ##TEST_PATH##/myjnl0.dat has been adjusted from 2308 to 2312.
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/myjnl0.dat is now ON
+##ALLOW_OUTPUT  REPLIC
+
+YDB>
+d in0^jdbfill("kill")
+kill PASS
+d in1^jdbfill("set")
+set PASS
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+##SUSPEND_OUTPUT  REPLIC
+##ALLOW_OUTPUT  NON_REPLIC
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+
+YDB>
+d in0^jdbfill("ver")
+ver PASS
+
+YDB>
+d in1^jdbfill("ver")
+ver PASS
+
+YDB>
+h
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+##ALLOW_OUTPUT  REPLIC
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+
+YDB>
+d in0^jdbfill("ver")
+ver PASS
+
+YDB>
+d in1^jdbfill("ver")
+ver PASS
+
+YDB>
+h
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

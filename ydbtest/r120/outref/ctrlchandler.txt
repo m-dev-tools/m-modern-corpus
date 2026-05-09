@@ -1,0 +1,87 @@
+# Test that Device exception handlers are dispatched when Ctrl-C is entered
+spawn /usr/local/bin/tcsh -f
+> stty cols 132
+> set shellprompt=SHELL
+> set prompt=$shellprompt
+SHELLsetenv term_env `tty`; echo $term_env > term_env.txt
+SHELL$gtm_dist/mumps -run ctrlchandler CENABLE
+Invoking mumps with $zcmdline = CENABLE
+Hit ^C now
+^CMade it to ctrl-C handler
+%YDB-I-BREAK, Break instruction encountered
+		At M source location gotctrlc+2^ctrlchandler
+
+YDB>zshow "S"
+gotctrlc+2^ctrlchandler    (Direct mode) 
++21^ctrlchandler    (Device Error)
+
+YDB>halt
+SHELL$gtm_dist/mumps -direct
+
+YDB>write "Invoking mumps with $zcmdline=""""",!
+Invoking mumps with $zcmdline=""
+
+YDB>set savelvl=$zlevel set $etrap="do etraperror^ctrlchandler"
+
+YDB>use $Principal:(CTRAP=$char(3):exception="do gotctrlc^ctrlchandler":CENABLE)
+
+YDB>write "Hit ^C now",!  hang 15
+Hit ^C now
+^C%YDB-E-CTRAP, Character trap $C(3) encountered
+
+YDB>zshow "S"
++1^GTM$DMOD    (Direct mode) 
+
+YDB>set savelvl=$zlevel set $etrap="do etraperror^ctrlchandler"
+
+YDB>use $Principal:(CTRAP=$char(3):exception="do gotctrlc^ctrlchandler":CENABLE)
+
+YDB>write "Hit ^C now",!  hang 15
+Hit ^C now
+^C%YDB-E-CTRAP, Character trap $C(3) encountered
+
+YDB>zshow "S"
++1^GTM$DMOD    (Direct mode) 
+
+YDB>halt
+SHELL$gtm_dist/mumps -run ctrlchandler NOCENABLE
+Invoking mumps with $zcmdline = NOCENABLE
+Hit ^C now
+^CMade it to ctrl-C handler
+%YDB-I-BREAK, Break instruction encountered
+		At M source location gotctrlc+2^ctrlchandler
+
+YDB>zshow "S"
+gotctrlc+2^ctrlchandler    (Direct mode) 
++21^ctrlchandler    (Device Error)
+
+YDB>halt
+SHELL$gtm_dist/mumps -direct
+
+YDB>write "Invoking mumps with $zcmdline=""""",!
+Invoking mumps with $zcmdline=""
+
+YDB>set savelvl=$zlevel set $etrap="do etraperror^ctrlchandler"
+
+YDB>use $Principal:(CTRAP=$char(3):exception="do gotctrlc^ctrlchandler":NOCENABLE)
+
+YDB>write "Hit ^C now",!  hang 15
+Hit ^C now
+^C%YDB-E-CTRAP, Character trap $C(3) encountered
+
+YDB>zshow "S"
++1^GTM$DMOD    (Direct mode) 
+
+YDB>set savelvl=$zlevel set $etrap="do etraperror^ctrlchandler"
+
+YDB>use $Principal:(CTRAP=$char(3):exception="do gotctrlc^ctrlchandler":NOCENABLE)
+
+YDB>write "Hit ^C now",!  hang 15
+Hit ^C now
+^C%YDB-E-CTRAP, Character trap $C(3) encountered
+
+YDB>zshow "S"
++1^GTM$DMOD    (Direct mode) 
+
+YDB>halt
+SHELL

@@ -1,0 +1,583 @@
+///////////////////////////////////////////////////////////////////
+//                                                               //
+// Copyright (c) 2019-2026 YottaDB LLC. and/or its subsidiaries. //
+// All rights reserved.                                          //
+//                                                               //
+//      This source code contains the intellectual property      //
+//      of its copyright holder(s), and is made available        //
+//      under a license.  If you do not know the terms of        //
+//      the license, please stop and do not read further.        //
+//                                                               //
+///////////////////////////////////////////////////////////////////
+
+package main
+
+import (
+	"fmt"
+	"lang.yottadb.com/go/yottadb"
+	"log"
+	"math/rand"
+	"os"
+	"os/exec"
+	"strconv"
+	"sync"
+	"syscall"
+	"time"
+)
+
+// Constant definition(s)
+const tptoken uint64 = yottadb.NOTTP
+
+// Cleanup all child jobs in proc array
+func cleanup(proc []*exec.Cmd, wg *sync.WaitGroup) {
+	for _, toTerminate := range proc[1:] {
+		log.Println("Sending SIGTERM to PID ", toTerminate.Process.Pid)
+		err := toTerminate.Process.Signal(syscall.SIGTERM)
+		if err != nil {
+			log.Println("Failed to send SIGTERM to PID ", toTerminate.Process.Pid, ": ", err)
+		}
+	}
+
+	log.Println("Waiting for all child jobs to terminate")
+	wg.Wait()
+	return
+}
+
+// Golang implementation of imptp using multiple processes as workers (basically a translation of simplethreadapi_imptp.c). This file
+// contains the main routine that handles initialization and firing off of the workers after which time it exits leaving the workers
+// running. The imptpjobgo routine is what is run in each process. This could have been made into a single unified file but since golang
+// requires driving an exec() that executes something and reinitializes the process (unlike the C versions do), we have split imptp.m
+// functionality into two pieces rather than having some super secret argument to indicate a separate process is being initialited and
+// bypassing all the main routine's initialization stuff like how threeenp1C2 was written.
+
+// You can build this from the YDBTest/com directory as follows:
+//	go work init; go work use imp
+//	go build imptpgo.go && go build impjobgo.go
+
+// Main routine for imptp. Generally speaking, we are using the Easy API in this main routine since most accesses are one-off with no
+// looping to speak of but will use SimpleAPI (threaded) in the actual workers we create (impjobgo) where looping is prevalent.
+func main() {
+	var valint, valint2, secs, istp, tpnoiso, dupset int32
+	var valint64 int64
+	var dataval uint32
+	var valstr string
+	var err error
+	var i int
+	var pidstr, childstr string
+	var stdoutp, stderrp *os.File
+	var gblprefix = []string{"a", "b", "c", "d", "e", "f", "g", "h"}
+	var errstr yottadb.BufferT
+
+	defer yottadb.Exit() // Needed to assure proper cleanup
+	defer errstr.Free()
+
+	log.SetFlags(log.Lshortfile)
+	log.SetFlags(0)                  // turn off date prefix on log messages
+	log.SetOutput(os.Stdout)         // Could leave as Stderr but move to Stdout since M code prints messages to Stdout anyway
+
+	errstr.Alloc(yottadb.YDB_MAX_ERRORMSG)
+	processID := os.Getpid()
+	// Initialize random number generator seed
+	rand.Seed(time.Now().UnixNano())
+	// Implement M code
+	//
+	// MCode: set jobcnt=$$jobcnt
+	valstr = os.Getenv("gtm_test_jobcnt")
+	if "" != valstr {
+		valint64, err = strconv.ParseInt(valstr, 10, 32)
+		CheckErrorReturn(err) // Only panic-able errors should hit here
+		valint = int32(valint64)
+	} else {
+		valint = 0
+	}
+	if 0 == valint {
+		valint = 5
+	}
+	jobcnt := valint
+	log.Println("jobcnt =", jobcnt)
+	jobcntstr := fmt.Sprintf("%d", jobcnt)
+	err = yottadb.SetValE(tptoken, &errstr, jobcntstr, "jobcnt", []string{})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// Implement M entryref : imptp^imptp
+	//
+	// MCode: write "Start Time of parent:",$ZD($H,"DD-MON-YEAR 24:60:SS"),!
+	log.Println("Start time of parent:", time.Now().Format("02-Jan-2006 03:04:05.000"))
+	// MCode: write "$zro=",$zro,!
+	zro, err := yottadb.ValE(tptoken, &errstr, "$zroutines", []string{})
+	if CheckErrorReturn(err) {
+		return
+	}
+	log.Printf("$zro=%s\n", zro)
+	// MCode: write "PID: ",$job,!,"In hex: ",$$FUNC^%DH($job),!
+	log.Printf("PID: %d\nIn hex: %x\n", processID, processID)
+
+	// Start processing test system parameters
+	//
+	// istp = 0 non-tp
+	// istp = 1 TP
+	// istp = 2 ZTP
+	//
+	// MCode: set fillid=+$ztrnlnm("gtm_test_dbfillid")
+	valstr = os.Getenv("gtm_test_dbfillid")
+	if "" != valstr {
+		valint64, err = strconv.ParseInt(valstr, 10, 32)
+		CheckErrorReturn(err) // Only panic-able errors should hit here
+		valint = int32(valint64)
+	} else {
+		valint = 0
+	}
+	fillid := valint
+	fillidstr := fmt.Sprintf("%d", fillid)
+	err = yottadb.SetValE(tptoken, &errstr, fillidstr, "fillid", []string{})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: if $ztrnlnm("gtm_test_tp")="NON_TP"  do
+	// MCode: . set istp=0
+	// MCode: . write "It is Non-TP",!
+	// MCode: else  do
+	// MCode: . if $ztrnlnm("gtm_test_dbfill")="IMPZTP" set istp=2  write "It is ZTP",!
+	// MCode: . else  set istp=1  write "It is TP",!
+	// MCode: set ^%imptp(fillid,"istp")=istp
+	valstr = os.Getenv("gtm_test_tp")
+	if "NON_TP" == valstr {
+		istp = 0
+		log.Println("It is Non-TP")
+	} else {
+		valstr = os.Getenv("gtm_test_dbfill")
+		if ("" != valstr) && ("IMPZTP" == valstr) {
+			istp = 2
+			log.Println("It is ZTP")
+			panic("Cannot simulate ZTP with SimpleAPI - should not be using this imptp flavor")
+		} else {
+			istp = 1
+			log.Println("It is TP")
+		}
+	}
+	istpstr := fmt.Sprintf("%d", istp)
+	err = yottadb.SetValE(tptoken, &errstr, istpstr, "istp", []string{}) // set local istp
+	if CheckErrorReturn(err) {
+		return
+	}
+	err = yottadb.SetValE(tptoken, &errstr, istpstr, "^%imptp", []string{fillidstr, "istp"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: if $ztrnlnm("gtm_test_tptype")="ONLINE" set ^%imptp(fillid,"tptype")="ONLINE"
+	// MCode: else  set ^%imptp(fillid,"tptype")="BATCH"
+	valstr = os.Getenv("gtm_test_tptype")
+	if ("" != valstr) && ("ONLINE" == valstr) {
+		err = yottadb.SetValE(tptoken, &errstr, "ONLINE", "^%imptp", []string{fillidstr, "tptype"})
+	} else {
+		err = yottadb.SetValE(tptoken, &errstr, "BATCH", "^%imptp", []string{fillidstr, "tptype"})
+	}
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: ; Randomly 50% time use noisolation for TP if gtm_test_noisolation not defined, and only if not already set.
+	// MCode: if '$data(^%imptp(fillid,"tpnoiso")) do
+	// MCode: .  if (istp=1)&(($ztrnlnm("gtm_test_noisolation")="TPNOISO")!($random(2)=1)) set ^%imptp(fillid,"tpnoiso")=1
+	// MCode: .  else  set ^%imptp(fillid,"tpnoiso")=0
+	dataval, err = yottadb.DataE(tptoken, &errstr, "^%imptp", []string{fillidstr, "tpnoiso"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	if 0 == dataval {
+		tpnoiso = 0
+		if 1 == istp {
+			valstr = os.Getenv("gtm_test_noisolation")
+			if (("" != valstr) && ("TPNOISO" == valstr)) || (1 == int(rand.Float64()*2)) {
+				tpnoiso = 1
+			}
+		}
+		err = yottadb.SetValE(tptoken, &errstr, fmt.Sprintf("%d", tpnoiso), "^%imptp", []string{fillidstr, "tpnoiso"})
+		if CheckErrorReturn(err) {
+			return
+		}
+	}
+	// MCode: ; Randomly 50% time use optimization for redundant sets, only if not already set.
+	// MCode: if '$data(^%imptp(fillid,"dupset")) do
+	// MCode: .  if ($random(2)=1) set ^%imptp(fillid,"dupset")=1
+	// MCode: .  else  set ^%imptp(fillid,"dupset")=
+	dataval, err = yottadb.DataE(tptoken, &errstr, "^%imptp", []string{fillidstr, "dupset"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	if 0 == dataval {
+		dupset = int32(rand.Float64() * 2)
+		err = yottadb.SetValE(tptoken, &errstr, fmt.Sprintf("%d", dupset), "^%imptp", []string{fillidstr, "dupset"})
+		if CheckErrorReturn(err) {
+			return
+		}
+	}
+	// MCode: set ^%imptp(fillid,"crash")=+$ztrnlnm("gtm_test_crash")
+	valstr = os.Getenv("gtm_test_crash")
+	if "" != valstr {
+		valint64, err = strconv.ParseInt(valstr, 10, 32)
+		CheckErrorReturn(err) // Only panic-able errors should hit here
+		valint = int32(valint64)
+	} else {
+		valint = 0
+	}
+	crash := valint
+	err = yottadb.SetValE(tptoken, &errstr, fmt.Sprintf("%d", crash), "^%imptp", []string{fillidstr, "crash"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^%imptp(fillid,"gtcm")=+$ztrnlnm("gtm_test_is_gtcm")
+	valstr = os.Getenv("gtm_test_is_gtcm")
+	if "" != valstr {
+		valint64, err = strconv.ParseInt(valstr, 10, 32)
+		CheckErrorReturn(err) // Only panic-able errors should hit here
+		valint = int32(valint64)
+	} else {
+		valint = 0
+	}
+	isgtcm := valint
+	err = yottadb.SetValE(tptoken, &errstr, fmt.Sprintf("%d", isgtcm), "^%imptp", []string{fillidstr, "gtcm"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^%imptp(fillid,"skipreg")=+$ztrnlnm("gtm_test_repl_norepl")	; How many regions to skip dbfill
+	valstr = os.Getenv("gtm_test_repl_norepl")
+	if "" != valstr {
+		valint64, err = strconv.ParseInt(valstr, 10, 32)
+		CheckErrorReturn(err) // Only panic-able errors should hit here
+		valint = int32(valint64)
+	} else {
+		valint = 0
+	}
+	replnorepl := valint
+	err = yottadb.SetValE(tptoken, &errstr, fmt.Sprintf("%d", replnorepl), "^%imptp", []string{fillidstr, "skipreg"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set jobid=+$ztrnlnm("gtm_test_jobid")
+	valstr = os.Getenv("gtm_test_jobid")
+	if "" != valstr {
+		valint64, err = strconv.ParseInt(valstr, 10, 32)
+		CheckErrorReturn(err) // Only panic-able errors should hit here
+		valint = int32(valint64)
+	} else {
+		valint = 0
+	}
+	jobid := valint
+	jobidstr := fmt.Sprintf("%d", jobid)
+	err = yottadb.SetValE(tptoken, &errstr, jobidstr, "jobid", []string{})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^%imptp("fillid",jobid)=fillid
+	err = yottadb.SetValE(tptoken, &errstr, fillidstr, "^%imptp", []string{"fillid", jobidstr})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// Throughout this C program small portions of code are implemented using call-ins (instead of SimpleAPI/SimpleThreadAPI)
+	// because either it is not possible to migrate or because it is easier to keep it as is (no benefit of extra
+	// test coverage for SimpleAPI/SimpleThreadAPI).
+	//
+	// MCode: ; Grab the key and record size from DSE
+	// MCode: do get^datinfo("^%imptp("_fillid_")")
+	_, err = yottadb.CallMT(tptoken, &errstr, 0, "getdatinfo")
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^%imptp(fillid,"gtm_test_spannode")=+$ztrnlnm("gtm_test_spannode")
+	valstr = os.Getenv("gtm_test_spannode")
+	if "" != valstr {
+		valint64, err = strconv.ParseInt(valstr, 10, 32)
+		CheckErrorReturn(err) // Only panic-able errors should hit here
+		valint = int32(valint64)
+	} else {
+		valint = 0
+	}
+	spannode := valint
+	err = yottadb.SetValE(tptoken, &errstr, fmt.Sprintf("%d", spannode), "^%imptp", []string{fillidstr, "gtm_test_spannode"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: ; if triggers are installed, the following will invoke the trigger
+	// MCode: ; for ^%imptp(fillid,"trigger") defined in test/com_u/imptp.trg and set
+	// MCode: ; ^%imptp(fillid,"trigger") to 1
+	// MCode: set ^%imptp(fillid,"trigger")=0
+	err = yottadb.SetValE(tptoken, &errstr, "0", "^%imptp", []string{fillidstr, "trigger"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: if $DATA(^%imptp(fillid,"totaljob"))=0 set ^%imptp(fillid,"totaljob")=jobcnt
+	// MCode: else  if ^%imptp(fillid,"totaljob")'=jobcnt  write "IMPTP-E-MISMATCH: Job number mismatch",!  zwrite ^%imptp  h
+	dataval, err = yottadb.DataE(tptoken, &errstr, "^%imptp", []string{fillidstr, "totaljob"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	if 0 == dataval {
+		err = yottadb.SetValE(tptoken, &errstr, jobcntstr, "^%imptp", []string{fillidstr, "totaljob"})
+		if CheckErrorReturn(err) {
+			return
+		}
+	} else {
+		valstr, err = yottadb.ValE(tptoken, &errstr, "^%imptp", []string{fillidstr, "totaljob"})
+		if CheckErrorReturn(err) {
+			return
+		}
+		valint64, err = strconv.ParseInt(valstr, 10, 32)
+		CheckErrorReturn(err) // Only panic-able errors should hit here
+		valint = int32(valint64)
+		if valint != jobcnt {
+			log.Printf("IMPTP-E-MISMATCH: Job number mismatch : ^%%imptp(fillid,totaljob) = %d : jobcnt = %d\n",
+				valint, jobcnt)
+			os.Exit(-1)
+		}
+	}
+	// MCode: ;
+	// MCode: ; End of processing test system paramters
+	// MCode: ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	// MCode: ;
+	// MCode: ;   This program fills database randomly using primitive root of a field.
+	// MCode: ;   Say, w is the primitive root and we have 5 jobs
+	// MCode: ;   Job 1 : Sets index w^0, w^5, w^10 etc.
+	// MCode: ;   Job 2 : Sets index w^1, w^6, w^11 etc.
+	// MCode: ;   Job 3 : Sets index w^2, w^7, w^12 etc.
+	// MCode: ;   Job 4 : Sets index w^3, w^8, w^13 etc.
+	// MCode: ;   Job 5 : Sets index w^4, w^9, w^14 etc.
+	// MCode: ;   In above example nroot = w^5
+	// MCode: ;   In above example root =  w
+	// MCode: ;   Precalculate primitive root for a prime and set them here
+	//
+	// MCode: set ^%imptp(fillid,"prime")=50000017	;Precalculated
+	err = yottadb.SetValE(tptoken, &errstr, "50000017", "^%imptp", []string{fillidstr, "prime"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^%imptp(fillid,"root")=5          ;Precalculated
+	err = yottadb.SetValE(tptoken, &errstr, "5", "^%imptp", []string{fillidstr, "root"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^endloop(fillid)=0	;To stop infinite loop
+	err = yottadb.SetValE(tptoken, &errstr, "0", "^endloop", []string{fillidstr})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: if $data(^cntloop(fillid))=0 set ^cntloop(fillid)=0	; Initialize before attempting $incr in child
+	dataval, err = yottadb.DataE(tptoken, &errstr, "^cntloop", []string{fillidstr})
+	if CheckErrorReturn(err) {
+		return
+	}
+	if 0 == dataval {
+		err = yottadb.SetValE(tptoken, &errstr, "0", "^cntloop", []string{fillidstr})
+		if CheckErrorReturn(err) {
+			return
+		}
+	}
+	// MCode: if $data(^cntseq(fillid))=0 set ^cntseq(fillid)=0	; Initialize before attempting $incr in child
+	dataval, err = yottadb.DataE(tptoken, &errstr, "^cntseq", []string{fillidstr})
+	if CheckErrorReturn(err) {
+		return
+	}
+	if 0 == dataval {
+		err = yottadb.SetValE(tptoken, &errstr, "0", "^cntseq", []string{fillidstr})
+		if CheckErrorReturn(err) {
+			return
+		}
+	}
+	// MCode: set ^%imptp(fillid,"jsyncnt")=0	; To count number of processes that are ready to be killed by crash scripts
+	err = yottadb.SetValE(tptoken, &errstr, "0", "^%imptp", []string{fillidstr, "jsyncnt"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: ; If test is running with gtm_test_spanreg'=0, we want to make sure the// MCode:xarr global variables continue to
+	// MCode: ; cover ALL regions involved in the updates as this is relied upon in Stage 11 of imptp updates.
+	// MCode: ; See <GTM_2168_imptp_dbcheck_verification_fail> for details. An easy way to achieve this is by
+	// MCode: ; unconditionally (gtm_test_spanreg is 0 or not) excluding all these globals from random mapping to multiple regions.
+	//
+	// MCode: set gblprefix="abcdefgh"
+	// MCode: for i=1:1:$length(gblprefix) set ^%sprgdeExcludeGbllist($extract(gblprefix,i)_"ndxarr")=""
+	for i = 0; i < len(gblprefix); i++ {
+		err = yottadb.SetValE(tptoken, &errstr, "", "^%sprgdeExcludeGbllist", []string{gblprefix[i] + "ndxarr"})
+		if CheckErrorReturn(err) {
+			return
+		}
+	}
+	// MCode: Before forking off children, make sure all buffered IO is flushed out (or else the children would inherit
+	// MCode: the unflushed buffers and will show up duplicated in the children's stdout/stderr.
+	// CCode: fflush(NULL);
+	// ** Note this flush is not done in Golang because os.Stdout is not buffered.
+	//
+	// MCode: Since "jmaxwait" local variable (in com/imptp.m) is undefined at this point, the caller
+	// MCode: will invoke "endtp.csh" later to wait for the children to die. Therefore set ^%jobwait global
+	// MCode: to point to those pids.
+	//
+	// MCode: set ^%jobwait(jobid,"njobs")=njobs   ; Taken from com/job.m
+	err = yottadb.SetValE(tptoken, &errstr, jobcntstr, "^%jobwait", []string{jobidstr, "njobs"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^%jobwait(jobid,"jmaxwait")=7200 ; Taken from com/job.m
+	err = yottadb.SetValE(tptoken, &errstr, "7200", "^%jobwait", []string{jobidstr, "jmaxwait"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^%jobwait(jobid,"jdefwait")=7200 ; Taken from com/job.m
+	err = yottadb.SetValE(tptoken, &errstr, "7200", "^%jobwait", []string{jobidstr, "jdefwait"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^%jobwait(jobid,"jprint")=0      ; Taken from com/job.m
+	err = yottadb.SetValE(tptoken, &errstr, "0", "^%jobwait", []string{jobidstr, "jprint"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^%jobwait(jobid,"jroutine")="impjob_imptp" ; Taken from com/job.m
+	err = yottadb.SetValE(tptoken, &errstr, "impjob_imptp", "^%jobwait", []string{jobidstr, "jroutine"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^%jobwait(jobid,"jmjoname")="impjob_imptp" ; Taken from com/job.m
+	err = yottadb.SetValE(tptoken, &errstr, "impjob_imptp", "^%jobwait", []string{jobidstr, "jmjoname"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: set ^%jobwait(jobid,"jnoerrchk")="0" ; Taken from com/job.m
+	err = yottadb.SetValE(tptoken, &errstr, "0", "^%jobwait", []string{jobidstr, "jnoerrchk"})
+	if CheckErrorReturn(err) {
+		return
+	}
+	// Note - this golang version won't be calling ydb_child_init() on its own - let that part of the testing rest with the
+	//        C version of this routine.
+	//
+	// MCode: do ^job("impjob^imptp",jobcnt,"""""")	; Taken from com/imptp.m
+	// For golang, we create this proc array but index it starting at 1 so make the array one larger than it needs to be
+	var wg sync.WaitGroup // Later used to wait for all spawned processes to exit in case of error
+	var procDied = false  // Flag to track whether a process has died prematurely
+	proc := make([]*exec.Cmd, jobcnt+1, jobcnt+1)
+	for child := int32(1); child <= jobcnt; child++ {
+		childstr = fmt.Sprintf("%d", child)
+		dir, _ := os.Getwd()
+		proc[child] = exec.Command(dir+"/impjobgo", childstr)
+		// We have the command we want to fork off but setup its stdout/stderr to go directly to output files
+		stdoutp, err = os.Create("./impjob_imptp" + jobidstr + ".mjo" + childstr) // should be gjo/gje but easier for testsystem this way
+		if CheckErrorReturn(err) {
+			return
+		}
+		proc[child].Stdout = stdoutp
+		defer stdoutp.Close()
+		stderrp, err = os.Create("./impjob_imptp" + jobidstr + ".mje" + childstr)
+		if CheckErrorReturn(err) {
+			return
+		}
+		proc[child].Stderr = stderrp
+		defer stderrp.Close()
+		err = proc[child].Start() // Start new process
+		if CheckErrorReturn(err) {
+			return
+		}
+		wg.Add(1)
+		go func(cmd *exec.Cmd, wg *sync.WaitGroup) {
+			defer wg.Done()
+			// Wait for process to die, ensuring graceful exit even in case of unexpected termination
+			result, err := cmd.Process.Wait()
+			if err != nil {
+				if result.ExitCode() != 0 {
+					procDied = true
+				}
+				log.Println("TEST-E-imptpgo: ", err)
+				return
+			}
+		}(proc[child], &wg)
+		// MCode: [for i=1:1:njobs]  set ^(i)=jobindex(i)	: com/job.m
+		pidstr = fmt.Sprintf("%d", proc[child].Process.Pid)
+		err = yottadb.SetValE(tptoken, &errstr, pidstr, "^%jobwait", []string{jobidstr, childstr})
+		if CheckErrorReturn(err) {
+			return
+		}
+		err = yottadb.SetValE(tptoken, &errstr, pidstr, "jobindex", []string{childstr})
+		if CheckErrorReturn(err) {
+			return
+		}
+	}
+	// MCode: do writecrashfileifneeded			: com/job.m
+	_, err = yottadb.CallMT(tptoken, &errstr, 0, "writecrashfileifneeded")
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: do writejobinfofileifneeded			: com/job.m
+	_, err = yottadb.CallMT(tptoken, &errstr, 0, "writejobinfofileifneeded")
+	if CheckErrorReturn(err) {
+		return
+	}
+	// MCode: ; Wait until the first update on all regions happen
+	// MCode: set start=$horolog
+	// MCode: for  set stop=$horolog quit:^cntloop(fillid)  quit:($$^difftime(stop,start)>300)  hang 1
+	// MCode: write:$$^difftime(stop,start)>300 "TEST-W-FIRSTUPD None of the jobs completed its first update across all the regions after 5 minutes!",!
+	for secs = 0; 300 > secs; secs++ {
+		valstr, err = yottadb.ValE(tptoken, &errstr, "^cntloop", []string{fillidstr})
+		if CheckErrorReturn(err) {
+			return
+		}
+		valint64, err = strconv.ParseInt(valstr, 10, 32)
+		CheckErrorReturn(err) // Only panic-able errors should hit here
+		valint = int32(valint64)
+		if 0 != valint {
+			break
+		}
+		time.Sleep(1 * time.Second)
+	}
+	if 300 == secs {
+		log.Println("TEST-W-FIRSTUPD None of the jobs completed its first update across all the regions after 5 minutes!")
+	}
+	// MCode: ; Wait for all M child processes to start and reach a point when it is safe to simulate crash
+	// MCode: set timeout=600	; 10 minutes to start and reach the sync point for kill
+	// MCode: for i=1:1:600 hang 1 quit:^%imptp(fillid,"jsyncnt")=^%imptp(fillid,"totaljob")
+	// MCode: if ^%imptp(fillid,"jsyncnt")<^%imptp(fillid,"totaljob") do
+	// MCode: . write "TEST-E-imptp.m time out for jobs to start and synch after ",timeout," seconds",!
+	// MCode: . zwrite ^%imptp
+	for secs = 0; 600 > secs; secs++ {
+		// Confirm all child processes are still alive. If not, do not wait for the timeout to exit,
+		// since the test will already have unexpectedly failed in that case and continuing this loop could
+		// cause the disk to fill up needless on fast systems.
+		// Child processes have been observed to terminate due to segmentation faults in some CLANG + ASAN builds.
+		// See https://gitlab.com/YottaDB/DB/YDBTest/-/work_items/910 for additional information.
+		if procDied {
+			log.Println("TEST-E-imptpgo child job terminated prematurely")
+			// Terminate any child jobs that are still running before exiting
+			cleanup(proc, &wg)
+			return
+		}
+		valstr, err = yottadb.ValE(tptoken, &errstr, "^%imptp", []string{fillidstr, "jsyncnt"})
+		if CheckErrorReturn(err) {
+			return
+		}
+		valint64, err = strconv.ParseInt(valstr, 10, 32)
+		CheckErrorReturn(err) // Only panic-able errors should hit here
+		valint = int32(valint64)
+		valstr, err = yottadb.ValE(tptoken, &errstr, "^%imptp", []string{fillidstr, "totaljob"})
+		if CheckErrorReturn(err) {
+			return
+		}
+		valint64, err = strconv.ParseInt(valstr, 10, 32)
+		CheckErrorReturn(err) // Only panic-able errors should hit here
+		valint2 = int32(valint64)
+		if valint2 == valint {
+			break
+		}
+		time.Sleep(1 * time.Second)
+	}
+	if valint < valint2 {
+		log.Println("TEST-E-imptp.m time out for jobs to start and synch after 600 seconds")
+		cleanup(proc, &wg)
+	}
+	// No need to run writeinfofileifneeded^imptp for online rollback which is disabled.
+	// This is because imptp.m transfers control to an M label orlbkres^imptp, etc. for online
+	// rollbacks which is not straightforward with API wrapper. See similar comment in imptp.csh.
+	valstr = os.Getenv("gtm_test_onlinerollback")
+	if "TRUE" == valstr {
+		panic("TEST-F-NOONLINEROLLBACK Online rollback cannot be supported with the Simple[Thread]API")
+	}
+	// MCode: write "End   Time of parent:",$ZD($H,"DD-MON-YEAR 24:60:SS"),!
+	log.Println("End   Time of parent:", time.Now().Format("02-Jan-2006 03:04:05.000"))
+	// MCode: quit
+	return
+}

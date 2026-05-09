@@ -1,0 +1,130 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+Create some *-only blocks
+-------------------------------------------------------------
+                             root                            
+      *              *               *               *       
+ reorgvar(77) : reorgvar(177) : reorgvar(266) : reorgvar(267)
+-------------------------------------------------------------
+Fill Factor:: Index blocks 100%: Data blocks 100%
+##SUSPEND_OUTPUT PRO
+GTMPOOLLIMIT used for mupip reorg : ##FILTERED##
+##ALLOW_OUTPUT PRO
+   
+Global: reorgvar (region DEFAULT)
+Blocks processed    : 6 
+Blocks coalesced    : 2 
+Blocks split        : 0 
+Blocks swapped      : 1 
+Blocks freed        : 3 
+Blocks reused       : 1 
+Blocks extended     : 0 
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+##TEST_AWKDirectory           2               2           [0]....            NA
+Index               1               1           0.683             1
+Data                1               4          98.071             1
+Free               96              NA              NA            NA
+Total             100               7              NA             2
+
+YDB>
+1111
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+--------------------------------------------------------------
+                             root                             
+   non-*              *               *               *       
+reorgvar(1:77) : reorgvar(177) : reorgvar(266) : reorgvar(267)
+--------------------------------------------------------------
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+Fill Factor:: Index blocks 100%: Data blocks 100%
+##SUSPEND_OUTPUT PRO
+GTMPOOLLIMIT used for mupip reorg : ##FILTERED##
+##ALLOW_OUTPUT PRO
+   
+Global: reorgvar (region DEFAULT)
+Blocks processed    : 24 
+Blocks coalesced    : 21 
+Blocks split        : 0 
+Blocks swapped      : 10 
+Blocks freed        : 2 
+Blocks reused       : 1 
+Blocks extended     : 0 
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+##TEST_AWKDirectory           2               2           [0]....            NA
+Index               1              21           8.325             1
+Data               21              81          94.526            21
+Free               76              NA              NA            NA
+Total             100             104              NA            22
+
+YDB>
+1111
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+--------------------------------------------------------------
+                             root                             
+   *              non-*               *               *       
+reorgvar(77) :reorgvar(110:177) : reorgvar(266) : reorgvar(267)
+--------------------------------------------------------------
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+Fill Factor:: Index blocks 100%: Data blocks 100%
+##SUSPEND_OUTPUT PRO
+GTMPOOLLIMIT used for mupip reorg : ##FILTERED##
+##ALLOW_OUTPUT PRO
+   
+Global: reorgvar (region DEFAULT)
+Blocks processed    : 21 
+Blocks coalesced    : 18 
+Blocks split        : 0 
+Blocks swapped      : 10 
+Blocks freed        : 3 
+Blocks reused       : 2 
+Blocks extended     : 0 
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+##TEST_AWKDirectory           2               2           [0]....            NA
+Index               1              18           7.250             1
+Data               18              71          96.671            18
+Free               79              NA              NA            NA
+Total             100              91              NA            19
+
+YDB>
+1111
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

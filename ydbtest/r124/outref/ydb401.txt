@@ -1,0 +1,22 @@
+## Test that a call-in successfully invokes an external call that uses Simple API ##
+# Should avoid a SIG-11 error and return the variable rc as 0
+
+# Automates haisenbug test which can be found at:
+https://gitlab.com/YottaDB/DB/YDB/issues/401 or https://github.com/YottaDB/YDB/issues/351
+
+# Copy relevant files
+# Running the make file
+##TEST_PATH##/ydb401
+Call-in to echo()
+##TEST_AWKzyre=YottaDB .* Linux .*
+echo(): 150373850,echo+2^ydb401,%YDB-E-LVUNDEF, Undefined local variable: c
+Call-in to test1()
+test1(): 150373850,test1+1^ydb401,%YDB-E-LVUNDEF, Undefined local variable: v
+Call-in to call()
+-- zwr shows rc=0 --
+rc=0
+result="ok"
+-- $g(rc) --
+rc=0
+-- accessing rc --
+rc=0

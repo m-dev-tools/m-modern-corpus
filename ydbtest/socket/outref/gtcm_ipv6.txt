@@ -1,0 +1,30 @@
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/server/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/server/mumps.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/server/mumps.dat created
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/client/mumps.gld
+
+GDE> 
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/client/mumps.gld
+
+YDB>
+
+YDB>
+
+YDB>
+Set from client
+
+YDB>
+%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+Check the databases on the GT.CM Servers...
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

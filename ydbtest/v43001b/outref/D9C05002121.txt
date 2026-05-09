@@ -1,0 +1,405 @@
+##TEST_PATH##
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+##TEST_PATH##/mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+mumps.dat
+##SUSPEND_OUTPUT NON_REPLIC
+##REMOTE_TEST_PATH##
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+##REMOTE_TEST_PATH##/mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+===================================================================
+Non-incremental backup is not supported to pipes and tcp:
+$MUPIP backup -nonew -o DEFAULT '"| gzip -c > mumpsbak.dat.gz"'
+%YDB-E-NOTRNDMACC, Only random access files are supported as backup files for non-incremental backup
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+$MUPIP backup -nonew -o -nettimeout=120 DEFAULT "tcp://`hostname`:6200"
+%YDB-E-NOTRNDMACC, Only random access files are supported as backup files for non-incremental backup
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+unset verbose
+Check D9C05002121a.log for more detailed info
+===================================================================
+The temporary file should go to /tmp for non-file backups:
+
+MUPIP INFO:   Temp file name: /tmp//DEFAULT_YYYY_ZZZZZZ
+
+TRANSACTION number is greater than or equal to current transaction,
+no blocks backed up from database ##TEST_PATH##/mumps.dat
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+===================================================================
+try a bad gtm_baktmpdir:
+%YDB-E-DIRACCESS, Do not have full access to directory for temporary files: junkdir
+%SYSTEM-E-ENO2, No such file or directory
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+===================================================================
+Try a relative pathname for mupip (mumps and mupip called from different directories):
+Give it some time...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if ( "ENCRYPT" == "$test_encryption" ) then
+
+##SUSPEND_OUTPUT  NON_ENCRYPT
+
+
+setenv gtmcrypt_config $PWD:h/gtmcrypt.cfg
+endif
+
+##ALLOW_OUTPUT  NON_ENCRYPT
+if ( ! -d bak ) mkdir bak
+if ( ! -d baktmp ) mkdir baktmp
+
+
+
+$MUPIP backup -nonew -o "*" ./bak -dbg > & backup1.logx
+$grep -vE '^$|cp --sparse=always' backup1.logx | sort -f
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/a.dat backed up in file ##TEST_PATH##/bak/bak/a.dat
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/b.dat backed up in file ##TEST_PATH##/bak/bak/b.dat
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/mumps.dat backed up in file ##TEST_PATH##/bak/bak/mumps.dat
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/bak//AREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/bak//BREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/bak//DEFAULT_YYYY_ZZZZZZ
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/AREG_YYYY_ZZZZZZa.dat' .*/bak/a.dat'
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/BREG_YYYY_ZZZZZZb.dat' .*/bak/b.dat'
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/DEFAULT_YYYY_ZZZZZZmumps.dat' .*/bak/mumps.dat'
+$MUPIP integ -noonline -reg "*" >> & integ.log
+ls ./bak/*
+./bak/a.dat
+./bak/b.dat
+./bak/mumps.dat
+rm ./bak/*
+$gtm_exe/mumps -run wait
+if ( $status ) then
+ls -l core*
+ls: No match.
+$MUPIP backup -nonew -o "*" ./bak -dbg -i > & backup2.logx
+$grep -vE '^$|cp --sparse=always' backup2.logx | sort -f
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/a.dat backed up in file ##TEST_PATH##/bak/bak/a.dat
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/b.dat backed up in file ##TEST_PATH##/bak/bak/b.dat
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+X blocks saved.
+X blocks saved.
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/bak//AREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/bak//BREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/bak//DEFAULT_YYYY_ZZZZZZ
+no blocks backed up from database ##TEST_PATH##/mumps.dat
+TRANSACTION number is greater than or equal to current transaction,
+$MUPIP integ -noonline -reg "*" >> & integ.log
+ls ./bak/*
+./bak/a.dat
+./bak/b.dat
+rm ./bak/*
+setenv gtm_baktmpdir `pwd`/baktmp
+echo "gtm_baktmpdir: $gtm_baktmpdir"
+gtm_baktmpdir: ##TEST_PATH##/bak/baktmp
+$MUPIP backup -nonew -o "*" ./bak -dbg > & backup3.logx
+$grep -vE '^$|cp --sparse=always' backup3.logx | sort -f
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/a.dat backed up in file ##TEST_PATH##/bak/bak/a.dat
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/b.dat backed up in file ##TEST_PATH##/bak/bak/b.dat
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/mumps.dat backed up in file ##TEST_PATH##/bak/bak/mumps.dat
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/baktmp/AREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/baktmp/BREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/baktmp/DEFAULT_YYYY_ZZZZZZ
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/AREG_YYYY_ZZZZZZa.dat' .*/bak/a.dat'
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/BREG_YYYY_ZZZZZZb.dat' .*/bak/b.dat'
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/DEFAULT_YYYY_ZZZZZZmumps.dat' .*/bak/mumps.dat'
+$MUPIP integ -noonline -reg "*" >> & integ.log
+ls ./bak/*
+./bak/a.dat
+./bak/b.dat
+./bak/mumps.dat
+rm ./bak/*
+$gtm_exe/mumps -run wait
+if ( $status ) then
+ls -l core*
+ls: No match.
+
+$MUPIP backup -nonew -o "*" ./bak -dbg -i > & backup4.logx
+$grep -vE '^$|cp --sparse=always' backup4.logx | sort -f
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/a.dat backed up in file ##TEST_PATH##/bak/bak/a.dat
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/b.dat backed up in file ##TEST_PATH##/bak/bak/b.dat
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+X blocks saved.
+X blocks saved.
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/baktmp/AREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/baktmp/BREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##TEST_PATH##/bak/baktmp/DEFAULT_YYYY_ZZZZZZ
+no blocks backed up from database ##TEST_PATH##/mumps.dat
+TRANSACTION number is greater than or equal to current transaction,
+$MUPIP integ -noonline -reg "*" >> & integ.log
+ls ./bak/*
+./bak/a.dat
+./bak/b.dat
+rm ./bak/*
+echo "==================================================================="
+===================================================================
+chmod 000 $gtm_baktmpdir
+echo "No read permissions for $gtm_baktmpdir."
+No read permissions for ##TEST_PATH##/bak/baktmp.
+$MUPIP backup -nonew -o "AREG" ./bak -dbg
+%YDB-E-DIRACCESS, Do not have full access to directory for temporary files: ##TEST_PATH##/bak/baktmp
+%SYSTEM-E-ENO13, Permission denied
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+$MUPIP integ -noonline -reg "*" >> & integ.log
+ls ./bak/*
+ls: No match.
+rm ./bak/*
+rm: No match.
+$gtm_exe/mumps -run wait
+if ( $status ) then
+ls -l core*
+ls: No match.
+$MUPIP backup -nonew -o "AREG" ./bak -dbg -i
+%YDB-E-DIRACCESS, Do not have full access to directory for temporary files: ##TEST_PATH##/bak/baktmp
+%SYSTEM-E-ENO13, Permission denied
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+$MUPIP integ -noonline -reg "*" >> & integ.log
+chmod 755 $gtm_baktmpdir
+##SUSPEND_OUTPUT NON_REPLIC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if ( "ENCRYPT" == "$test_encryption" ) then
+
+##SUSPEND_OUTPUT  NON_ENCRYPT
+
+
+setenv gtmcrypt_config $PWD:h/gtmcrypt.cfg
+endif
+
+##ALLOW_OUTPUT  NON_ENCRYPT
+if ( ! -d bak ) mkdir bak
+if ( ! -d baktmp ) mkdir baktmp
+
+
+
+$MUPIP backup -nonew -o "*" ./bak -dbg > & backup1.logx
+$grep -vE '^$|cp --sparse=always' backup1.logx | sort -f
+$MUPIP integ -noonline -reg "*" >> & integ.log
+ls ./bak/*
+rm ./bak/*
+$gtm_exe/mumps -run wait
+if ( $status ) then
+ls -l core*
+ls: No match.
+$MUPIP backup -nonew -o "*" ./bak -dbg -i > & backup2.logx
+$grep -vE '^$|cp --sparse=always' backup2.logx | sort -f
+$MUPIP integ -noonline -reg "*" >> & integ.log
+ls ./bak/*
+rm ./bak/*
+setenv gtm_baktmpdir `pwd`/baktmp
+echo "gtm_baktmpdir: $gtm_baktmpdir"
+$MUPIP backup -nonew -o "*" ./bak -dbg > & backup3.logx
+$grep -vE '^$|cp --sparse=always' backup3.logx | sort -f
+$MUPIP integ -noonline -reg "*" >> & integ.log
+ls ./bak/*
+rm ./bak/*
+$gtm_exe/mumps -run wait
+if ( $status ) then
+ls -l core*
+ls: No match.
+
+$MUPIP backup -nonew -o "*" ./bak -dbg -i > & backup4.logx
+$grep -vE '^$|cp --sparse=always' backup4.logx | sort -f
+$MUPIP integ -noonline -reg "*" >> & integ.log
+ls ./bak/*
+rm ./bak/*
+echo "==================================================================="
+chmod 000 $gtm_baktmpdir
+echo "No read permissions for $gtm_baktmpdir."
+$MUPIP backup -nonew -o "AREG" ./bak -dbg
+%YDB-E-DIRACCESS, Do not have full access to directory for temporary files: ##REMOTE_TEST_PATH##/bak/baktmp
+%SYSTEM-E-ENO13, Permission denied
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+$MUPIP integ -noonline -reg "*" >> & integ.log
+ls ./bak/*
+ls: No match.
+rm ./bak/*
+rm: No match.
+$gtm_exe/mumps -run wait
+if ( $status ) then
+ls -l core*
+ls: No match.
+$MUPIP backup -nonew -o "AREG" ./bak -dbg -i
+%YDB-E-DIRACCESS, Do not have full access to directory for temporary files: ##REMOTE_TEST_PATH##/bak/baktmp
+%SYSTEM-E-ENO13, Permission denied
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+$MUPIP integ -noonline -reg "*" >> & integ.log
+chmod 755 $gtm_baktmpdir
+And on the secondary side:
+%YDB-I-BACKUPDBFILE, DB file ##REMOTE_TEST_PATH##/a.dat backed up in file ##REMOTE_TEST_PATH##/bak/bak/a.dat
+%YDB-I-BACKUPDBFILE, DB file ##REMOTE_TEST_PATH##/b.dat backed up in file ##REMOTE_TEST_PATH##/bak/bak/b.dat
+%YDB-I-BACKUPDBFILE, DB file ##REMOTE_TEST_PATH##/mumps.dat backed up in file ##REMOTE_TEST_PATH##/bak/bak/mumps.dat
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/bak//AREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/bak//BREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/bak//DEFAULT_YYYY_ZZZZZZ
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/AREG_YYYY_ZZZZZZa.dat' .*/bak/a.dat'
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/BREG_YYYY_ZZZZZZb.dat' .*/bak/b.dat'
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/DEFAULT_YYYY_ZZZZZZmumps.dat' .*/bak/mumps.dat'
+./bak/a.dat
+./bak/b.dat
+./bak/mumps.dat
+%YDB-I-BACKUPDBFILE, DB file ##REMOTE_TEST_PATH##/a.dat backed up in file ##REMOTE_TEST_PATH##/bak/bak/a.dat
+%YDB-I-BACKUPDBFILE, DB file ##REMOTE_TEST_PATH##/b.dat backed up in file ##REMOTE_TEST_PATH##/bak/bak/b.dat
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+X blocks saved.
+X blocks saved.
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/bak//AREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/bak//BREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/bak//DEFAULT_YYYY_ZZZZZZ
+no blocks backed up from database ##REMOTE_TEST_PATH##/mumps.dat
+TRANSACTION number is greater than or equal to current transaction,
+./bak/a.dat
+./bak/b.dat
+gtm_baktmpdir: ##REMOTE_TEST_PATH##/bak/baktmp
+%YDB-I-BACKUPDBFILE, DB file ##REMOTE_TEST_PATH##/a.dat backed up in file ##REMOTE_TEST_PATH##/bak/bak/a.dat
+%YDB-I-BACKUPDBFILE, DB file ##REMOTE_TEST_PATH##/b.dat backed up in file ##REMOTE_TEST_PATH##/bak/bak/b.dat
+%YDB-I-BACKUPDBFILE, DB file ##REMOTE_TEST_PATH##/mumps.dat backed up in file ##REMOTE_TEST_PATH##/bak/bak/mumps.dat
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/baktmp/AREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/baktmp/BREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/baktmp/DEFAULT_YYYY_ZZZZZZ
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/AREG_YYYY_ZZZZZZa.dat' .*/bak/a.dat'
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/BREG_YYYY_ZZZZZZb.dat' .*/bak/b.dat'
+##TEST_AWKMUPIP INFO:   unalias -a; .*/mv .*/bak/DEFAULT_YYYY_ZZZZZZmumps.dat' .*/bak/mumps.dat'
+./bak/a.dat
+./bak/b.dat
+./bak/mumps.dat
+%YDB-I-BACKUPDBFILE, DB file ##REMOTE_TEST_PATH##/a.dat backed up in file ##REMOTE_TEST_PATH##/bak/bak/a.dat
+%YDB-I-BACKUPDBFILE, DB file ##REMOTE_TEST_PATH##/b.dat backed up in file ##REMOTE_TEST_PATH##/bak/bak/b.dat
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+%YDB-I-BACKUPTN, Transactions from XXXX to YYYY are backed up
+X blocks saved.
+X blocks saved.
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+##TEST_AWKMUPIP INFO:   Current Transaction # at end of backup is 0x.*
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/baktmp/AREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/baktmp/BREG_YYYY_ZZZZZZ
+MUPIP INFO:   Temp file name: ##REMOTE_TEST_PATH##/bak/baktmp/DEFAULT_YYYY_ZZZZZZ
+no blocks backed up from database ##REMOTE_TEST_PATH##/mumps.dat
+TRANSACTION number is greater than or equal to current transaction,
+./bak/a.dat
+./bak/b.dat
+===================================================================
+No read permissions for ##REMOTE_TEST_PATH##/bak/baktmp.
+##ALLOW_OUTPUT NON_REPLIC
+STOP issued to process XXXX
+===================================================================
+##SUSPEND_OUTPUT NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT NON_REPLIC
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##ALLOW_OUTPUT NON_REPLIC
+##SUSPEND_OUTPUT REPLIC
+##TEST_PATH##/mnset.out
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+##TEST_HOST_SHORT##:##TEST_PATH##/mnset.out
+##ALLOW_OUTPUT NON_REPLIC
+%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+##SUSPEND_OUTPUT REPLIC
+##TEST_PATH##/D9C05002121a.log
+##SUSPEND_OUTPUT NON_REPLIC
+##ALLOW_OUTPUT REPLIC
+##TEST_HOST_SHORT##:##TEST_PATH##/D9C05002121a.log
+##ALLOW_OUTPUT NON_REPLIC
+%YDB-E-DIRACCESS, Do not have full access to directory for temporary files: junkdir
+%SYSTEM-E-ENO2, No such file or directory
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+%YDB-E-DIRACCESS, Do not have full access to directory for temporary files: ##TEST_PATH##/bak/baktmp
+%SYSTEM-E-ENO13, Permission denied
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+%YDB-E-DIRACCESS, Do not have full access to directory for temporary files: ##TEST_PATH##/bak/baktmp
+%SYSTEM-E-ENO13, Permission denied
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+##SUSPEND_OUTPUT NON_REPLIC
+%YDB-E-DIRACCESS, Do not have full access to directory for temporary files: ##REMOTE_TEST_PATH##/bak/baktmp
+%SYSTEM-E-ENO13, Permission denied
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+%YDB-E-DIRACCESS, Do not have full access to directory for temporary files: ##REMOTE_TEST_PATH##/bak/baktmp
+%SYSTEM-E-ENO13, Permission denied
+%YDB-E-BACKUPFAIL, MUPIP cannot start backup with the above errors
+##ALLOW_OUTPUT NON_REPLIC

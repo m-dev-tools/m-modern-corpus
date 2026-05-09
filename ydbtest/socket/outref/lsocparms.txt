@@ -1,0 +1,9 @@
+ENTERING LOCAL SOCKET PARMS
+
+YDB>
+Testing NEWversion and DELETE
+Setting permission and group
+lsocparms.m done
+
+YDB>
+LEAVING LOCAL SOCKET PARMS

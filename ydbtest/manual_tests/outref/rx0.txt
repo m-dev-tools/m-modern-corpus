@@ -1,0 +1,6 @@
+
+YDB>
+PASS from rx0
+
+YDB>
+exit status: 0

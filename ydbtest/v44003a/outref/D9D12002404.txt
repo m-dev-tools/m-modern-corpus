@@ -1,0 +1,14 @@
+
+YDB>
+Testing D9D12-002404...
+
+YDB>
+##SUSPEND_OUTPUT HOST_LINUX_IX86 HOST_HP-UX_IA64
+%YDB-E-LABELMISSING, Label referenced but not defined: labundef
+##SUSPEND_OUTPUT HOST_ALL
+##ALLOW_OUTPUT HOST_LINUX_IX86 HOST_HP-UX_IA64
+%YDB-E-LABELUNKNOWN, Label referenced but not defined
+##ALLOW_OUTPUT HOST_ALL
+		At M source location gtmchk+5^gtmchk
+
+YDB>

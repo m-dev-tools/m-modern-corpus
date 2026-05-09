@@ -1,0 +1,23 @@
+From: Mir Layek Ali
+Sent: Tuesday, October 03, 2000 6:48 PM
+To: Greystone Group
+Subject: Scripts for simulating Crash
+
+Assume mumps.gld is the global directory and we have a.dat, b.dat, c.dat and mumps.dat only (no other *.dat in same directory). 
+
+
+This is what is done in UNIX:
+=====================
+Primary crash (may be in different order):
+    kill -9 active source  server process
+    kill -9 all GTM processes
+    ipc=$gtm_dist/mupip ftok *.dat  :				Then ipcrm -s  $ipc and ipcrm  -m $ipc
+    ipc=$gtm_dist/mupip ftok *.gld  :            		Then ipcrm -s  $ipc and ipcrm  -m $ipc
+
+Secondary crash (may be in different order):
+    kill -9 passive source server process
+    kill -9 receiver server process
+    kill -9 update process
+    ipc=$gtm_dist/mupip ftok *.dat   :				Then ipcrm -s  $ipc and ipcrm  -m $ipc
+    ipc=$gtm_dist/mupip ftok *.gld   :                 	    	Then ipcrm -s  $ipc and ipcrm  -m $ipc
+    ipc=$gtm_dist/mupip ftok -jnlpool -receivpool *.gld  :      Then ipcrm -s  $ipc and ipcrm  -m $ipc

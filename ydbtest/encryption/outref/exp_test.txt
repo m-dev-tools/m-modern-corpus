@@ -1,0 +1,51 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+YDB>
+
+YDB>
+******* Experiment #1: Verify that we cannot access the global in an encrypted file without password *******
+
+YDB>
+%YDB-E-CRYPTINIT, Could not initialize encryption library while opening encrypted file ##TEST_PATH##/mumps.dat. Environment variable ydb_passwd/gtm_passwd not set
+
+YDB>
+******* Experiment #2: Verify we can set gtm_passwd value after we are in GT.M *******
+
+YDB>
+%YDB-E-CRYPTINIT, Could not initialize encryption library while opening encrypted file ##TEST_PATH##/mumps.dat. Environment variable ydb_passwd/gtm_passwd not set
+
+YDB>
+
+YDB>
+THIS_VAR_IS_ENCRYPTED
+YDB>
+******* Experiment #3: Verify we can be prompted for password after we are in GT.M and access a global *******
+Experiment #3 passed.
+******* Experiment #4 Verify we can recover from a bad password by setting to a correct value after entering GT.M *******
+
+YDB>
+%YDB-E-CRYPTINIT, Could not initialize encryption library while opening encrypted file ##TEST_PATH##/mumps.dat. Environment variable ydb_passwd/gtm_passwd not set
+
+YDB>
+
+YDB>
+
+YDB>
+##TEST_AWK%YDB-E-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/mumps.dat. .*
+
+YDB>
+
+YDB>
+
+YDB>
+THIS_VAR_IS_ENCRYPTED
+YDB>
+******* Experiment #5 Verify we can recover from a bad password by setting gtm_passwd to NULL and by entering at the prompt *******
+Experiment #5 passed.
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

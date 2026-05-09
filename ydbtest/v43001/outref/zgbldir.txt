@@ -1,0 +1,66 @@
+Entering ZGBLDIR subtest
+
+YDB>
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/ddd.gld.  Retaining ##TEST_PATH##/mumps.gld.
+%SYSTEM-E-ENO2, No such file or directory
+
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: abc
+
+YDB>
+
+YDB>
+##TEST_PATH##/mumps.gld
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/ddd.gld.  Cannot continue.
+%SYSTEM-E-ENO2, No such file or directory
+
+YDB>
+
+YDB>
+
+YDB>
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/a.gld
+
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/a.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/a.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/b.gld
+
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/b.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/b.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+
+YDB>
+Inside sub: Global Directory ##TEST_PATH##/b.gld
+Now Global directory b.gld
+We can see ^a
+We cannot see ^b
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+Leaving ZGBLDIR subtest

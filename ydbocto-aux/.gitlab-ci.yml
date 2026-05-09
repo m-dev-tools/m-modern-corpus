@@ -1,0 +1,375 @@
+#################################################################
+#								#
+# Copyright (c) 2019-2025 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+
+stages:
+  - docker-baseline
+  - build
+  - docs
+  - docker-create
+  - docker-manifest
+
+variables:
+  MYSQL_ROOT_PASSWORD: ydbrocks
+  UBUNTU_REL_BASELINE_REPO: registry.gitlab.com/yottadb/dbms/ydbocto:ubuntu-release
+  UBUNTU_MAS_BASELINE_REPO: registry.gitlab.com/yottadb/dbms/ydbocto:ubuntu-master
+  ROCKY_REL_BASELINE_REPO:  registry.gitlab.com/yottadb/dbms/ydbocto:rocky-release
+  ROCKY_MAS_BASELINE_REPO: registry.gitlab.com/yottadb/dbms/ydbocto:rocky-master
+
+# Shared build config
+.make:
+  stage: build
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 month
+    when: always
+  interruptible: true
+
+.docker-baseline-shared:
+  stage: docker-baseline
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+  interruptible: true
+  services:
+    - docker:dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker image build --pull -f ${FILE} --build-arg imagetag=${TAG} --progress=plain -t ${REPO} .
+    - docker push ${REPO}
+
+octo-ubuntu-master-base-image:
+  extends:
+    - .docker-baseline-shared
+  variables:
+    FILE: tools/misc-dockerfiles/Dockerfile-Ubuntu-Tests.baseline
+    REPO: ${UBUNTU_MAS_BASELINE_REPO}
+    TAG: latest-master
+
+octo-ubuntu-release-base-image:
+  extends:
+    - .docker-baseline-shared
+  variables:
+    FILE: tools/misc-dockerfiles/Dockerfile-Ubuntu-Tests.baseline
+    REPO: ${UBUNTU_REL_BASELINE_REPO}
+    TAG: latest
+
+octo-rocky-master-base-image:
+  extends:
+    - .docker-baseline-shared
+  variables:
+    FILE: tools/misc-dockerfiles/Dockerfile-Rocky-Tests.baseline
+    REPO: ${ROCKY_MAS_BASELINE_REPO}
+    TAG: latest-master
+
+octo-rocky-release-base-image:
+  extends:
+    - .docker-baseline-shared
+  variables:
+    FILE: tools/misc-dockerfiles/Dockerfile-Rocky-Tests.baseline
+    REPO: ${ROCKY_REL_BASELINE_REPO}
+    TAG: latest
+
+commit-verify:
+  image: ubuntu:22.04
+  stage: build
+  interruptible: true
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq git wget gnupg
+  script:
+    # Copy commit gpg key verify script to build directory and execute
+    - wget https://gitlab.com/YottaDB/DB/YDB/-/raw/master/ci/commit_verify.sh
+    - chmod +x commit_verify.sh
+    - ./commit_verify.sh tools/ci/needs_copyright.sh https://gitlab.com/YottaDB/DBMS/YDBOcto
+
+# This is against the latest released version of YottaDB
+release-ubuntu:
+  image: ${UBUNTU_REL_BASELINE_REPO}
+  # Run Release job only if this is a scheduled pipeline
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+  services:
+    - mysql:8.0
+  extends:
+    - .make
+  script:
+    - ./tools/ci/build.sh "make-ubuntu" "none"
+
+# This is against the latest released version of YottaDB
+release-rocky:
+  image: ${ROCKY_REL_BASELINE_REPO}
+  # Run Release job only if this is a scheduled pipeline
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+  services:
+    - mysql:8.0
+  extends:
+    - .make
+  script: ./tools/ci/build.sh "make-rocky" "none"
+
+make-ubuntu:
+  image: ${UBUNTU_MAS_BASELINE_REPO}
+  services:
+    - mysql:8.0
+  extends:
+    - .make
+  script:
+    - ./tools/ci/build.sh "make-ubuntu" "none"
+  only:
+    - master@YottaDB/DBMS/YDBOcto
+
+make-rocky:
+  image: ${ROCKY_MAS_BASELINE_REPO}
+  services:
+    - mysql:8.0
+  extends:
+    - .make
+  script: ./tools/ci/build.sh "make-rocky" "none"
+  only:
+    - master@YottaDB/DBMS/YDBOcto
+
+asan-ubuntu:
+  image: ${UBUNTU_MAS_BASELINE_REPO}
+  # Override default runner timeout
+  timeout: 3h
+  # This ASAN job always runs
+  extends:
+    - .make
+  services:
+    - mysql:8.0
+  script:
+    - ./tools/ci/build.sh "make-ubuntu" "asan"
+
+asan-rocky:
+  image: ${ROCKY_MAS_BASELINE_REPO}
+  # Override default runner timeout
+  timeout: 3h
+  # Run this ASAN job only if this is a scheduled pipeline or if we are on a ASAN branch
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_COMMIT_BRANCH =~ /asan/'
+  extends:
+    - .make
+  services:
+    - mysql:8.0
+  script:
+    - ./tools/ci/build.sh "make-rocky" "asan"
+
+# This job runs for branches and on master
+make-tls-ubuntu:
+  image: ${UBUNTU_MAS_BASELINE_REPO}
+  services:
+    - mysql:8.0
+  extends:
+    - .make
+  script:
+    - ./tools/ci/install-tls.sh
+    - ./tools/ci/build.sh "make-tls-ubuntu" "none"
+  coverage: /^lines:\s+(\d+\.\d+)%/ # lines: 91.6% (23972 out of 26164)
+  # Artifacts is overridden (from .make above) as we need to provide the coverage report for this job
+  # See https://docs.gitlab.com/ci/testing/code_coverage/cobertura/#cc-example
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 month
+    when: always
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: build/coverage.xml
+
+make-tls-rocky:
+  image: ${ROCKY_MAS_BASELINE_REPO}
+  services:
+    - mysql:8.0
+  extends:
+    - .make
+  script:
+    - ./tools/ci/install-tls.sh
+    - ./tools/ci/build.sh "make-tls-rocky" "none"
+  only:
+    - master@YottaDB/DBMS/YDBOcto
+
+test-force-upgrade:
+  # This job tests auto upgrade functionality of binary table/function definitions by forcing an auto upgrade
+  image: ${UBUNTU_MAS_BASELINE_REPO}
+  services:
+    - mysql:8.0
+  extends:
+    - .make
+  script:
+    - ./tools/ci/build.sh "test-auto-upgrade" "force"
+
+test-auto-upgrade:
+  # This job tests that auto upgrade functionality of binary table/function definitions and plan definitions (physical plans,
+  # xref plans, triggers etc.) works fine relative to a random older commit
+  image: ${UBUNTU_MAS_BASELINE_REPO}
+  services:
+    - mysql:8.0
+  extends:
+    - .make
+  script:
+    # We previously used netstat and xxd, and that's why we install net-tools
+    - apt-get install -y -qq --no-install-recommends net-tools xxd
+    - ./tools/ci/build.sh "test-auto-upgrade" "binary"
+
+test-vista:
+  # This job tests that various Octo tests run inside of a VistA instance
+  image:
+    name: yottadb/octo-vehu:latest-master
+    entrypoint: [""] # override the default entry point, which starts VistA and Octo etc.
+  extends:
+    - .make
+  script:
+    - ./tools/ci/vistatest.sh
+  rules:
+    # 1) We want to run the test-vista job only in pre-merge pipelines (not post-merge pipelines).
+    #    Hence the $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH check below.
+    # 2) Additionally, we want to allow for failures in the pre-merge pipeline in rare cases
+    #    (like was seen in https://gitlab.com/YottaDB/DBMS/YDBOcto/-/merge_requests/1484#note_1643676118)
+    #    Hence the check for the special branch name that starts with "test_vista_fail_expected" in which
+    #    case we skip running this job even in the pre-merge pipeline.
+    # 3) Additionally, we want to run this job only for push pipelines, not for scheduled or merge_request_event
+    #    pipelines (the act of using "rules:" causes this job to be enabled for "Merge request pipelines" which
+    #    we don't want to run this job) hence the $CI_PIPELINE_SOURCE == "push" check below.
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH && $CI_COMMIT_BRANCH !~ /^test_vista_fail_expected/ && $CI_PIPELINE_SOURCE == "push"
+
+############################################################
+
+.docker-octo-common:
+  image: docker:latest
+  stage: docker-create
+  before_script:
+    - ""
+  services:
+    - docker:dind
+  script:
+    - docker build --provenance=false --pull -t yottadb/${REPO}:${DOCKERHUBTAG} .
+    # Suppress Docker warning advising against using the --password flag
+    - echo -n $HUB_PASSWORD | docker login -u $HUB_USERNAME --password-stdin
+    - docker push yottadb/${REPO}:${DOCKERHUBTAG}
+  # Run for master branch on YottaDB/DBMS/YDBOcto repo
+  # $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH means run only post merge
+  # Don't run for scheduled pipelines
+  # https://docs.gitlab.com/ci/jobs/job_rules/#ci_pipeline_source-predefined-variable
+  rules:
+    - if: '$CI_PROJECT_PATH == "YottaDB/DBMS/YDBOcto" && $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "schedule"'
+
+docker-octo-amd64:
+  extends: .docker-octo-common
+  variables:
+    REPO: octo
+    DOCKERHUBTAG: latest-amd64
+  tags:
+    - amd64
+
+docker-octo-aarch64:
+  extends: .docker-octo-common
+  variables:
+    REPO: octo
+    DOCKERHUBTAG: latest-aarch64
+  tags:
+    - aarch64
+
+.docker-vista-common:
+  image: docker:latest
+  stage: docker-create
+  before_script:
+    - ""
+  services:
+    - docker:dind
+  script:
+    - apk add git
+    - ./tools/ci/vistabuild.sh
+    - docker tag yottadb/octo-vehu:latest-master yottadb/${REPO}:${DOCKERHUBTAG}
+    - docker rmi yottadb/octo-vehu:latest-master
+    - echo -n $HUB_PASSWORD | docker login -u $HUB_USERNAME --password-stdin
+    - docker push yottadb/${REPO}:${DOCKERHUBTAG}
+  # Run for master branch on YottaDB/DBMS/YDBOcto repo
+  # $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH means run only post merge
+  # Don't run for scheduled pipelines
+  # https://docs.gitlab.com/ci/jobs/job_rules/#ci_pipeline_source-predefined-variable
+  rules:
+    - if: '$CI_PROJECT_PATH == "YottaDB/DBMS/YDBOcto" && $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "schedule"'
+
+docker-vista-amd64:
+  extends: .docker-vista-common
+  variables:
+    REPO: octo-vehu
+    DOCKERHUBTAG: latest-master-amd64
+  tags:
+    - amd64
+
+docker-vista-aarch64:
+  extends: .docker-vista-common
+  variables:
+    REPO: octo-vehu
+    DOCKERHUBTAG: latest-master-aarch64
+  tags:
+    - aarch64
+
+.docker-manifest-common:
+  stage: docker-manifest
+  services:
+    - docker:dind
+  script:
+    - echo -n $HUB_PASSWORD | docker login -u $HUB_USERNAME --password-stdin
+    - docker pull --platform=linux/amd64 yottadb/${REPO}:${DOCKERHUBTAG}-amd64
+    - docker pull --platform=linux/aarch64 yottadb/${REPO}:${DOCKERHUBTAG}-aarch64
+    - docker manifest create yottadb/${REPO}:${DOCKERHUBTAG} yottadb/${REPO}:${DOCKERHUBTAG}-amd64 yottadb/${REPO}:${DOCKERHUBTAG}-aarch64
+    - docker manifest inspect yottadb/${REPO}:${DOCKERHUBTAG}
+    - docker manifest push yottadb/${REPO}:${DOCKERHUBTAG}
+  tags:
+    - amd64
+  # Run for master branch on YottaDB/DBMS/YDBOcto repo
+  # $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH means run only post merge
+  # Don't run for scheduled pipelines
+  # https://docs.gitlab.com/ci/jobs/job_rules/#ci_pipeline_source-predefined-variable
+  rules:
+    - if: '$CI_PROJECT_PATH == "YottaDB/DBMS/YDBOcto" && $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "schedule"'
+
+docker-manifest-octo:
+  extends: .docker-manifest-common
+  variables:
+    REPO: octo
+    DOCKERHUBTAG: latest
+
+docker-manifest-vista:
+  extends: .docker-manifest-common
+  variables:
+    REPO: octo-vehu
+    DOCKERHUBTAG: latest-master
+
+pages:
+  stage: docs
+  image: bitnami/minideb
+  interruptible: true
+  script:
+    - apt-get update && apt-get install -y make python3 tcsh wget jq sphinx-common python3-sphinx-rtd-theme
+    - ./tools/ci/docs.sh
+    - export DEADLINKS_VERSION=$(wget -q -O - https://api.github.com/repos/deadlinks/cargo-deadlinks/releases/latest | jq --raw-output .tag_name)
+    - wget https://github.com/deadlinks/cargo-deadlinks/releases/download/$DEADLINKS_VERSION/deadlinks-linux -O deadlinks
+    - chmod +x ./deadlinks
+    - ./deadlinks -v public
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 month
+    when: always
+
+docs.yottadb.net:
+  stage: docs
+  trigger: YottaDB/DB/YDBDoc
+  only:
+    refs:
+      - master@YottaDB/DBMS/YDBOcto
+    changes:
+      - doc/**/*

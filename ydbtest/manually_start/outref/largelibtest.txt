@@ -1,0 +1,56 @@
+# Parameters
+# Setup directories
+# Unpack routines
+# Set up the database
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/g/mumps.gld
+
+GDE> 
+GDE> 
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/g/mumps.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/g/mumps.dat created
+# Make copies of the files
+GT.M MUPIP EXTRACT
+##FILTERED##..-...-....  ..:..:.. ZWR
+Beginning LOAD at record number: 3
+
+LOAD TOTAL		Key Cnt: 20337342  Max Subsc Len: 223  Max Data Len: 834
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 20337344
+# Run the test
+
+YDB>
+
+YDB>
+
+
+VA FileMan 22.0
+
+
+Select OPTION: 
+    Answer with OPTION NUMBER, or NAME
+   Choose from:
+   1            ENTER OR EDIT FILE ENTRIES
+   2            PRINT FILE ENTRIES
+   3            SEARCH FILE ENTRIES
+   4            MODIFY FILE ATTRIBUTES
+   5            INQUIRE TO FILE ENTRIES
+   6            UTILITY FUNCTIONS
+   7            OTHER OPTIONS
+   8            DATA DICTIONARY UTILITIES
+   9            TRANSFER ENTRIES
+    
+Select OPTION: 
+YDB>
+
+
+ZTMGRSET Version 8.0 Patch level **34,36,69,94,121,127,136,191,275,355**
+HELLO! I exist to assist you in correctly initializing the current account.
+
+This is namespace or uci EHR,EHR.
+Should I continue? N//
+YDB>
+# End of largelibtest

@@ -1,0 +1,1412 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+mumps.dat
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> Error:  already in region: AREG
+DSE> 
+Key not found, would be in block  3.
+    Directory path
+    Path--blk:off
+	1:10,	2:10,
+    Global tree path
+    Path--blk:off
+	4:10,	3:10,
+DSE> 
+File  	##TEST_PATH##/b.dat
+Region	BREG
+
+DSE> 
+Key not found, would be in block  AD.
+    Directory path
+    Path--blk:off
+	1:10,	2:10,
+    Global tree path
+    Path--blk:off
+	4:33,	C8:268,	AD:149,
+DSE> 
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> 
+Key not found, would be in block  3.
+    Directory path
+    Path--blk:off
+	1:10,	2:10,
+    Global tree path
+    Path--blk:off
+	4:2B0,	322:2AF,	CB:1D1,	35:F2,	F:3CD,	3:10,
+DSE> 
+###################################################################
+# Test MUPIP INTEG -BLOCK= for block in GVT at each level in AREG
+# Get regular MUPIP INTEG output for AREG
+
+
+Integ of region AREG
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           2               2           3.076            NA
+Index               1              28          45.214             1
+Data               28            1000          96.107            28
+Free               69              NA              NA            NA
+Total             100            1030              NA            29
+##SOURCE_PATH##/mupip integ -block=3 -reg AREG
+
+
+Integ of region AREG
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               0               0           0.000             0
+Data                1              37          99.511             1
+Total               1              37              NA             1
+##SOURCE_PATH##/mupip integ -block=4 -reg AREG
+
+
+Integ of region AREG
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               1              28          45.214             1
+Data               28            1000          96.107            28
+Total              29            1028              NA            29
+# Induce DBINVGBL error at BLOCK=3 in AREG
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> Error:  already in region: AREG
+DSE> DSE> 
+##SOURCE_PATH##/mupip integ -block=3 -reg AREG : Should NOT give a DBINVGBL error since 3 is the only block that is integed
+
+
+Integ of region AREG
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               0               0           0.000             0
+Data                1              37          99.511             1
+Total               1              37              NA             1
+##SOURCE_PATH##/mupip integ -block=4 -reg AREG : Should give a DBINVGBL error since 4 and 3 have different global names in same tree
+
+
+Integ of region AREG
+
+Block:Offset Level
+%YDB-E-DBINVGBL,         Nature: #Data
+               3:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  4:10, 3:10
+Keys from ^ to ^a(37.0) are suspect.
+
+Total error count from integ:		1.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               1              28          45.214             1
+Data               28             964          96.107            28
+Total              29             992              NA            29
+%YDB-E-INTEGERRS, Database integrity errors
+###################################################################
+# Test MUPIP INTEG -BLOCK= for block in GVT at each level in BREG
+# Get regular MUPIP INTEG output for BREG
+
+
+Integ of region BREG
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           2               2           3.076            NA
+Index               7             340          74.469             1
+Data              334            1000          92.281           334
+Free               57              NA              NA            NA
+Total             400            1342              NA           335
+##SOURCE_PATH##/mupip integ -block=AD -reg BREG
+
+
+Integ of region BREG
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               0               0           0.000             0
+Data                1               3          92.480             0
+Total               1               3              NA             0
+##SOURCE_PATH##/mupip integ -block=C8 -reg BREG
+
+
+Integ of region BREG
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               1              65          98.730             0
+Data               65             195          92.471            64
+Total              66             260              NA            64
+##SOURCE_PATH##/mupip integ -block=4 -reg BREG
+
+
+Integ of region BREG
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               7             340          74.469             1
+Data              334            1000          92.281           334
+Total             341            1340              NA           335
+# Induce DBINVGBL error at BLOCK=C8 in BREG
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> 
+File  	##TEST_PATH##/b.dat
+Region	BREG
+
+DSE> DSE> 
+##SOURCE_PATH##/mupip integ -block=AD -reg BREG
+
+
+Integ of region BREG
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               0               0           0.000             0
+Data                1               3          92.480             0
+Total               1               3              NA             0
+##SOURCE_PATH##/mupip integ -block=C8 -reg BREG
+
+
+Integ of region BREG
+
+Block:Offset Level
+%YDB-E-DBINVGBL,         Nature: #Data
+              85:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:10, 85:10
+Keys from ^ to ^c(384.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              86:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:23, 86:10
+Keys from ^c(384.1) to ^c(387.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              88:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:32, 88:10
+Keys from ^c(387.1) to ^c(390) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              89:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:42, 89:10
+Keys from ^c(390) to ^c(393.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              8A:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:51, 8A:10
+Keys from ^c(393.1) to ^c(396.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              8B:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:60, 8B:10
+Keys from ^c(396.1) to ^c(3*0) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              8C:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:6F, 8C:10
+Keys from ^c(3*0) to ^c(402.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              8D:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:7F, 8D:10
+Keys from ^c(402.1) to ^c(405.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              8E:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:8E, 8E:10
+Keys from ^c(405.1) to ^c(408.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              8F:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:9D, 8F:10
+Keys from ^c(408.1) to ^c(411.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              90:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:AD, 90:10
+Keys from ^c(411.1) to ^c(414.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              91:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:BC, 91:10
+Keys from ^c(414.1) to ^c(417.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              92:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:CB, 92:10
+Keys from ^c(417.1) to ^c(420) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              93:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:DB, 93:10
+Keys from ^c(420) to ^c(423.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              94:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:EA, 94:10
+Keys from ^c(423.1) to ^c(426.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              95:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:F9, 95:10
+Keys from ^c(426.1) to ^c(429.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              96:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:108, 96:10
+Keys from ^c(429.1) to ^c(432.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              97:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:118, 97:10
+Keys from ^c(432.1) to ^c(435.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              98:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:127, 98:10
+Keys from ^c(435.1) to ^c(438.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              99:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:136, 99:10
+Keys from ^c(438.1) to ^c(441.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              9A:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:146, 9A:10
+Keys from ^c(441.1) to ^c(444.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              9B:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:155, 9B:10
+Keys from ^c(444.1) to ^c(447.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              9C:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:164, 9C:10
+Keys from ^c(447.1) to ^c(450) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              9D:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:174, 9D:10
+Keys from ^c(450) to ^c(453.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              9E:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:183, 9E:10
+Keys from ^c(453.1) to ^c(456.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              9F:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:192, 9F:10
+Keys from ^c(456.1) to ^c(459.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              A0:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:1A1, A0:10
+Keys from ^c(459.1) to ^c(462.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              A1:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:1B1, A1:10
+Keys from ^c(462.1) to ^c(465.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              A2:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:1C0, A2:10
+Keys from ^c(465.1) to ^c(468.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              A3:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:1CF, A3:10
+Keys from ^c(468.1) to ^c(471.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              A4:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:1DF, A4:10
+Keys from ^c(471.1) to ^c(474.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              A5:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:1EE, A5:10
+Keys from ^c(474.1) to ^c(477.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              A6:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:1FD, A6:10
+Keys from ^c(477.1) to ^c(480) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              A7:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:20D, A7:10
+Keys from ^c(480) to ^c(483.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              A8:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:21C, A8:10
+Keys from ^c(483.1) to ^c(486.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              A9:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:22B, A9:10
+Keys from ^c(486.1) to ^c(489.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              AA:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:23A, AA:10
+Keys from ^c(489.1) to ^c(492.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              AB:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:24A, AB:10
+Keys from ^c(492.1) to ^c(495.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              AC:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:259, AC:10
+Keys from ^c(495.1) to ^c(498.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              AD:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:268, AD:10
+Keys from ^c(498.1) to ^c(501.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              AE:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:278, AE:10
+Keys from ^c(501.1) to ^c(504.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              AF:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:287, AF:10
+Keys from ^c(504.1) to ^c(507.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              B0:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:296, B0:10
+Keys from ^c(507.1) to ^c(510) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              B1:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:2A6, B1:10
+Keys from ^c(510) to ^c(513.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              B2:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:2B5, B2:10
+Keys from ^c(513.1) to ^c(516.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              B3:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:2C4, B3:10
+Keys from ^c(516.1) to ^c(519.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              B4:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:2D3, B4:10
+Keys from ^c(519.1) to ^c(522.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              B5:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:2E3, B5:10
+Keys from ^c(522.1) to ^c(525.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              B6:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:2F2, B6:10
+Keys from ^c(525.1) to ^c(528.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              B7:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:301, B7:10
+Keys from ^c(528.1) to ^c(531.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              B8:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:311, B8:10
+Keys from ^c(531.1) to ^c(534.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              B9:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:320, B9:10
+Keys from ^c(534.1) to ^c(537.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              BA:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:32F, BA:10
+Keys from ^c(537.1) to ^c(540) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              BB:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:33F, BB:10
+Keys from ^c(540) to ^c(543.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              BC:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:34E, BC:10
+Keys from ^c(543.1) to ^c(546.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              BD:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:35D, BD:10
+Keys from ^c(546.1) to ^c(549.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              BE:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:36C, BE:10
+Keys from ^c(549.1) to ^c(552.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              BF:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:37C, BF:10
+Keys from ^c(552.1) to ^c(555.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              C0:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:38B, C0:10
+Keys from ^c(555.1) to ^c(558.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              C1:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:39A, C1:10
+Keys from ^c(558.1) to ^c(561.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              C2:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:3AA, C2:10
+Keys from ^c(561.1) to ^c(564.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              C3:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:3B9, C3:10
+Keys from ^c(564.1) to ^c(567.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              C4:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:3C8, C4:10
+Keys from ^c(567.1) to ^c(570) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              C5:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:3D8, C5:10
+Keys from ^c(570) to ^c(573.1) are suspect.
+%YDB-E-DBINVGBL,         Nature: #Data
+              C6:10     0  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  C8:3E7, C6:10
+Keys from ^c(573.1) to the end are suspect.
+
+Total error count from integ:		65.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               1              65          98.730             0
+Data               65              65          92.471            64
+Total              66             130              NA            64
+%YDB-E-INTEGERRS, Database integrity errors
+##SOURCE_PATH##/mupip integ -block=4 -reg BREG
+
+
+Integ of region BREG
+
+Block:Offset Level
+%YDB-E-DBINVGBL,         Nature: #DANGER***
+              C8:10     1  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  4:33, C8:10
+Keys from ^b(381.1) to ^b(576.1) are suspect.
+
+Total error count from integ:		1.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               7             276          74.469             1
+Data              269             805          92.235           268
+Total             276            1081              NA           269
+%YDB-E-INTEGERRS, Database integrity errors
+###################################################################
+# Test MUPIP INTEG -BLOCK= for block in GVT at each level in DEFAULT
+# Get regular MUPIP INTEG output for DEFAULT
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           2               2           3.076            NA
+Index             334            2334          87.712           233
+Data             2001            4000          82.509          2000
+Free               63              NA              NA            NA
+Total            2400            6336              NA          2233
+[Spanning Nodes:1000 ; Blocks:3000]
+##SOURCE_PATH##/mupip integ -block=3 -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBSPANCHUNKORD,         Nature: #Data
+               3:10     0  Chunk of 1 blocks is out of order
+                           Directory Path:  0:0
+                           Path:  3:10
+Spanning Node Chunk ^c(1000,"                                                                                                                                                                                                    1000",#SPAN3) is suspect.
+
+Total error count from integ:		1.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               0               0           0.000             0
+Data                1               1          42.968             1
+Total               1               1              NA             1
+[Spanning Nodes:1 ; Blocks:1]
+%YDB-E-INTEGERRS, Database integrity errors
+##SOURCE_PATH##/mupip integ -block=F -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBSPANCHUNKORD,         Nature: #Data
+             91C:1BA    0  Chunk of 1 blocks is out of order
+                           Directory Path:  0:0
+                           Path:  F:10, 91C:1BA
+Spanning Node Chunk ^c(996,"                                                                                                                                                                                                     996",#SPAN3) is suspect.
+
+Total error count from integ:		1.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               1               9          96.191             0
+Data                9              17          78.179             7
+Total              10              26              NA             7
+[Spanning Nodes:5 ; Blocks:13]
+%YDB-E-INTEGERRS, Database integrity errors
+##SOURCE_PATH##/mupip integ -block=35 -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBSPANCHUNKORD,         Nature: #Data
+             913:1BA    0  Chunk of 1 blocks is out of order
+                           Directory Path:  0:0
+                           Path:  35:10, 91D:10, 913:1BA
+Spanning Node Chunk ^c(992,"                                                                                                                                                                                                     992",#SPAN3) is suspect.
+
+Total error count from integ:		1.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               3              19          71.842             0
+Data               17              33          80.244            15
+Total              20              52              NA            15
+[Spanning Nodes:9 ; Blocks:25]
+%YDB-E-INTEGERRS, Database integrity errors
+##SOURCE_PATH##/mupip integ -block=CB -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBSPANCHUNKORD,         Nature: #Data
+             8C8:1B8    0  Chunk of 1 blocks is out of order
+                           Directory Path:  0:0
+                           Path:  CB:10, 8F8:10, 8D2:10, 8C8:1B8
+Spanning Node Chunk ^c(960,"                                                                                                                                                                                                     960",#SPAN3) is suspect.
+
+Total error count from integ:		1.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index              14              94          82.477             7
+Data               81             161          82.071            79
+Total              95             255              NA            86
+[Spanning Nodes:41 ; Blocks:121]
+%YDB-E-INTEGERRS, Database integrity errors
+##SOURCE_PATH##/mupip integ -block=322 -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBSPANCHUNKORD,         Nature: #Data
+             707:1BA    0  Chunk of 1 blocks is out of order
+                           Directory Path:  0:0
+                           Path:  322:10, 7CD:10, 737:10, 711:10, 707:1BA
+Spanning Node Chunk ^c(768,"                                                                                                                                                                                                     768",#SPAN3) is suspect.
+
+Total error count from integ:		1.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index              78             542          86.969            52
+Data              465             929          82.473           463
+Total             543            1471              NA           515
+[Spanning Nodes:233 ; Blocks:697]
+%YDB-E-INTEGERRS, Database integrity errors
+##SOURCE_PATH##/mupip integ -block=4 -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index             334            2334          87.712           233
+Data             2001            4000          82.509          2000
+Total            2335            6334              NA          2233
+[Spanning Nodes:1000 ; Blocks:3000]
+# Induce DBINVGBL error at BLOCK=CB in DEFAULT
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> 
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE> 
+##SOURCE_PATH##/mupip integ -block=3 -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBSPANCHUNKORD,         Nature: #Data
+               3:10     0  Chunk of 1 blocks is out of order
+                           Directory Path:  0:0
+                           Path:  3:10
+Spanning Node Chunk ^c(1000,"                                                                                                                                                                                                    1000",#SPAN3) is suspect.
+
+Total error count from integ:		1.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               0               0           0.000             0
+Data                1               1          42.968             1
+Total               1               1              NA             1
+[Spanning Nodes:1 ; Blocks:1]
+%YDB-E-INTEGERRS, Database integrity errors
+##SOURCE_PATH##/mupip integ -block=F -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBSPANCHUNKORD,         Nature: #Data
+             91C:1BA    0  Chunk of 1 blocks is out of order
+                           Directory Path:  0:0
+                           Path:  F:10, 91C:1BA
+Spanning Node Chunk ^c(996,"                                                                                                                                                                                                     996",#SPAN3) is suspect.
+
+Total error count from integ:		1.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               1               9          96.191             0
+Data                9              17          78.179             7
+Total              10              26              NA             7
+[Spanning Nodes:5 ; Blocks:13]
+%YDB-E-INTEGERRS, Database integrity errors
+##SOURCE_PATH##/mupip integ -block=35 -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBSPANCHUNKORD,         Nature: #Data
+             913:1BA    0  Chunk of 1 blocks is out of order
+                           Directory Path:  0:0
+                           Path:  35:10, 91D:10, 913:1BA
+Spanning Node Chunk ^c(992,"                                                                                                                                                                                                     992",#SPAN3) is suspect.
+
+Total error count from integ:		1.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               3              19          71.842             0
+Data               17              33          80.244            15
+Total              20              52              NA            15
+[Spanning Nodes:9 ; Blocks:25]
+%YDB-E-INTEGERRS, Database integrity errors
+##SOURCE_PATH##/mupip integ -block=CB -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBINVGBL,         Nature: #DANGER***
+             8F8:10     2  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  CB:10, 8F8:10
+Keys from ^ to ^a(976,"                                                                                                                                                                                                     976",#SPAN2*) are suspect.
+%YDB-E-DBINVGBL,         Nature: #DANGER***
+             91E:10     2  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  CB:F2, 91E:10
+Keys from ^a(976,"                                                                                                                                                                                                     976",#SPAN2*) to ^a(992,"                                                                                                                                                                                                     992",#SPAN2*) are suspect.
+%YDB-E-DBINVGBL,         Nature: #DANGER***
+              35:10     2  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  CB:1D1, 35:10
+Keys from ^a(992,"                                                                                                                                                                                                     992",#SPAN2*) to the end are suspect.
+
+Total error count from integ:		3.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index               4               6          51.928             0
+Data                0               0           0.000             0
+Total               4               6              NA             0
+%YDB-E-INTEGERRS, Database integrity errors
+##SOURCE_PATH##/mupip integ -block=322 -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBSPANCHUNKORD,         Nature: #Data
+             707:1BA    0  Chunk of 1 blocks is out of order
+                           Directory Path:  0:0
+                           Path:  322:10, 7CD:10, 737:10, 711:10, 707:1BA
+Spanning Node Chunk ^c(768,"                                                                                                                                                                                                     768",#SPAN3) is suspect.
+%YDB-E-DBINVGBL,         Nature: #DANGER***
+              CB:10     3  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  322:2AF, CB:10
+Keys from ^c(960,"                                                                                                                                                                                                     960",#SPAN2*) to the end are suspect.
+%YDB-E-DBSPANGLOINCMP,         Nature: #Data
+             8C7:10     0  Spanning node is missing. Block no 3 of spanning node is missing
+                           Directory Path:  0:0
+                           Path:  322:2AF, CB:10, 0:2AF, 8C9:3BC, 8C7:10
+Spanning Node ^c(960,"                                                                                                                                                                                                     960",#SPAN1) is suspect.
+
+Total error count from integ:		3.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index              65             449          87.315            44
+Data              384             768          82.558           383
+Total             449            1217              NA           427
+[Spanning Nodes:193 ; Blocks:576]
+%YDB-E-INTEGERRS, Database integrity errors
+##SOURCE_PATH##/mupip integ -block=4 -reg DEFAULT
+
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBINVGBL,         Nature: #DANGER***
+              CB:10     3  Invalid mixing of global names
+                           Directory Path:  0:0
+                           Path:  4:2B0, 322:2AF, CB:10
+Keys from ^c(960,"                                                                                                                                                                                                     960",#SPAN2*) to the end are suspect.
+%YDB-E-DBSPANGLOINCMP,         Nature: #Data
+             8C7:10     0  Spanning node is missing. Block no 3 of spanning node is missing
+                           Directory Path:  0:0
+                           Path:  4:2B0, 322:2AF, CB:10, 0:2AF, 8C9:3BC, 8C7:10
+Spanning Node ^c(960,"                                                                                                                                                                                                     960",#SPAN1) is suspect.
+
+Total error count from integ:		2.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           0               0           0.000            NA
+Index             321            2241          87.812           225
+Data             1920            3839          82.528          1920
+Total            2241            6080              NA          2145
+[Spanning Nodes:960 ; Blocks:2879]
+%YDB-E-INTEGERRS, Database integrity errors
+# Fix DBINVGBL error at BLOCK=CB in DEFAULT
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> 
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE> 
+###################################################################
+# Test MUPIP INTEG -BLOCK= for block in GVT in ALL regions. sort needed for deterministic region order
+$MUPIP integ -block=3 -reg "*" |& sort
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                           Directory Path:  0:0
+                           Path:  3:10
+               3:10     0  Chunk of 1 blocks is out of order
+%YDB-E-DBSPANCHUNKORD,         Nature: #Data
+%YDB-E-INTEGERRS, Database integrity errors
+Block:Offset Level
+Data                1               1          42.968             1
+Data                1               3          92.382             1
+Data                1              37          99.511             1
+Directory           0               0           0.000            NA
+Directory           0               0           0.000            NA
+Directory           0               0           0.000            NA
+Index               0               0           0.000             0
+Index               0               0           0.000             0
+Index               0               0           0.000             0
+Integ of region AREG
+Integ of region BREG
+Integ of region DEFAULT
+No errors detected by integ.
+No errors detected by integ.
+Spanning Node Chunk ^c(1000,"                                                                                                                                                                                                    1000",#SPAN3) is suspect.
+Total               1               1              NA             1
+Total               1               3              NA             1
+Total               1              37              NA             1
+Total error count from integ:		1.
+Type           Blocks         Records          % Used      Adjacent
+Type           Blocks         Records          % Used      Adjacent
+Type           Blocks         Records          % Used      Adjacent
+[Spanning Nodes:1 ; Blocks:1]
+$MUPIP integ -block=B6 -reg "*" |& sort
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Directory Path:  0:0
+                           Path:  C8:10, 85:10
+                           Path:  C8:10, BE:1B8
+                           Path:  C8:108, 96:10
+                           Path:  C8:118, 97:10
+                           Path:  C8:127, 98:10
+                           Path:  C8:136, 99:10
+                           Path:  C8:146, 9A:10
+                           Path:  C8:155, 9B:10
+                           Path:  C8:164, 9C:10
+                           Path:  C8:174, 9D:10
+                           Path:  C8:183, 9E:10
+                           Path:  C8:192, 9F:10
+                           Path:  C8:1A1, A0:10
+                           Path:  C8:1B1, A1:10
+                           Path:  C8:1C0, A2:10
+                           Path:  C8:1CF, A3:10
+                           Path:  C8:1DF, A4:10
+                           Path:  C8:1EE, A5:10
+                           Path:  C8:1FD, A6:10
+                           Path:  C8:20D, A7:10
+                           Path:  C8:21C, A8:10
+                           Path:  C8:22B, A9:10
+                           Path:  C8:23, 86:10
+                           Path:  C8:23A, AA:10
+                           Path:  C8:24A, AB:10
+                           Path:  C8:259, AC:10
+                           Path:  C8:268, AD:10
+                           Path:  C8:278, AE:10
+                           Path:  C8:287, AF:10
+                           Path:  C8:296, B0:10
+                           Path:  C8:2A6, B1:10
+                           Path:  C8:2B5, B2:10
+                           Path:  C8:2C4, B3:10
+                           Path:  C8:2D3, B4:10
+                           Path:  C8:2E3, B5:10
+                           Path:  C8:2F2, B6:10
+                           Path:  C8:301, B7:10
+                           Path:  C8:311, B8:10
+                           Path:  C8:32, 88:10
+                           Path:  C8:320, B9:10
+                           Path:  C8:32F, BA:10
+                           Path:  C8:33F, BB:10
+                           Path:  C8:34E, BC:10
+                           Path:  C8:35D, BD:10
+                           Path:  C8:36C, BE:10
+                           Path:  C8:37C, BF:10
+                           Path:  C8:38B, C0:10
+                           Path:  C8:39A, C1:10
+                           Path:  C8:3AA, C2:10
+                           Path:  C8:3B9, C3:10
+                           Path:  C8:3BB, C6:10
+                           Path:  C8:3C8, C4:10
+                           Path:  C8:3D8, C5:10
+                           Path:  C8:3E7, C6:10
+                           Path:  C8:42, 89:10
+                           Path:  C8:51, 8A:10
+                           Path:  C8:60, 8B:10
+                           Path:  C8:6F, 8C:10
+                           Path:  C8:7F, 8D:10
+                           Path:  C8:8E, 8E:10
+                           Path:  C8:9D, 8F:10
+                           Path:  C8:AD, 90:10
+                           Path:  C8:BC, 91:10
+                           Path:  C8:CB, 92:10
+                           Path:  C8:DB, 93:10
+                           Path:  C8:EA, 94:10
+                           Path:  C8:F9, 95:10
+              85:10     0  Invalid mixing of global names
+              86:10     0  Invalid mixing of global names
+              88:10     0  Invalid mixing of global names
+              89:10     0  Invalid mixing of global names
+              8A:10     0  Invalid mixing of global names
+              8B:10     0  Invalid mixing of global names
+              8C:10     0  Invalid mixing of global names
+              8D:10     0  Invalid mixing of global names
+              8E:10     0  Invalid mixing of global names
+              8F:10     0  Invalid mixing of global names
+              90:10     0  Invalid mixing of global names
+              91:10     0  Invalid mixing of global names
+              92:10     0  Invalid mixing of global names
+              93:10     0  Invalid mixing of global names
+              94:10     0  Invalid mixing of global names
+              95:10     0  Invalid mixing of global names
+              96:10     0  Invalid mixing of global names
+              97:10     0  Invalid mixing of global names
+              98:10     0  Invalid mixing of global names
+              99:10     0  Invalid mixing of global names
+              9A:10     0  Invalid mixing of global names
+              9B:10     0  Invalid mixing of global names
+              9C:10     0  Invalid mixing of global names
+              9D:10     0  Invalid mixing of global names
+              9E:10     0  Invalid mixing of global names
+              9F:10     0  Invalid mixing of global names
+              A0:10     0  Invalid mixing of global names
+              A1:10     0  Invalid mixing of global names
+              A2:10     0  Invalid mixing of global names
+              A3:10     0  Invalid mixing of global names
+              A4:10     0  Invalid mixing of global names
+              A5:10     0  Invalid mixing of global names
+              A6:10     0  Invalid mixing of global names
+              A7:10     0  Invalid mixing of global names
+              A8:10     0  Invalid mixing of global names
+              A9:10     0  Invalid mixing of global names
+              AA:10     0  Invalid mixing of global names
+              AB:10     0  Invalid mixing of global names
+              AC:10     0  Invalid mixing of global names
+              AD:10     0  Invalid mixing of global names
+              AE:10     0  Invalid mixing of global names
+              AF:10     0  Invalid mixing of global names
+              B0:10     0  Invalid mixing of global names
+              B1:10     0  Invalid mixing of global names
+              B2:10     0  Invalid mixing of global names
+              B3:10     0  Invalid mixing of global names
+              B4:10     0  Invalid mixing of global names
+              B5:10     0  Invalid mixing of global names
+              B6:10     0  Invalid mixing of global names
+              B7:10     0  Invalid mixing of global names
+              B8:10     0  Invalid mixing of global names
+              B9:10     0  Invalid mixing of global names
+              BA:10     0  Invalid mixing of global names
+              BB:10     0  Invalid mixing of global names
+              BC:10     0  Invalid mixing of global names
+              BD:10     0  Invalid mixing of global names
+              BE:10     0  Invalid mixing of global names
+              BE:1B8    0  Chunk of 1 blocks is out of order
+              BF:10     0  Invalid mixing of global names
+              C0:10     0  Invalid mixing of global names
+              C1:10     0  Invalid mixing of global names
+              C2:10     0  Invalid mixing of global names
+              C3:10     0  Invalid mixing of global names
+              C4:10     0  Invalid mixing of global names
+              C5:10     0  Invalid mixing of global names
+              C6:10     0  Invalid mixing of global names
+              C6:10     0  Spanning node is missing. Block no 3 of spanning node is missing
+              C8:0     FF  Root block number greater than last block number in file
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBINVGBL,         Nature: #Data
+%YDB-E-DBRBNTOOLRG,         Nature: #DANGER***
+%YDB-E-DBSPANCHUNKORD,         Nature: #Data
+%YDB-E-DBSPANGLOINCMP,         Nature: #Data
+%YDB-E-INTEGERRS, Database integrity errors
+Block:Offset Level
+Block:Offset Level
+Block:Offset Level
+Data                0               0           0.000             0
+Data                8              16          82.470             7
+Data               65              65          92.471            64
+Directory           0               0           0.000            NA
+Directory           0               0           0.000            NA
+Directory           0               0           0.000            NA
+Index               0               0           0.000             0
+Index               1               8          94.433             0
+Index               1              65          98.730             0
+Integ of region AREG
+Integ of region BREG
+Integ of region DEFAULT
+Keys from ^ to ^c(384.1) are suspect.
+Keys from ^c(3*0) to ^c(402.1) are suspect.
+Keys from ^c(384.1) to ^c(387.1) are suspect.
+Keys from ^c(387.1) to ^c(390) are suspect.
+Keys from ^c(390) to ^c(393.1) are suspect.
+Keys from ^c(393.1) to ^c(396.1) are suspect.
+Keys from ^c(396.1) to ^c(3*0) are suspect.
+Keys from ^c(402.1) to ^c(405.1) are suspect.
+Keys from ^c(405.1) to ^c(408.1) are suspect.
+Keys from ^c(408.1) to ^c(411.1) are suspect.
+Keys from ^c(411.1) to ^c(414.1) are suspect.
+Keys from ^c(414.1) to ^c(417.1) are suspect.
+Keys from ^c(417.1) to ^c(420) are suspect.
+Keys from ^c(420) to ^c(423.1) are suspect.
+Keys from ^c(423.1) to ^c(426.1) are suspect.
+Keys from ^c(426.1) to ^c(429.1) are suspect.
+Keys from ^c(429.1) to ^c(432.1) are suspect.
+Keys from ^c(432.1) to ^c(435.1) are suspect.
+Keys from ^c(435.1) to ^c(438.1) are suspect.
+Keys from ^c(438.1) to ^c(441.1) are suspect.
+Keys from ^c(441.1) to ^c(444.1) are suspect.
+Keys from ^c(444.1) to ^c(447.1) are suspect.
+Keys from ^c(447.1) to ^c(450) are suspect.
+Keys from ^c(450) to ^c(453.1) are suspect.
+Keys from ^c(453.1) to ^c(456.1) are suspect.
+Keys from ^c(456.1) to ^c(459.1) are suspect.
+Keys from ^c(459.1) to ^c(462.1) are suspect.
+Keys from ^c(462.1) to ^c(465.1) are suspect.
+Keys from ^c(465.1) to ^c(468.1) are suspect.
+Keys from ^c(468.1) to ^c(471.1) are suspect.
+Keys from ^c(471.1) to ^c(474.1) are suspect.
+Keys from ^c(474.1) to ^c(477.1) are suspect.
+Keys from ^c(477.1) to ^c(480) are suspect.
+Keys from ^c(480) to ^c(483.1) are suspect.
+Keys from ^c(483.1) to ^c(486.1) are suspect.
+Keys from ^c(486.1) to ^c(489.1) are suspect.
+Keys from ^c(489.1) to ^c(492.1) are suspect.
+Keys from ^c(492.1) to ^c(495.1) are suspect.
+Keys from ^c(495.1) to ^c(498.1) are suspect.
+Keys from ^c(498.1) to ^c(501.1) are suspect.
+Keys from ^c(501.1) to ^c(504.1) are suspect.
+Keys from ^c(504.1) to ^c(507.1) are suspect.
+Keys from ^c(507.1) to ^c(510) are suspect.
+Keys from ^c(510) to ^c(513.1) are suspect.
+Keys from ^c(513.1) to ^c(516.1) are suspect.
+Keys from ^c(516.1) to ^c(519.1) are suspect.
+Keys from ^c(519.1) to ^c(522.1) are suspect.
+Keys from ^c(522.1) to ^c(525.1) are suspect.
+Keys from ^c(525.1) to ^c(528.1) are suspect.
+Keys from ^c(528.1) to ^c(531.1) are suspect.
+Keys from ^c(531.1) to ^c(534.1) are suspect.
+Keys from ^c(534.1) to ^c(537.1) are suspect.
+Keys from ^c(537.1) to ^c(540) are suspect.
+Keys from ^c(540) to ^c(543.1) are suspect.
+Keys from ^c(543.1) to ^c(546.1) are suspect.
+Keys from ^c(546.1) to ^c(549.1) are suspect.
+Keys from ^c(549.1) to ^c(552.1) are suspect.
+Keys from ^c(552.1) to ^c(555.1) are suspect.
+Keys from ^c(555.1) to ^c(558.1) are suspect.
+Keys from ^c(558.1) to ^c(561.1) are suspect.
+Keys from ^c(561.1) to ^c(564.1) are suspect.
+Keys from ^c(564.1) to ^c(567.1) are suspect.
+Keys from ^c(567.1) to ^c(570) are suspect.
+Keys from ^c(570) to ^c(573.1) are suspect.
+Keys from ^c(573.1) to the end are suspect.
+Spanning Node Chunk ^c(80,"                                                                                                                                                                                                      80",#SPAN3) is suspect.
+Spanning Node ^c(84,"                                                                                                                                                                                                      84",#SPAN1) is suspect.
+Total               0               0              NA             0
+Total               9              24              NA             7
+Total              66             130              NA            64
+Total error count from integ:		1.
+Total error count from integ:		2.
+Total error count from integ:		65.
+Type           Blocks         Records          % Used      Adjacent
+Type           Blocks         Records          % Used      Adjacent
+Type           Blocks         Records          % Used      Adjacent
+[Spanning Nodes:5 ; Blocks:12]
+###################################################################
+# Test MUPIP INTEG -BLOCK= for block in DT at each level in ALL regions. sort needed for deterministic region order
+$MUPIP integ -block=2 -reg "*" |& sort
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Data                1               1           3.417             1
+Data                1               1           3.417             1
+Data                1               1           3.417             1
+Directory           0               0           0.000            NA
+Directory           0               0           0.000            NA
+Directory           0               0           0.000            NA
+Index               0               0           0.000             0
+Index               0               0           0.000             0
+Index               0               0           0.000             0
+Integ of region AREG
+Integ of region BREG
+Integ of region DEFAULT
+No errors detected by integ.
+No errors detected by integ.
+No errors detected by integ.
+Total               1               1              NA             1
+Total               1               1              NA             1
+Total               1               1              NA             1
+Type           Blocks         Records          % Used      Adjacent
+Type           Blocks         Records          % Used      Adjacent
+Type           Blocks         Records          % Used      Adjacent
+$MUPIP integ -block=1 -reg "*" |& sort
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Data                0               0           0.000             0
+Data                0               0           0.000             0
+Data                0               0           0.000             0
+Directory           2               2           3.076            NA
+Directory           2               2           3.076            NA
+Directory           2               2           3.076            NA
+Index               0               0           0.000             0
+Index               0               0           0.000             0
+Index               0               0           0.000             0
+Integ of region AREG
+Integ of region BREG
+Integ of region DEFAULT
+No errors detected by integ.
+No errors detected by integ.
+No errors detected by integ.
+Total               2               2              NA             0
+Total               2               2              NA             0
+Total               2               2              NA             0
+Type           Blocks         Records          % Used      Adjacent
+Type           Blocks         Records          % Used      Adjacent
+Type           Blocks         Records          % Used      Adjacent
+
+# Fix DBINVGBL error at BLOCK=3 in AREG
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> Error:  already in region: AREG
+DSE> DSE> 
+# Fix DBINVGBL error at BLOCK=C8 in BREG
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> 
+File  	##TEST_PATH##/b.dat
+Region	BREG
+
+DSE> DSE> 
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

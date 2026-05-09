@@ -1,0 +1,85 @@
+/****************************************************************
+ *								*
+ * Copyright (c) 2019-2024 YottaDB LLC and/or its subsidiaries.	*
+ * All rights reserved.						*
+ *								*
+ *	This source code contains the intellectual property	*
+ *	of its copyright holder(s), and is made available	*
+ *	under a license.  If you do not know the terms of	*
+ *	the license, please stop and do not read further.	*
+ *								*
+ ****************************************************************/
+
+// Class 00 - Successful completion
+ERROR_DEF(PSQL_Code_Success, "00000")
+// Class 01 - Warning
+// Class 02 - No Data
+// Class 08 - Connection exception
+ERROR_DEF(PSQL_Code_Connection_Exception, "08000")
+ERROR_DEF(PSQL_Code_Protocol_Violation, "08P01")
+// Class 0A - Feature Not Supported
+ERROR_DEF(PSQL_Code_Feature_Not_Supported, "0A000")
+// Class 21 - Cardinality Violation
+ERROR_DEF(PSQL_Code_Cardinality_Violation, "21000")
+// Class 22 - Data Exception
+ERROR_DEF(PSQL_Code_Data_Exception, "22000")
+ERROR_DEF(PSQL_String_Data_Right_Truncation, "22001")
+ERROR_DEF(PSQL_Invalid_Datetime_Format, "22007")
+ERROR_DEF(PSQL_Substring_Error, "22011")
+ERROR_DEF(PSQL_Code_String_Data_Length_Mismatch, "22026")
+ERROR_DEF(PSQL_Code_Numeric_Value_Out_Of_Range, "22003")
+ERROR_DEF(PSQL_Code_Invalid_Parameter_Value, "22023")
+ERROR_DEF(PSQL_Code_Unterminated_C_String, "22024")
+ERROR_DEF(PSQL_Datetime_field_overflow, "22008")
+ERROR_DEF(PSQL_Invalid_Text_Representation, "22P02")
+ERROR_DEF(PSQL_Invalid_Escape_Sequence, "22025")
+// Class 23 - Integrity Constraint Violation
+ERROR_DEF(PSQL_Code_Not_Null_Violation, "23502")
+ERROR_DEF(PSQL_Code_Unique_Violation, "23505")
+ERROR_DEF(PSQL_Code_Check_Violation, "23514")
+// Class 25 - Invalid Transaction State
+ERROR_DEF(PSQL_Read_Only_Sql_Transaction, "25006")
+ERROR_DEF(PSQL_Active_Sql_Transaction, "25001")
+ERROR_DEF(PSQL_No_Active_Sql_Transaction, "25P01")
+// Class 26 - Invalid SQL Statement Name
+ERROR_DEF(PSQL_Code_Invalid_Sql_Statement_Name, "26000")
+// Class 28 - Invalid Authorization Specification
+ERROR_DEF(PSQL_Code_Invalid_Authorization_Specification, "28000")
+ERROR_DEF(PSQL_Code_Invalid_Password, "28P01")
+// Class 2B - Dependent Privilege Descriptors Still Exist
+ERROR_DEF(PSQL_Dependent_Objects_Still_Exist, "2BP01")
+// Class 42 - Syntax Error or Access Rule Violation
+ERROR_DEF(PSQL_Code_Syntax_Error, "42601")
+ERROR_DEF(PSQL_Code_Duplicate_Column, "42701")
+ERROR_DEF(PSQL_Code_Ambiguous_Column, "42702")
+ERROR_DEF(PSQL_Code_Undefined_Column, "42703")
+ERROR_DEF(PSQL_Code_Undefined_Object, "42704")
+ERROR_DEF(PSQL_Code_Duplicate_Object, "42710")
+ERROR_DEF(PSQL_Code_Duplicate_Alias, "42712")
+ERROR_DEF(PSQL_Code_Duplicate_Function, "42723")
+ERROR_DEF(PSQL_Code_Grouping_Error, "42803")
+ERROR_DEF(PSQL_Code_Datatype_Mismatch, "42804")
+ERROR_DEF(PSQL_Code_Wrong_Object_Type, "42809")
+ERROR_DEF(PSQL_Code_Cannot_Coerce, "42846")
+ERROR_DEF(PSQL_Code_Undefined_Function, "42883")
+ERROR_DEF(PSQL_Code_Generated_Always, "428C9")
+ERROR_DEF(PSQL_Code_Undefined_Table, "42P01")
+ERROR_DEF(PSQL_Code_Duplicate_Table, "42P07")
+ERROR_DEF(PSQL_Code_Ambiguous_Parameter, "42P08")
+ERROR_DEF(PSQL_Code_Invalid_Column_Reference, "42P10")
+ERROR_DEF(PSQL_Code_Invalid_Table_Definition, "42P16")
+// Class 54 - Program Limit Exceeded
+ERROR_DEF(PSQL_Code_Too_Many_Columns, "54011")
+// Class 55 - Object Not In Prerequisite State
+ERROR_DEF(PSQL_Code_Cant_Change_Runtime_Param, "55P02")
+// Class 57 - Operator Intervention
+ERROR_DEF(PSQL_Code_Query_Canceled, "57014")
+// Class 58 - System Error
+ERROR_DEF(PSQL_Code_System_Error, "58000")
+ERROR_DEF(PSQL_Code_Io_Error, "58030")
+// Class F0 - Configuration File Error
+ERROR_DEF(PSQL_Code_Config_File_Error, "F0000")
+// Class XX - Internal Error
+ERROR_DEF(PSQL_Code_Internal_Error, "XX000")
+ERROR_END(PSQL_Code_Unknown, "00000")
+

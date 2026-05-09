@@ -1,0 +1,73 @@
+--------------------------------------------------------------------------------
+TEST: Referenced label not specified in call-in table: 
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+# Test that CINOENTRY message shows relative path if GTMCI/ydb_ci env var is set to relative path
+ 150379666,(Call-In),%YDB-E-CINOENTRY, No entry specified for getcode in the call-in table noent.tab
+# Test that CINOENTRY message shows absolute path if GTMCI/ydb_ci env var is set to absolute path
+ 150379666,(Call-In),%YDB-E-CINOENTRY, No entry specified for getcode in the call-in table ##TEST_PATH##/noent.tab
+# Test that setting GTMCI/ydb_ci env var to the empty string issues a CITABOPN error
+ 150379602,\(Call-In\),%YDB-E-CITABOPN, Unable to open call-in table: ,%YDB-E-SYSCALL, Error received from system call fopen -- called from module ##TEST_AWK.*/exttab_parse.c at line [0-9]*,%SYSTEM-E-ENO2, No such file or directory
+--------------------------------------------------------------------------------
+TEST: Invalid direction for passed parameters: 
+%YDB-I-EXTSRCLIN, 	getc: gtm_char_t* ccode^getrec2(gtm_long_t)
+
+						     ^-----
+%YDB-I-EXTSRCLOC, 		At column 29, line 1, source module dirctv.tab
+ 150379642,(Call-In),%YDB-E-CIDIRECTIVE, Invalid directive parameter passing.  Expected I, O or IO.
+--------------------------------------------------------------------------------
+TEST: Missing/Invalid C identifier in call-in table: 
+%YDB-I-EXTSRCLIN, 	    :  void ^bldrecs()
+
+			    ^-----
+%YDB-I-EXTSRCLOC, 		At column 4, line 1, source module errors.tab
+ 150379626,(Call-In),%YDB-E-CIRCALLNAME, Call-in routine name expected but not found
+--------------------------------------------------------------------------------
+TEST: Wrong type specification for O/IO, pointer type expected: 
+%YDB-I-EXTSRCLIN, 	get: gtm_char_t*  ccode^getrec2(O:gtm_long_t)
+
+							       ^-----
+%YDB-I-EXTSRCLOC, 		At column 39, line 1, source module partyp.tab
+ 150379650,(Call-In),%YDB-E-CIPARTYPE, Invalid type specification for O/IO directive - expected pointer type
+--------------------------------------------------------------------------------
+TEST: Syntax errors in parameter specifications in call-in table: 
+%YDB-I-EXTSRCLIN, 	get: gtm_char_t*  ccode^getrec2(I:gtm_long_t,)
+
+							       ^-----
+%YDB-I-EXTSRCLOC, 		At column 39, line 1, source module parnam.tab
+ 150379642,(Call-In),%YDB-E-CIDIRECTIVE, Invalid directive parameter passing.  Expected I, O or IO.
+--------------------------------------------------------------------------------
+TEST: Unknown parameter type specifcation:  
+%YDB-I-EXTSRCLIN, 	get: gtm_char_t*  ccode^getrec2(O:gtm_invalid_t)
+
+								  ^-----
+%YDB-I-EXTSRCLOC, 		At column 42, line 1, source module untype.tab
+ 150379658,(Call-In),%YDB-E-CIUNTYPE, Unknown parameter type encountered
+--------------------------------------------------------------------------------
+TEST: Invalid return type specifcation:  
+%YDB-I-EXTSRCLIN, 	getcode: gtm_char_t  ccode^getrec2(I:gtm_long_t)
+
+					    ^-----
+%YDB-I-EXTSRCLOC, 		At column 20, line 1, source module rtntyp.tab
+ 150379618,(Call-In),%YDB-E-CIRTNTYP, Invalid return type
+--------------------------------------------------------------------------------
+TEST: Environment variable for call table:
+GTMCI: Undefined variable.
+ 150379594,(Call-In),%YDB-E-CITABENV, Environment variable for call-in table ydb_ci/GTMCI not set
+--------------------------------------------------------------------------------
+TEST: Unable to open call table:
+ 150379602,\(Call-In\),%YDB-E-CITABOPN, Unable to open call-in table: call.tab,%YDB-E-SYSCALL, Error received from system call fopen -- called from module ##TEST_AWK.*/exttab_parse.c at line [0-9]*,%SYSTEM-E-ENO2, No such file or directory
+--------------------------------------------------------------------------------
+TEST: Multiple caret:
+%YDB-I-EXTSRCLIN, 	    getcode: gtm_char_t*  ccode^getrec2^nothere(I:gtm_long_t)
+
+							     ^-----
+%YDB-I-EXTSRCLOC, 		At column 37, line 1, source module mulcar.tab
+ 150379610,(Call-In),%YDB-E-CIENTNAME, No label reference found for this entry in call-in table
+--------------------------------------------------------------------------------

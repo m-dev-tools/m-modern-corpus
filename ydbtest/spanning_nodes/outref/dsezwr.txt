@@ -1,0 +1,12 @@
+
+YDB>
+
+YDB>
+
+YDB>
+1 spanning node construction successful
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

@@ -1,0 +1,22 @@
+
+YDB>
+
+YDB>
+Saving access semaphore id to semid.txt
+
+YDB>
+##TEST_AWK[0-9]*
+
+YDB>
+Saving shared memory id to shmid.txt
+
+YDB>
+##TEST_AWK[0-9]*
+
+YDB>
+Crashing database 
+YDB>
+Killed
+##TEST_AWK(Removing|Keeping) shared memory
+Executing MUPIP RUNDOWN
+TEST-I-PASS

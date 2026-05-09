@@ -1,0 +1,223 @@
+
+########################################################################################
+                      Try saving LOCKSPACE in template                      
+########################################################################################
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+
+GDE> 
+
+                                *** TEMPLATES ***
+                                                                          Std      Inst
+                                             Def      Rec   Key Null      Null     Freeze Qdb   Epoch              LOCK
+ Region                                     Coll     Size  Size Subs      Coll Jnl on Err Rndwn Taper AutoDB Stats Crit
+ ----------------------------------------------------------------------------------------------------------------------
+ <default>                                     0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+
+ Segment          Active              Acc Typ Block      Alloc Exten    Options
+ ------------------------------------------------------------------------------
+ <default>          *                 BG  DYN  4096        100   100    GLOB =1024
+                                                                        LOCK = 220
+                                                                        RES  =   0
+                                                                        ENCR = OFF
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        AIO  = OFF
+                                                                        FBWR =   0
+ <default>                            MM  DYN  4096        100   100    DEFER
+                                                                        LOCK = 220
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        FBWR =   0
+GDE> 
+GDE> 
+
+                                *** TEMPLATES ***
+                                                                          Std      Inst
+                                             Def      Rec   Key Null      Null     Freeze Qdb   Epoch              LOCK
+ Region                                     Coll     Size  Size Subs      Coll Jnl on Err Rndwn Taper AutoDB Stats Crit
+ ----------------------------------------------------------------------------------------------------------------------
+ <default>                                     0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+
+ Segment          Active              Acc Typ Block      Alloc Exten    Options
+ ------------------------------------------------------------------------------
+ <default>          *                 BG  DYN  4096        100   100    GLOB =1024
+                                                                        LOCK =1000
+                                                                        RES  =   0
+                                                                        ENCR = OFF
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        AIO  = OFF
+                                                                        FBWR =   0
+ <default>                            MM  DYN  4096        100   100    DEFER
+                                                                        LOCK = 220
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        FBWR =   0
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+########################################################################################
+                      Try saving BLOCKSIZE and RECSIZE in template                      
+########################################################################################
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+
+GDE> 
+
+                                *** TEMPLATES ***
+                                                                          Std      Inst
+                                             Def      Rec   Key Null      Null     Freeze Qdb   Epoch              LOCK
+ Region                                     Coll     Size  Size Subs      Coll Jnl on Err Rndwn Taper AutoDB Stats Crit
+ ----------------------------------------------------------------------------------------------------------------------
+ <default>                                     0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+
+ Segment          Active              Acc Typ Block      Alloc Exten    Options
+ ------------------------------------------------------------------------------
+ <default>          *                 BG  DYN  4096        100   100    GLOB =1024
+                                                                        LOCK =1000
+                                                                        RES  =   0
+                                                                        ENCR = OFF
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        AIO  = OFF
+                                                                        FBWR =   0
+ <default>                            MM  DYN  4096        100   100    DEFER
+                                                                        LOCK = 220
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        FBWR =   0
+GDE> 
+GDE> 
+GDE> 
+
+                                *** TEMPLATES ***
+                                                                          Std      Inst
+                                             Def      Rec   Key Null      Null     Freeze Qdb   Epoch              LOCK
+ Region                                     Coll     Size  Size Subs      Coll Jnl on Err Rndwn Taper AutoDB Stats Crit
+ ----------------------------------------------------------------------------------------------------------------------
+ <default>                                     0     8176    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+
+ Segment          Active              Acc Typ Block      Alloc Exten    Options
+ ------------------------------------------------------------------------------
+ <default>          *                 BG  DYN  8192        100   100    GLOB =1024
+                                                                        LOCK =1000
+                                                                        RES  =   0
+                                                                        ENCR = OFF
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        AIO  = OFF
+                                                                        FBWR =   0
+ <default>                            MM  DYN  4096        100   100    DEFER
+                                                                        LOCK = 220
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        FBWR =   0
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+########################################################################################
+                      Try saving STDNULLCOLL in template                      
+########################################################################################
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+
+GDE> 
+
+                                *** TEMPLATES ***
+                                                                          Std      Inst
+                                             Def      Rec   Key Null      Null     Freeze Qdb   Epoch              LOCK
+ Region                                     Coll     Size  Size Subs      Coll Jnl on Err Rndwn Taper AutoDB Stats Crit
+ ----------------------------------------------------------------------------------------------------------------------
+ <default>                                     0     8176    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+
+ Segment          Active              Acc Typ Block      Alloc Exten    Options
+ ------------------------------------------------------------------------------
+ <default>          *                 BG  DYN  8192        100   100    GLOB =1024
+                                                                        LOCK =1000
+                                                                        RES  =   0
+                                                                        ENCR = OFF
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        AIO  = OFF
+                                                                        FBWR =   0
+ <default>                            MM  DYN  4096        100   100    DEFER
+                                                                        LOCK = 220
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        FBWR =   0
+GDE> 
+GDE> 
+
+                                *** TEMPLATES ***
+                                                                          Std      Inst
+                                             Def      Rec   Key Null      Null     Freeze Qdb   Epoch              LOCK
+ Region                                     Coll     Size  Size Subs      Coll Jnl on Err Rndwn Taper AutoDB Stats Crit
+ ----------------------------------------------------------------------------------------------------------------------
+ <default>                                     0     8176    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+
+ Segment          Active              Acc Typ Block      Alloc Exten    Options
+ ------------------------------------------------------------------------------
+ <default>          *                 BG  DYN  8192        100   100    GLOB =1024
+                                                                        LOCK =1000
+                                                                        RES  =   0
+                                                                        ENCR = OFF
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        AIO  = OFF
+                                                                        FBWR =   0
+ <default>                            MM  DYN  4096        100   100    DEFER
+                                                                        LOCK = 220
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        FBWR =   0
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+########################################################################################
+                       Try reading STDNULLCOLL from saved template                      
+########################################################################################
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+
+GDE> 
+
+                                *** TEMPLATES ***
+                                                                          Std      Inst
+                                             Def      Rec   Key Null      Null     Freeze Qdb   Epoch              LOCK
+ Region                                     Coll     Size  Size Subs      Coll Jnl on Err Rndwn Taper AutoDB Stats Crit
+ ----------------------------------------------------------------------------------------------------------------------
+ <default>                                     0     8176    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+
+ Segment          Active              Acc Typ Block      Alloc Exten    Options
+ ------------------------------------------------------------------------------
+ <default>          *                 BG  DYN  8192        100   100    GLOB =1024
+                                                                        LOCK =1000
+                                                                        RES  =   0
+                                                                        ENCR = OFF
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        AIO  = OFF
+                                                                        FBWR =   0
+ <default>                            MM  DYN  4096        100   100    DEFER
+                                                                        LOCK = 220
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        FBWR =   0
+GDE> 
+%GDE-I-NOACTION, Not updating Global Directory ##TEST_PATH##/mumps.gld

@@ -1,0 +1,109 @@
+
+YDB>
+zprint zbreak1
+zbreak1;
+@zbentlab^@zbentrtn
+zbreak2;
+@zbentlab+@indlineno^@zbentrtn
+	. set filebase="txt"_j
+zbreak2+20^dollartx>set zbcnt(20)=zbcnt(20)+1  write "zbreak action at=",$zpos,!
+zbreak2^dollartx>set zbcnt(19)=zbcnt(19)+1  write "zbreak action at=",$zpos,!
+zbreak action at=zbreak2+1^dollartx
+zprint zbreak2
+zbreak2;
++74^dollartx>set zbcnt(75)=zbcnt(75)+1  zc
++73^dollartx>set zbcnt(73)=zbcnt(73)+1  zc
++72^dollartx>set zbcnt(72)=zbcnt(72)+1  zc
++70^dollartx>set zbcnt(71)=zbcnt(71)+1  zc
++69^dollartx>set zbcnt(69)=zbcnt(69)+1  zc
++67^dollartx>set zbcnt(68)=zbcnt(68)+1  zc
++66^dollartx>set zbcnt(66)=zbcnt(66)+1  zc
++65^dollartx>set zbcnt(65)=zbcnt(65)+1  zc
++64^dollartx>set zbcnt(64)=zbcnt(64)+1  zc
++63^dollartx>set zbcnt(63)=zbcnt(63)+1  zc
++62^dollartx>set zbcnt(62)=zbcnt(62)+1  zc
++61^dollartx>set zbcnt(61)=zbcnt(61)+1  zc
++60^dollartx>set zbcnt(60)=zbcnt(60)+1  zc
++59^dollartx>set zbcnt(59)=zbcnt(59)+1  zc
++57^dollartx>set zbcnt(58)=zbcnt(58)+1  zc
++56^dollartx>set zbcnt(56)=zbcnt(56)+1  zc
++55^dollartx>set zbcnt(55)=zbcnt(55)+1  zc
++54^dollartx>set zbcnt(54)=zbcnt(54)+1  zc
++53^dollartx>set zbcnt(53)=zbcnt(53)+1  zc
++52^dollartx>set zbcnt(52)=zbcnt(52)+1  zc
++48^dollartx>set zbcnt(48)=zbcnt(48)+1  zc
++47^dollartx>set zbcnt(47)=zbcnt(47)+1  zc
++46^dollartx>set zbcnt(46)=zbcnt(46)+1  zc
++45^dollartx>set zbcnt(45)=zbcnt(45)+1  zc
++44^dollartx>set zbcnt(44)=zbcnt(44)+1  zc
++43^dollartx>set zbcnt(43)=zbcnt(43)+1  zc
++42^dollartx>set zbcnt(42)=zbcnt(42)+1  zc
++41^dollartx>set zbcnt(41)=zbcnt(41)+1  zc
++40^dollartx>set zbcnt(40)=zbcnt(40)+1  zc
++39^dollartx>set zbcnt(39)=zbcnt(39)+1  zc
++38^dollartx>set zbcnt(38)=zbcnt(38)+1  zc
+zbreak2+20^dollartx>set zbcnt(37)=zbcnt(37)+1  zc
++36^dollartx>set zbcnt(36)=zbcnt(36)+1  zc
++34^dollartx>set zbcnt(35)=zbcnt(35)+1  zc
++33^dollartx>set zbcnt(33)=zbcnt(33)+1  zc
++32^dollartx>set zbcnt(32)=zbcnt(32)+1  zc
++31^dollartx>set zbcnt(31)=zbcnt(31)+1  zc
+zbreak2^dollartx>set zbcnt(19)=zbcnt(19)+1  write "zbreak action at=",$zpos,!
+zprint create
+create;
+zprint run
+run;
+do verify
+zprint verify
+verify
+do verlines
+dollartx finished successfully
+zbcnt(19)=1
+zbcnt(20)=0
+zbcnt(31)=1
+zbcnt(32)=1
+zbcnt(33)=1
+zbcnt(34)=0
+zbcnt(35)=1
+zbcnt(36)=1
+zbcnt(37)=5
+zbcnt(38)=5
+zbcnt(39)=5
+zbcnt(40)=5
+zbcnt(41)=5
+zbcnt(42)=5
+zbcnt(43)=5
+zbcnt(44)=5
+zbcnt(45)=5
+zbcnt(46)=2500
+zbcnt(47)=2500
+zbcnt(48)=2500
+zbcnt(49)=0
+zbcnt(50)=0
+zbcnt(51)=0
+zbcnt(52)=2500
+zbcnt(53)=2500
+zbcnt(54)=2500
+zbcnt(55)=5
+zbcnt(56)=1
+zbcnt(57)=0
+zbcnt(58)=0
+zbcnt(59)=0
+zbcnt(60)=0
+zbcnt(61)=0
+zbcnt(62)=0
+zbcnt(63)=0
+zbcnt(64)=0
+zbcnt(65)=0
+zbcnt(66)=0
+zbcnt(67)=0
+zbcnt(68)=0
+zbcnt(69)=0
+zbcnt(70)=0
+zbcnt(71)=0
+zbcnt(72)=0
+zbcnt(73)=0
+zbcnt(74)=0
+zbcnt(75)=0
+
+YDB>

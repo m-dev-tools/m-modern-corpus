@@ -1,0 +1,51 @@
+Test JOB command with environment variable gtm_noundef = FALSE
+
+YDB>
+job ^@a
+
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: k
+
+YDB>
+job @k
+
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: k
+
+YDB>
+job ^k
+
+YDB>
+%YDB-E-JOBFAIL, JOB command failure
+%YDB-I-TEXT, Job error in routine or label or offset specification.
+
+YDB>
+------------------------------------------------------------
+
+Test JOB command with environment variable gtm_noundef = TRUE
+
+YDB>
+job ^@a
+
+YDB>
+%YDB-E-JOBFAIL, JOB command failure
+%YDB-E-NULLENTRYREF, JOB command did not specify entryref
+
+YDB>
+job @k
+
+YDB>
+%YDB-E-LABELEXPECTED, Label expected in this context
+
+YDB>
+job ^k
+
+YDB>
+%YDB-E-JOBFAIL, JOB command failure
+%YDB-I-TEXT, Job error in routine or label or offset specification.
+
+YDB>
+##TEST_PATH##/k.mje
+%YDB-E-ZLINKFILE, Error while zlinking "k"
+%YDB-E-FILENOTFND, File k.m not found
+%YDB-E-FILENOTFND, File k.o not found

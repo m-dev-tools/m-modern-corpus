@@ -1,0 +1,260 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+YDB>
+
+--------- (a) Test viewfillfactor ------------
+
+Fill factor = 100
+Fill factor = 30
+Fill factor = 60
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+
+###### GT.M with RESERVED_BYTES=0. Should NOT issue RSVDBYTE2HIGH error ###### 
+
+YDB>
+
+--------- (b1) Test fillfactor -------------------
+
+YDB>
+
+--------- (b2) Test RSVDBYTE2HIGH error at the leaf level -------------------
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-RECORDSTAT, ^x:	  Key cnt: 2  max subsc len: 6  max rec len: 900  max node len: 910
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 2  max subsc len: 6  max rec len: 900  max node len: 910
+data1.glo
+^x(2)="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1"
+^x(3)="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1"
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE> 
+###### GT.M with RESERVED_BYTES=128. Should issue RSVDBYTE2HIGH error ###### 
+
+YDB>
+
+--------- (b2) Test RSVDBYTE2HIGH error at the leaf level -------------------
+
+YDB>
+
+YDB>
+
+--------- (b1) Test fillfactor -------------------
+
+YDB>
+
+--------- (b2) Test RSVDBYTE2HIGH error at the leaf level -------------------
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-RECORDSTAT, ^x:	  Key cnt: 2  max subsc len: 6  max rec len: 900  max node len: 880
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 2  max subsc len: 6  max rec len: 900  max node len: 880
+data2.glo
+^x(2)="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1"
+^x(3)="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1"
+
+###### MUPIP LOAD with RESERVED_BYTES=128. Should issue RSVDBYTE2HIGH error ###### 
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE> Beginning LOAD at record number: 3
+
+LOAD TOTAL		Key Cnt: 2  Max Subsc Len: 6  Max Data Len: 900
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 4
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-RECORDSTAT, ^x:	  Key cnt: 2  max subsc len: 6  max rec len: 900  max node len: 880
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 2  max subsc len: 6  max rec len: 900  max node len: 880
+
+###### MUPIP LOAD with RESERVED_BYTES=0 and FILLFACTOR=30. Should NOT issue RSVDBYTE2HIGH error ###### 
+Beginning LOAD at record number: 3
+
+LOAD TOTAL		Key Cnt: 2  Max Subsc Len: 6  Max Data Len: 900
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 4
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-RECORDSTAT, ^x:	  Key cnt: 2  max subsc len: 6  max rec len: 900  max node len: 910
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 2  max subsc len: 6  max rec len: 900  max node len: 910
+
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE> 
+YDB>
+
+--------- (b3) Test RSVDBYTE2HIGH error at the index level -------------------
+##TEST_AWK%YDB-E-RSVDBYTE2HIGH, Record size \((260|264)\) is greater than the maximum allowed for region DEFAULT with Block size \(1024\) and index reserved bytes \(768\),%YDB-I-GVIS, 		Global variable: \^x\("                                                                                                                                                                                                                                     2")
+		At M source location data4+8^d002587
+
+YDB>
+
+YDB>
+
+--------- (c) Test emptyrightblock ------------
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-RECORDSTAT, ^x:	  Key cnt: 2  max subsc len: 6  max rec len: 500  max node len: 510
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 2  max subsc len: 6  max rec len: 500  max node len: 510
+
+###### MUPIP LOAD with FILLFACTOR=60 ######
+Beginning LOAD at record number: 3
+
+LOAD TOTAL		Key Cnt: 2  Max Subsc Len: 6  Max Data Len: 500
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 4
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-RECORDSTAT, ^x:	  Key cnt: 2  max subsc len: 6  max rec len: 500  max node len: 510
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 2  max subsc len: 6  max rec len: 500  max node len: 510
+data6.glo
+^x(1)="                                                                                                   1"
+^x(2)="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1"
+
+YDB>
+
+--------- (d) Test copyextrarecord ------------
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-RECORDSTAT, ^x:	  Key cnt: 2  max subsc len: 6  max rec len: 500  max node len: 510
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 2  max subsc len: 6  max rec len: 500  max node len: 510
+
+YDB>
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-RECORDSTAT, ^x:	  Key cnt: 1  max subsc len: 6  max rec len: 500  max node len: 510
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 1  max subsc len: 6  max rec len: 500  max node len: 510
+
+YDB>
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-RECORDSTAT, ^x:	  Key cnt: 1  max subsc len: 6  max rec len: 100  max node len: 110
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 1  max subsc len: 6  max rec len: 100  max node len: 110
+
+###### MUPIP LOAD of DATA2 with FILLFACTOR=60 ######
+Beginning LOAD at record number: 3
+
+LOAD TOTAL		Key Cnt: 1  Max Subsc Len: 6  Max Data Len: 500
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 3
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+
+###### MUPIP LOAD of DATA1 with FILLFACTOR=30 ######
+Beginning LOAD at record number: 3
+
+LOAD TOTAL		Key Cnt: 1  Max Subsc Len: 6  Max Data Len: 100
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 3
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-I-RECORDSTAT, ^x:	  Key cnt: 2  max subsc len: 6  max rec len: 500  max node len: 510
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 2  max subsc len: 6  max rec len: 500  max node len: 510
+data8.glo
+^x(1)="                                                                                                   1"
+^x(2)="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1"
+
+YDB>
+
+--------- (e) Test leftsplitLEFTBLOCK ------------
+
+YDB>
+
+YDB>
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE> 
+YDB>
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+
+YDB>
+
+--------- (f) Test leftsplitRIGHTBLOCK ------------
+
+YDB>
+
+YDB>
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE> 
+YDB>
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+
+YDB>
+
+--------- (g) Test rightsplitLEFTBLOCK ------------
+
+YDB>
+
+YDB>
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE> 
+YDB>
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

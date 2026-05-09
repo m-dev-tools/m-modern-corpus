@@ -1,0 +1,8 @@
+# m-cli configuration — modern M project (validation corpus).
+# See ~/claude/templates/m-project/.m-cli.toml for documentation.
+
+[lint]
+rules = "pythonic"
+
+[fmt]
+rules = "pythonic-lower"

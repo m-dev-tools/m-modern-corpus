@@ -1,0 +1,164 @@
+# TESTING EACH FUNCTION RESTRICTED BY RESTRICT.TXT (with readonly permissions)
+
+-r--r--r-- ##TEST_PATH##/ydb_temp_dist/restrict.txt
+# TESTING BREAK
+Break command successfully ignored
+# TESTING ZBREAK
+ZSTATUS=zbreakfn+4^gtm8694,%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: ZBREAK
+Zbreak command successfully ignored
+# TESTING ZCMDLINE
+
+# TESTING ZEDIT
+ZSTATUS=zeditfn+3^gtm8694,%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: ZEDIT
+# TESTING ZSYSTEM
+ZSTATUS=zsystemfn+3^gtm8694,%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: ZSYSTEM
+# TESTING PIPE
+ZSTATUS=pipefn+4^gtm8694,%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: OPEN PIPE
+# TESTING TRIGMOD
+ZSTATUS=trigmodfn+3^gtm8694,%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: $ZTRIGGER(FILE)
+# TESTING DIRECTMODE
+%YDB-F-RESTRICTEDOP, Attempt to perform a restricted operation: mumps -direct
+# TESTING DSE
+%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: DSE
+
+# TESTING CENABLE
+YDB>#<CTRL-C>
+
+# -----------------------------------------------------------------------------
+
+# TESTING EACH FUNCTION WHEN RESTRICT.TXT HAS NO READ OR WRITE PERMISSIONS
+
+# Not testing cenable, since this should restrict direct mode, which is necessary for testing cenable
+# Randomly choosing what is listed as restricted, since everything should get restricted regardless
+---------- ##TEST_PATH##/ydb_temp_dist/restrict.txt
+##TEST_PATH##/ydb_temp_dist/mumps -run breakfn^gtm8694
+##TEST_AWK%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: dlopen\(##TEST_PATH##/ydb_temp_dist/plugin/.*##TEST_SHL_SUFFIX##)
+##TEST_PATH##/ydb_temp_dist/mumps -run zbreakfn^gtm8694
+##TEST_AWK%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: dlopen\(##TEST_PATH##/ydb_temp_dist/plugin/.*##TEST_SHL_SUFFIX##)
+##TEST_PATH##/ydb_temp_dist/mumps -run zcmdlnefn^gtm8694 ZCMDLNE was not ignored
+##TEST_AWK%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: dlopen\(##TEST_PATH##/ydb_temp_dist/plugin/.*##TEST_SHL_SUFFIX##)
+##TEST_PATH##/ydb_temp_dist/mumps -run zeditfn^gtm8694
+##TEST_AWK%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: dlopen\(##TEST_PATH##/ydb_temp_dist/plugin/.*##TEST_SHL_SUFFIX##)
+##TEST_PATH##/ydb_temp_dist/mumps -run zsystemfn^gtm8694
+##TEST_AWK%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: dlopen\(##TEST_PATH##/ydb_temp_dist/plugin/.*##TEST_SHL_SUFFIX##)
+##TEST_PATH##/ydb_temp_dist/mumps -run pipefn^gtm8694
+##TEST_AWK%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: dlopen\(##TEST_PATH##/ydb_temp_dist/plugin/.*##TEST_SHL_SUFFIX##)
+##TEST_PATH##/ydb_temp_dist/mumps -run trigmodfn^gtm8694
+##TEST_AWK%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: dlopen\(##TEST_PATH##/ydb_temp_dist/plugin/.*##TEST_SHL_SUFFIX##)
+unset echo
+# TESTING DIRECTMODE
+##TEST_AWK%YDB-[FE]-RESTRICTEDOP, Attempt to perform a restricted operation: (mumps -direct|dlopen.*libicuio.so.)
+# TESTING DSE
+##TEST_AWK%YDB-E-RESTRICTEDOP, Attempt to perform a restricted operation: (DSE|dlopen.*libicuio.so.)
+
+
+# ----------------------------------------------------------------------------
+
+# TESTING EACH FUNCTION WHEN RESTRICT.TXT LISTS OUR GROUP NAME (with readonly permissions)
+
+
+-r--r--r-- ##TEST_PATH##/ydb_temp_dist/restrict.txt
+# TESTING BREAK
+%YDB-I-BREAK, Break instruction encountered
+		At M source location breakfn+2^gtm8694
+
+YDB>
+# TESTING ZBREAK
+ZBREAK not ignored
+# TESTING ZCMDLINE
+ZCMDLNE was not ignored
+# TESTING ZEDIT
+ZEDIT not ignored
+# TESTING ZSYSTEM
+ZSYSTEM not ignored
+# TESTING PIPE
+PIPE not ignored
+# TESTING TRIGMOD
+File trigclear.trg, Line 1: Deleted SET trigger on ^A named A#1
+=========================================
+0 triggers added
+1 triggers deleted
+0 triggers modified
+1 trigger file entries did update database trigger content
+0 trigger file entries did not update database trigger content
+=========================================
+1
+# TESTING DIRECTMODE
+
+YDB>
+# TESTING DSE
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> 
+# TESTING CENABLE
+YDB>#<CTRL-C>
+##TEST_AWK.*YDB-I-CTRLC, CTRL_C encountered
+
+# -------------------------------------------------------------------------
+
+# TESTING EACH FUNCTION WHEN RESTRICT.TXT HAS WRITE PERMISSIONS
+# Randomly choosing what gets restricted, since nothing should end up restricted
+
+-rw-rw-r-- ##TEST_PATH##/ydb_temp_dist/restrict.txt
+# TESTING BREAK
+%YDB-I-BREAK, Break instruction encountered
+		At M source location breakfn+2^gtm8694
+
+YDB>
+# TESTING ZBREAK
+ZBREAK not ignored
+# TESTING ZCMDLINE
+ZCMDLNE was not ignored
+# TESTING ZEDIT
+ZEDIT not ignored
+# TESTING ZSYSTEM
+ZSYSTEM not ignored
+# TESTING PIPE
+PIPE not ignored
+# TESTING TRIGMOD
+File trigclear.trg, Line 1: Deleted SET trigger on ^A named A#1
+=========================================
+0 triggers added
+1 triggers deleted
+0 triggers modified
+1 trigger file entries did update database trigger content
+0 trigger file entries did not update database trigger content
+=========================================
+1
+# TESTING DIRECTMODE
+
+YDB>
+# TESTING DSE
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> 
+# TESTING CENABLE
+YDB>#<CTRL-C>
+##TEST_AWK.*YDB-I-CTRLC, CTRL_C encountered
+
+# -----------------------------------------------------------------------
+
+TESTING EACH FUNCTION WHEN ALL ARE INCLUDED IN RESTRICT.TXT AND SOME ARE RANDOMLY ASSIGNED TO OUR GROUP (with read only permissions)
+
+-r--r--r-- ##TEST_PATH##/ydb_temp_dist/restrict.txt
+BREAK acted as expected
+ZBREAK acted as expected
+ZCMDLINE acted as expected
+ZEDIT acted as expected
+ZSYSTEM acted as expected
+PIPE_OPEN acted as expected
+DIRECT_MODE acted as expected
+DSE acted as expected
+TRIGGER_MOD acted as expected
+
+#----------------------------------------------------------------------
+
+TESTING A RANDOM FUNCTION WHEN THERE IS A SYNTAX ERROR IN RESTRICT.TXT AND CHECKING THE SYSLOG
+
+-r--r--r-- ##TEST_PATH##/ydb_temp_dist/restrict.txt
+# CHECKING THE SYSLOG
+##TEST_AWK%YDB-E-RESTRICTSYNTAX, Syntax error in file ##TEST_PATH##/ydb_temp_dist/restrict.txt at line number 1. All facilities restricted for process. -- generated from 0x.*

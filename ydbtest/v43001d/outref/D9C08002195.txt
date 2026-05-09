@@ -1,0 +1,15 @@
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/temp.dat created
+Database file ##TEST_PATH##/mumps.dat now has BG access method
+Database file ##TEST_PATH##/temp.dat now has BG access method

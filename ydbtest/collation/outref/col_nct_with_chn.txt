@@ -1,0 +1,378 @@
+setenv gtm_chset UTF-8
+unset echo
+DEBUG INFORMATION
+1
+gtm_collate_1=##TEST_PATH##/libchinese##TEST_SHL_SUFFIX##
+DEBUG INFORMATION
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+	set nct=0
+	set act=1
+	q
+
+YDB>
+
+YDB>
+nct is requested to be set to 0
+
+YDB>
+act is requested to be set to 1
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^a is configured to :: 0,1,3
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^A is configured to :: 0,1,3
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+	set nct=0
+	set act=1
+	q
+
+YDB>
+
+YDB>
+nct is requested to be set to 0
+
+YDB>
+act is requested to be set to 1
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^a is configured to :: 0,1,3
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^A is configured to :: 0,1,3
+
+YDB>
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+    SET Global ^a
+
+YDB>
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+Checking scenario with nct :: 0 and act :: 1 PASSED
+##SOURCE_PATH##/mupip extract -format=bin col_nct_chn_data.bin
+%YDB-I-RECORDSTAT, ^a:	  Key cnt: 84  max subsc len: 11  max rec len: 6  max node len: 17
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 84  max subsc len: 11  max rec len: 6  max node len: 17
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+	set nct=1
+	set act=1
+	q
+
+YDB>
+
+YDB>
+nct is requested to be set to 1
+
+YDB>
+act is requested to be set to 1
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^a is configured to :: 1,1,3
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^A is configured to :: 1,1,3
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+	set nct=1
+	set act=1
+	q
+
+YDB>
+
+YDB>
+nct is requested to be set to 1
+
+YDB>
+act is requested to be set to 1
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^a is configured to :: 1,1,3
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^A is configured to :: 1,1,3
+
+YDB>
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip load -format=bin col_nct_chn_data.bin
+
+Beginning LOAD at record number: 2
+
+LOAD TOTAL		Key Cnt: 84  Max Subsc Len: 11  Max Data Len: 6
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 2
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+Checking scenario with nct :: 1 and act :: 1 PASSED
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+	set nct=1
+	set act=0
+	q
+
+YDB>
+
+YDB>
+nct is requested to be set to 1
+
+YDB>
+act is requested to be set to 0
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^a is configured to :: 1,0,0
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^A is configured to :: 1,0,0
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+	set nct=1
+	set act=0
+	q
+
+YDB>
+
+YDB>
+nct is requested to be set to 1
+
+YDB>
+act is requested to be set to 0
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^a is configured to :: 1,0,0
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^A is configured to :: 1,0,0
+
+YDB>
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip load -format=bin col_nct_chn_data.bin
+
+Beginning LOAD at record number: 2
+
+LOAD TOTAL		Key Cnt: 84  Max Subsc Len: 14  Max Data Len: 6
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 2
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+Checking scenario with nct :: 1 and act :: 0 PASSED
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+	set nct=0
+	set act=0
+	q
+
+YDB>
+
+YDB>
+nct is requested to be set to 0
+
+YDB>
+act is requested to be set to 0
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^a is configured to :: 0,0,0
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^A is configured to :: 0,0,0
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+	set nct=0
+	set act=0
+	q
+
+YDB>
+
+YDB>
+nct is requested to be set to 0
+
+YDB>
+act is requested to be set to 0
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^a is configured to :: 0,0,0
+
+YDB>
+
+YDB>
+The return code from set of %GBLDEF :: 1
+
+YDB>
+Global ^A is configured to :: 0,0,0
+
+YDB>
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip load -format=bin col_nct_chn_data.bin
+
+Beginning LOAD at record number: 2
+
+LOAD TOTAL		Key Cnt: 84  Max Subsc Len: 14  Max Data Len: 6
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 2
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+Checking scenario with nct :: 0 and act :: 0 PASSED

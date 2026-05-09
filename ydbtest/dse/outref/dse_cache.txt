@@ -1,0 +1,454 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+c.dat
+d.dat
+e.dat
+f.dat
+g.dat
+mumps.dat
+##SUSPEND_OUTPUT   NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+a.dat
+b.dat
+c.dat
+d.dat
+e.dat
+f.dat
+g.dat
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT   NON_REPLIC
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+##SUSPEND_OUTPUT  REPLIC
+Done Waiting for region AREG : Refcnt = 4
+Done Waiting for region BREG : Refcnt = 4
+Done Waiting for region CREG : Refcnt = 4
+Done Waiting for region DEFAULT : Refcnt = 4
+Done Waiting for region DREG : Refcnt = 4
+Done Waiting for region EREG : Refcnt = 4
+Done Waiting for region FREG : Refcnt = 4
+Done Waiting for region GREG : Refcnt = 4
+##ALLOW_OUTPUT  REPLIC
+##SUSPEND_OUTPUT  NON_REPLIC
+Done Waiting for region AREG : Refcnt = 5
+Done Waiting for region BREG : Refcnt = 5
+Done Waiting for region CREG : Refcnt = 5
+Done Waiting for region DEFAULT : Refcnt = 5
+Done Waiting for region DREG : Refcnt = 5
+Done Waiting for region EREG : Refcnt = 5
+Done Waiting for region FREG : Refcnt = 5
+Done Waiting for region GREG : Refcnt = 5
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+
+--------- Testing CACHE VERIFY and CACHE RECOVER ---------
+
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> 
+File  	##TEST_PATH##/c.dat
+Region	CREG
+
+DSE> Region CREG         : Cache verification is clean
+DSE> 
+File  	##TEST_PATH##/b.dat
+Region	BREG
+
+DSE> Region BREG         : Cache verification is clean
+DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> Region AREG         : Cache verification is clean
+Region BREG         : Cache verification is clean
+Region CREG         : Cache verification is clean
+Region DEFAULT      : Cache verification is clean
+Region DREG         : Cache verification is clean
+Region EREG         : Cache verification is clean
+Region FREG         : Cache verification is clean
+Region GREG         : Cache verification is clean
+DSE> Region AREG         : Cache recovery complete (see operator log for details)
+DSE> Region AREG         : Cache recovery complete (see operator log for details)
+Region BREG         : Cache recovery complete (see operator log for details)
+Region CREG         : Cache recovery complete (see operator log for details)
+Region DEFAULT      : Cache recovery complete (see operator log for details)
+Region DREG         : Cache recovery complete (see operator log for details)
+Region EREG         : Cache recovery complete (see operator log for details)
+Region FREG         : Cache recovery complete (see operator log for details)
+Region GREG         : Cache recovery complete (see operator log for details)
+DSE> Region AREG         : Cache verification is clean
+Region BREG         : Cache verification is clean
+Region CREG         : Cache verification is clean
+Region DEFAULT      : Cache verification is clean
+Region DREG         : Cache verification is clean
+Region EREG         : Cache verification is clean
+Region FREG         : Cache verification is clean
+Region GREG         : Cache verification is clean
+DSE> 
+
+--------- Testing CACHE SHOW with no arguments ---------
+
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> Error:  already in region: AREG
+DSE> Region AREG : Shared_memory       = ##HEX##
+Region AREG :  node_local         = ##HEX##
+Region AREG :  critical           = ##HEX##
+##SUSPEND_OUTPUT   NON_REPLIC
+Region AREG :  jnl_buffer_struct  = ##HEX##
+Region AREG :  jnl_buffer_data    = ##HEX##
+##ALLOW_OUTPUT   NON_REPLIC
+Region AREG :  shmpool_buffer     = ##HEX##
+Region AREG :  lock_space         = ##HEX##
+##SUSPEND_OUTPUT MM
+Region AREG :  cache_queues_state = ##HEX##
+Region AREG :  cache_que_header   = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region AREG :  cache_record       = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region AREG :  global_buffer      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##SUSPEND_OUTPUT NON_ENCRYPT
+Region AREG :  encrypted_globuff  = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##ALLOW_OUTPUT NON_ENCRYPT
+Region AREG :  db_file_header     = ##HEX##
+Region AREG :  bt_que_header      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region AREG :  th_base            = ##HEX##
+Region AREG :  bt_record          = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region AREG :  shared_memory_size = ##HEX##
+##ALLOW_OUTPUT MM
+##SUSPEND_OUTPUT BG
+Region AREG :  shared_memory_size = ##HEX##
+Region AREG :  db_file_header     = ##HEX##
+##ALLOW_OUTPUT BG
+DSE> 
+File  	##TEST_PATH##/c.dat
+Region	CREG
+
+DSE> Region AREG : Shared_memory       = ##HEX##
+Region AREG :  node_local         = ##HEX##
+Region AREG :  critical           = ##HEX##
+##SUSPEND_OUTPUT   NON_REPLIC
+Region AREG :  jnl_buffer_struct  = ##HEX##
+Region AREG :  jnl_buffer_data    = ##HEX##
+##ALLOW_OUTPUT   NON_REPLIC
+Region AREG :  shmpool_buffer     = ##HEX##
+Region AREG :  lock_space         = ##HEX##
+##SUSPEND_OUTPUT MM
+Region AREG :  cache_queues_state = ##HEX##
+Region AREG :  cache_que_header   = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region AREG :  cache_record       = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region AREG :  global_buffer      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##SUSPEND_OUTPUT NON_ENCRYPT
+Region AREG :  encrypted_globuff  = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##ALLOW_OUTPUT NON_ENCRYPT
+Region AREG :  db_file_header     = ##HEX##
+Region AREG :  bt_que_header      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region AREG :  th_base            = ##HEX##
+Region AREG :  bt_record          = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region AREG :  shared_memory_size = ##HEX##
+##ALLOW_OUTPUT MM
+##SUSPEND_OUTPUT BG
+Region AREG :  shared_memory_size = ##HEX##
+Region AREG :  db_file_header     = ##HEX##
+##ALLOW_OUTPUT BG
+Region BREG : Shared_memory       = ##HEX##
+Region BREG :  node_local         = ##HEX##
+Region BREG :  critical           = ##HEX##
+##SUSPEND_OUTPUT   NON_REPLIC
+Region BREG :  jnl_buffer_struct  = ##HEX##
+Region BREG :  jnl_buffer_data    = ##HEX##
+##ALLOW_OUTPUT   NON_REPLIC
+Region BREG :  shmpool_buffer     = ##HEX##
+Region BREG :  lock_space         = ##HEX##
+##SUSPEND_OUTPUT MM
+Region BREG :  cache_queues_state = ##HEX##
+Region BREG :  cache_que_header   = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region BREG :  cache_record       = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region BREG :  global_buffer      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##SUSPEND_OUTPUT NON_ENCRYPT
+Region BREG :  encrypted_globuff  = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##ALLOW_OUTPUT NON_ENCRYPT
+Region BREG :  db_file_header     = ##HEX##
+Region BREG :  bt_que_header      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region BREG :  th_base            = ##HEX##
+Region BREG :  bt_record          = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region BREG :  shared_memory_size = ##HEX##
+##ALLOW_OUTPUT MM
+##SUSPEND_OUTPUT BG
+Region BREG :  shared_memory_size = ##HEX##
+Region BREG :  db_file_header     = ##HEX##
+##ALLOW_OUTPUT BG
+Region CREG : Shared_memory       = ##HEX##
+Region CREG :  node_local         = ##HEX##
+Region CREG :  critical           = ##HEX##
+##SUSPEND_OUTPUT   NON_REPLIC
+Region CREG :  jnl_buffer_struct  = ##HEX##
+Region CREG :  jnl_buffer_data    = ##HEX##
+##ALLOW_OUTPUT   NON_REPLIC
+Region CREG :  shmpool_buffer     = ##HEX##
+Region CREG :  lock_space         = ##HEX##
+##SUSPEND_OUTPUT MM
+Region CREG :  cache_queues_state = ##HEX##
+Region CREG :  cache_que_header   = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region CREG :  cache_record       = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region CREG :  global_buffer      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##SUSPEND_OUTPUT NON_ENCRYPT
+Region CREG :  encrypted_globuff  = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##ALLOW_OUTPUT NON_ENCRYPT
+Region CREG :  db_file_header     = ##HEX##
+Region CREG :  bt_que_header      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region CREG :  th_base            = ##HEX##
+Region CREG :  bt_record          = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region CREG :  shared_memory_size = ##HEX##
+##ALLOW_OUTPUT MM
+##SUSPEND_OUTPUT BG
+Region CREG :  shared_memory_size = ##HEX##
+Region CREG :  db_file_header     = ##HEX##
+##ALLOW_OUTPUT BG
+Region DEFAULT : Shared_memory       = ##HEX##
+Region DEFAULT :  node_local         = ##HEX##
+Region DEFAULT :  critical           = ##HEX##
+##SUSPEND_OUTPUT   NON_REPLIC
+Region DEFAULT :  jnl_buffer_struct  = ##HEX##
+Region DEFAULT :  jnl_buffer_data    = ##HEX##
+##ALLOW_OUTPUT   NON_REPLIC
+Region DEFAULT :  shmpool_buffer     = ##HEX##
+Region DEFAULT :  lock_space         = ##HEX##
+##SUSPEND_OUTPUT MM
+Region DEFAULT :  cache_queues_state = ##HEX##
+Region DEFAULT :  cache_que_header   = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region DEFAULT :  cache_record       = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region DEFAULT :  global_buffer      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##SUSPEND_OUTPUT NON_ENCRYPT
+Region DEFAULT :  encrypted_globuff  = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##ALLOW_OUTPUT NON_ENCRYPT
+Region DEFAULT :  db_file_header     = ##HEX##
+Region DEFAULT :  bt_que_header      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region DEFAULT :  th_base            = ##HEX##
+Region DEFAULT :  bt_record          = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region DEFAULT :  shared_memory_size = ##HEX##
+##ALLOW_OUTPUT MM
+##SUSPEND_OUTPUT BG
+Region DEFAULT :  shared_memory_size = ##HEX##
+Region DEFAULT :  db_file_header     = ##HEX##
+##ALLOW_OUTPUT BG
+Region DREG : Shared_memory       = ##HEX##
+Region DREG :  node_local         = ##HEX##
+Region DREG :  critical           = ##HEX##
+##SUSPEND_OUTPUT   NON_REPLIC
+Region DREG :  jnl_buffer_struct  = ##HEX##
+Region DREG :  jnl_buffer_data    = ##HEX##
+##ALLOW_OUTPUT   NON_REPLIC
+Region DREG :  shmpool_buffer     = ##HEX##
+Region DREG :  lock_space         = ##HEX##
+##SUSPEND_OUTPUT MM
+Region DREG :  cache_queues_state = ##HEX##
+Region DREG :  cache_que_header   = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region DREG :  cache_record       = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region DREG :  global_buffer      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##SUSPEND_OUTPUT NON_ENCRYPT
+Region DREG :  encrypted_globuff  = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##ALLOW_OUTPUT NON_ENCRYPT
+Region DREG :  db_file_header     = ##HEX##
+Region DREG :  bt_que_header      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region DREG :  th_base            = ##HEX##
+Region DREG :  bt_record          = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region DREG :  shared_memory_size = ##HEX##
+##ALLOW_OUTPUT MM
+##SUSPEND_OUTPUT BG
+Region DREG :  shared_memory_size = ##HEX##
+Region DREG :  db_file_header     = ##HEX##
+##ALLOW_OUTPUT BG
+Region EREG : Shared_memory       = ##HEX##
+Region EREG :  node_local         = ##HEX##
+Region EREG :  critical           = ##HEX##
+##SUSPEND_OUTPUT   NON_REPLIC
+Region EREG :  jnl_buffer_struct  = ##HEX##
+Region EREG :  jnl_buffer_data    = ##HEX##
+##ALLOW_OUTPUT   NON_REPLIC
+Region EREG :  shmpool_buffer     = ##HEX##
+Region EREG :  lock_space         = ##HEX##
+##SUSPEND_OUTPUT MM
+Region EREG :  cache_queues_state = ##HEX##
+Region EREG :  cache_que_header   = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region EREG :  cache_record       = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region EREG :  global_buffer      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##SUSPEND_OUTPUT NON_ENCRYPT
+Region EREG :  encrypted_globuff  = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##ALLOW_OUTPUT NON_ENCRYPT
+Region EREG :  db_file_header     = ##HEX##
+Region EREG :  bt_que_header      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region EREG :  th_base            = ##HEX##
+Region EREG :  bt_record          = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region EREG :  shared_memory_size = ##HEX##
+##ALLOW_OUTPUT MM
+##SUSPEND_OUTPUT BG
+Region EREG :  shared_memory_size = ##HEX##
+Region EREG :  db_file_header     = ##HEX##
+##ALLOW_OUTPUT BG
+Region FREG : Shared_memory       = ##HEX##
+Region FREG :  node_local         = ##HEX##
+Region FREG :  critical           = ##HEX##
+##SUSPEND_OUTPUT   NON_REPLIC
+Region FREG :  jnl_buffer_struct  = ##HEX##
+Region FREG :  jnl_buffer_data    = ##HEX##
+##ALLOW_OUTPUT   NON_REPLIC
+Region FREG :  shmpool_buffer     = ##HEX##
+Region FREG :  lock_space         = ##HEX##
+##SUSPEND_OUTPUT MM
+Region FREG :  cache_queues_state = ##HEX##
+Region FREG :  cache_que_header   = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region FREG :  cache_record       = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region FREG :  global_buffer      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##SUSPEND_OUTPUT NON_ENCRYPT
+Region FREG :  encrypted_globuff  = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##ALLOW_OUTPUT NON_ENCRYPT
+Region FREG :  db_file_header     = ##HEX##
+Region FREG :  bt_que_header      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region FREG :  th_base            = ##HEX##
+Region FREG :  bt_record          = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region FREG :  shared_memory_size = ##HEX##
+##ALLOW_OUTPUT MM
+##SUSPEND_OUTPUT BG
+Region FREG :  shared_memory_size = ##HEX##
+Region FREG :  db_file_header     = ##HEX##
+##ALLOW_OUTPUT BG
+Region GREG : Shared_memory       = ##HEX##
+Region GREG :  node_local         = ##HEX##
+Region GREG :  critical           = ##HEX##
+##SUSPEND_OUTPUT   NON_REPLIC
+Region GREG :  jnl_buffer_struct  = ##HEX##
+Region GREG :  jnl_buffer_data    = ##HEX##
+##ALLOW_OUTPUT   NON_REPLIC
+Region GREG :  shmpool_buffer     = ##HEX##
+Region GREG :  lock_space         = ##HEX##
+##SUSPEND_OUTPUT MM
+Region GREG :  cache_queues_state = ##HEX##
+Region GREG :  cache_que_header   = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region GREG :  cache_record       = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region GREG :  global_buffer      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##SUSPEND_OUTPUT NON_ENCRYPT
+Region GREG :  encrypted_globuff  = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+##ALLOW_OUTPUT NON_ENCRYPT
+Region GREG :  db_file_header     = ##HEX##
+Region GREG :  bt_que_header      = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region GREG :  th_base            = ##HEX##
+Region GREG :  bt_record          = ##HEX## : Numelems = ##HEX## : Elemsize = ##HEX##
+Region GREG :  shared_memory_size = ##HEX##
+##ALLOW_OUTPUT MM
+##SUSPEND_OUTPUT BG
+Region GREG :  shared_memory_size = ##HEX##
+Region GREG :  db_file_header     = ##HEX##
+##ALLOW_OUTPUT BG
+DSE> 
+
+--------- Testing CACHE SHOW and CACHE CHANGE ---------
+
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> Error:  already in region: AREG
+DSE> Region AREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region BREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region CREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region DEFAULT      : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region DREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region EREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region FREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region GREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+DSE> Error:  already in region: AREG
+DSE> Region AREG         : Location 0 [0x00000000] : Old Value = 71 [0x47] : New Value = 18 [0x12] : Size = 1 [0x01]
+DSE> Region AREG         : Location 0 [0x00000000] : Value = 18 [0x12] : Size = 1 [0x01]
+DSE> Region AREG         : Location 0 [0x00000000] : Old Value = 18 [0x12] : New Value = 71 [0x47] : Size = 1 [0x01]
+DSE> Region AREG         : Location 0 [0x00000000] : Value = 71 [0x47] : Size = 1 [0x01]
+DSE> Region AREG         : Location 0 [0x00000000] : Old Value =  : New Value = 4660 [0x1234] : Size = 2 [0x02]
+DSE> Region AREG         : Location 0 [0x00000000] : Value = 4660 [0x1234] : Size = 2 [0x02]
+DSE> Region AREG         : Location 0 [0x00000000] : Old Value = 4660 [0x1234] : New Value =  : Size = 2 [0x02]
+DSE> Region AREG         : Location 0 [0x00000000] : Value =  : Size = 2 [0x02]
+DSE> Region AREG         : Location 0 [0x00000000] : Old Value =  : New Value = 305419896 [0x12345678] : Size = 4 [0x04]
+DSE> %YDB-E-SIZENOTVALID4, Size (in bytes) must be either 1, 2, or 4
+DSE> 
+File  	##TEST_PATH##/b.dat
+Region	BREG
+
+DSE> Region BREG         : Location 0 [0x00000000] : Old Value =  : New Value = 2427178479 [0x90ABCDEF] : Size = 4 [0x04]
+DSE> Region AREG         : Location 0 [0x00000000] : Value = 305419896 [0x12345678] : Size = 4 [0x04]
+Region BREG         : Location 0 [0x00000000] : Value = 2427178479 [0x90ABCDEF] : Size = 4 [0x04]
+Region CREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region DEFAULT      : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region DREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region EREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region FREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region GREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+DSE> %YDB-E-SIZENOTVALID4, Size (in bytes) must be either 1, 2, or 4
+DSE> Error:  already in region: BREG
+DSE> Region BREG         : Location 0 [0x00000000] : Old Value = 2427178479 [0x90ABCDEF] : New Value = 0 [0x00000000] : Size = 4 [0x04]
+DSE> Region BREG         : Location 0 [0x00000000] : Old Value = 0 [0x00] : New Value = 71 [0x47] : Size = 1 [0x01]
+DSE> Region BREG         : Location 1 [0x00000001] : Old Value = 0 [0x00] : New Value = 68 [0x44] : Size = 1 [0x01]
+DSE> Region BREG         : Location 2 [0x00000002] : Old Value = 0 [0x00] : New Value = 83 [0x53] : Size = 1 [0x01]
+DSE> Region BREG         : Location 3 [0x00000003] : Old Value = 0 [0x00] : New Value = 68 [0x44] : Size = 1 [0x01]
+DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> Region AREG         : Location 0 [0x00000000] : Old Value = 305419896 [0x12345678] : New Value = 0 [0x00000000] : Size = 4 [0x04]
+DSE> Region AREG         : Location 0 [0x00000000] : Old Value = 0 [0x00] : New Value = 71 [0x47] : Size = 1 [0x01]
+DSE> Region AREG         : Location 1 [0x00000001] : Old Value = 0 [0x00] : New Value = 68 [0x44] : Size = 1 [0x01]
+DSE> Region AREG         : Location 2 [0x00000002] : Old Value = 0 [0x00] : New Value = 83 [0x53] : Size = 1 [0x01]
+DSE> Region AREG         : Location 3 [0x00000003] : Old Value = 0 [0x00] : New Value = 68 [0x44] : Size = 1 [0x01]
+DSE> 
+File  	##TEST_PATH##/c.dat
+Region	CREG
+
+DSE> Region AREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region BREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region CREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region DEFAULT      : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region DREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region EREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region FREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+Region GREG         : Location 0 [0x00000000] : Value =  : Size = 4 [0x04]
+DSE> 
+
+YDB>
+
+YDB>
+##SUSPEND_OUTPUT   NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+##ALLOW_OUTPUT   NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT   NON_REPLIC
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##TEST_HOST_SHORT##:##TEST_PATH##/dse_cache_change_show.log
+##SUSPEND_OUTPUT  REPLIC
+##ALLOW_OUTPUT   NON_REPLIC
+##TEST_PATH##/dse_cache_change_show.log
+##ALLOW_OUTPUT  REPLIC
+DSE> %YDB-E-SIZENOTVALID4, Size (in bytes) must be either 1, 2, or 4
+DSE> %YDB-E-SIZENOTVALID4, Size (in bytes) must be either 1, 2, or 4

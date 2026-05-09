@@ -1,0 +1,24 @@
+Test ZSHOW V:x
+
+YDB>
+
+YDB>
+$query(x) = 
+
+YDB>
+Test ZSHOW V:x(1)
+
+YDB>
+
+YDB>
+$query(x(1)) = 
+
+YDB>
+Test ZSHOW V:x(1,2,3,4)
+
+YDB>
+
+YDB>
+$query(x(1,2,3,4)) = 
+
+YDB>

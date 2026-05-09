@@ -1,0 +1,799 @@
+# Test of all ydb_env_set/unset functions
+# Environment variables are set correctly
+# Environment variables are restored correctly after unset
+# Will create a working database at $HOME/.yottadb if $ydb_dir is not set
+# Will create new regions if the .gld has changed
+# Will create a UTF-8 database if $ydb_chset is set to UtF-8
+# Will create a working database at $ydb_dir if none exists there
+# Will recover a database with before journaling after a crash and will error on nobefore/disable journaling
+# A database with nobefore/disable journaling will start up normally after ydb_env_set
+
+
+# Test 1
+# Checks that ydb_env_set sets all of the expected environment variables
+# This case is on a "fresh" environment with no preexisting variables set
+# That ydb_env_unset unsets all of the expected environment variables
+# That ydb_env_set creates the directory $HOME/.yottadb if it does not exist
+# source ydb_env_set
+# wc -l of envCmpA.txt, and setEnvA.txt should be the same
+PASS
+# source ydb_env_unset
+# Check that no ydb*, gtm*, GTM* environment variables are set
+PASS
+# Check that .yottadb was created at $HOME
+PASS
+
+
+# Test 2
+# Checks that ydb_env_set sets all of the expected environment variables
+# This case is on an environment with preexisting variables
+# That ydb_env_unset unsets all of the expected environment variables
+# That ydb_env_set creates the directory $HOME/.yottadb if it does not exist
+# source ydb_env_set
+# wc -l of envCmpB.txt, and setEnvB.txt should be the same
+PASS
+# source ydb_env_unset
+# wc -l of envCmpC.txt, and unsetEnvB.txt should be the same
+PASS
+# Check that .yottadb was created at $HOME
+PASS
+
+
+# Test 3
+# Test that ydb_env_set sets up a working database
+# Running subtest basic/globals to test that database is properly setup
+
+Test of access to MUMPS globals
+d  PASS
+i  PASS
+u  PASS
+# Creating a second region and confirming that ydb_env_set creates it
+PASS
+
+
+# Test 4
+# Test that setting ydb_chset to UtF-8 prior to ydb_env_set will use a UTF-8 database
+# Setting ydb_chset to UtF-8 to verify ydb_env_set properly sets up UTF-8 mode
+# Checking yottadb $zchset value
+UTF-8
+PASS
+
+
+# Test 5
+# Test that ydb_env_set creates the database files at ydb_dir when it is set
+# Setting ydb_dir to nonexistent directory tmp and testing environment works
+
+# [YDB#661] Test 5a : Test that ydb_chset is set to M by ydb_env_set by default
+$ydb_chset = M
+
+# Copying subtest basic/globals to test new environment
+
+Test of access to MUMPS globals
+d  PASS
+i  PASS
+u  PASS
+# Checking for the globals object file
+globals.o
+PASS
+
+
+# Test [6-11]
+# Simulating crashes and recoveries of database with properties
+#       Single Region before journaling
+#       2 Region before journaling
+#       Single Region nobefore journaling
+#       2 Region nobefore journaling
+#       Single Region no journaling
+#       2 Region no journaling
+# Test 6
+# Simulating a database crash and recovery with ydb_env_set with 1 regions with enable,on,before journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Crashing database
+##SUSPEND_OUTPUT REPLIC
+##TEST_AWKSimulating kill of GTM/YDB Processes with PID [0-9]*
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+##TEST_AWKSimulating kill of GTM/YDB Processes with PID [0-9]* [0-9]*
+##ALLOW_OUTPUT NON_REPLIC
+# Confirming it is crashed
+##SUSPEND_OUTPUT REPLIC
+##TEST_AWKError occurred: 150379986,%XCMD\+5\^%XCMD,%YDB-E-REQRECOV.*
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+##TEST_AWKError occurred: 150380978,%XCMD\+5\^%XCMD,%YDB-E-REQROLLBACK.*
+##ALLOW_OUTPUT NON_REPLIC
+# Attempting recovery
+##TEST_AWK##Checking the recovered database with $data(^a), $data(^b) Expected: 0|10 0|10; Actual: 0\|10 0\|10
+
+
+
+# Test 7
+# Simulating a database crash and recovery with ydb_env_set with 2 regions with enable,on,before journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Crashing database
+##SUSPEND_OUTPUT REPLIC
+##TEST_AWKSimulating kill of GTM/YDB Processes with PID [0-9]*
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+##TEST_AWKSimulating kill of GTM/YDB Processes with PID [0-9]* [0-9]*
+##ALLOW_OUTPUT NON_REPLIC
+# Confirming it is crashed
+##SUSPEND_OUTPUT REPLIC
+##TEST_AWKError occurred: 150379986,%XCMD\+5\^%XCMD,%YDB-E-REQRECOV.*
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+##TEST_AWKError occurred: 150380978,%XCMD\+5\^%XCMD,%YDB-E-REQROLLBACK.*
+##ALLOW_OUTPUT NON_REPLIC
+# Attempting recovery
+##TEST_AWK##Checking the recovered database with $data(^a), $data(^b) Expected: 0|10 0|10; Actual: 0\|10 0\|10
+
+
+
+# Test 8
+# Simulating a database crash and recovery with ydb_env_set with 1 regions with enable,on,nobefore journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Crashing database
+##SUSPEND_OUTPUT REPLIC
+##TEST_AWKSimulating kill of GTM/YDB Processes with PID [0-9]*
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+##TEST_AWKSimulating kill of GTM/YDB Processes with PID [0-9]* [0-9]*
+##ALLOW_OUTPUT NON_REPLIC
+# Confirming it is crashed
+##TEST_AWKError occurred: 150379986,%XCMD\+5\^%XCMD,%YDB-E-REQRECOV.*
+# Attempting recovery
+##TEST_AWKError file is at .*
+%YDBENV-F-NOTBEFOREIMAGEJOURNAL backward rollback/recover not possible because region "DEFAULT" does not have before-image journaling
+# Cannot do a dbcheck as non-before journaling types will have integ errors
+
+
+
+# Test 9
+# Simulating a database crash and recovery with ydb_env_set with 2 regions with enable,on,nobefore journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Crashing database
+##SUSPEND_OUTPUT REPLIC
+##TEST_AWKSimulating kill of GTM/YDB Processes with PID [0-9]*
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+##TEST_AWKSimulating kill of GTM/YDB Processes with PID [0-9]* [0-9]*
+##ALLOW_OUTPUT NON_REPLIC
+# Confirming it is crashed
+##TEST_AWKError occurred: 150379986,%XCMD\+5\^%XCMD,%YDB-E-REQRECOV.*
+# Attempting recovery
+##TEST_AWKError file is at .*
+%YDBENV-F-NOTBEFOREIMAGEJOURNAL backward rollback/recover not possible because region "AREG" does not have before-image journaling
+# Cannot do a dbcheck as non-before journaling types will have integ errors
+
+
+
+# Test 10
+# Simulating a database crash and recovery with ydb_env_set with 1 regions with disable journaling
+##SUSPEND_OUTPUT REPLIC
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+# Crashing database
+##TEST_AWKSimulating kill of GTM/YDB Processes with PID [0-9]*
+# Confirming it is crashed
+##TEST_AWKError occurred: 150374954,%XCMD\+5\^%XCMD,%YDB-E-REQRUNDOWN.*
+# Attempting recovery
+##TEST_AWKError file is at .*
+%YDBENV-F-NOTBEFOREIMAGEJOURNAL backward rollback/recover not possible because region "DEFAULT" does not have before-image journaling
+# Cannot do a dbcheck as non-before journaling types will have integ errors
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+Replication test cannot run with disabled journaling. Skipping test.
+##ALLOW_OUTPUT NON_REPLIC
+
+
+
+# Test 11
+# Simulating a database crash and recovery with ydb_env_set with 2 regions with disable journaling
+##SUSPEND_OUTPUT REPLIC
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+# Crashing database
+##TEST_AWKSimulating kill of GTM/YDB Processes with PID [0-9]*
+# Confirming it is crashed
+##TEST_AWKError occurred: 150374954,%XCMD\+5\^%XCMD,%YDB-E-REQRUNDOWN.*
+# Attempting recovery
+##TEST_AWKError file is at .*
+%YDBENV-F-NOTBEFOREIMAGEJOURNAL backward rollback/recover not possible because region "AREG" does not have before-image journaling
+# Cannot do a dbcheck as non-before journaling types will have integ errors
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+Replication test cannot run with disabled journaling. Skipping test.
+##ALLOW_OUTPUT NON_REPLIC
+
+
+
+
+
+# Test [12-17]
+# Testing that ydb_env_set will not attempt robustify after a clean shutdown of database with properties
+#       Single Region before journaling
+#       2 Region before journaling
+#       Single Region nobefore journaling
+#       2 Region nobefore journaling
+#       Single Region no journaling
+#       2 Region no journaling
+# Test 12
+# Opening and closing cleanly database with 1 regions with enable,on,before journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+
+
+
+# Test 13
+# Opening and closing cleanly database with 2 regions with enable,on,before journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+
+
+
+# Test 14
+# Opening and closing cleanly database with 1 regions with enable,on,nobefore journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+
+
+
+# Test 15
+# Opening and closing cleanly database with 2 regions with enable,on,nobefore journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+
+
+
+# Test 16
+# Opening and closing cleanly database with 1 regions with disable journaling
+##SUSPEND_OUTPUT REPLIC
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+Replication test cannot run with disabled journaling. Skipping test.
+##ALLOW_OUTPUT NON_REPLIC
+
+
+
+# Test 17
+# Opening and closing cleanly database with 2 regions with disable journaling
+##SUSPEND_OUTPUT REPLIC
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+Replication test cannot run with disabled journaling. Skipping test.
+##ALLOW_OUTPUT NON_REPLIC
+
+
+
+
+
+Test [18-23]
+Test that ydb_env_set does not call robustify when there is an open database with properties
+#       Single Region before journaling
+#       2 Region before journaling
+#       Single Region nobefore journaling
+#       2 Region nobefore journaling
+#       Single Region no journaling
+#       2 Region no journaling
+# Test 18
+# Leaving a database open and calling ydb_env_set with 1 regions with enable,on,before journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Leaving a yottadb process open and calling ydb_env_set
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+
+
+
+# Test 19
+# Leaving a database open and calling ydb_env_set with 2 regions with enable,on,before journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Leaving a yottadb process open and calling ydb_env_set
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+
+
+
+# Test 20
+# Leaving a database open and calling ydb_env_set with 1 regions with enable,on,nobefore journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Leaving a yottadb process open and calling ydb_env_set
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+
+
+
+# Test 21
+# Leaving a database open and calling ydb_env_set with 2 regions with enable,on,nobefore journaling
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Leaving a yottadb process open and calling ydb_env_set
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+
+
+
+# Test 22
+# Leaving a database open and calling ydb_env_set with 1 regions with disable journaling
+##SUSPEND_OUTPUT REPLIC
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+# Leaving a yottadb process open and calling ydb_env_set
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+Replication test cannot run with disabled journaling. Skipping test.
+##ALLOW_OUTPUT NON_REPLIC
+
+
+
+# Test 23
+# Leaving a database open and calling ydb_env_set with 2 regions with disable journaling
+##SUSPEND_OUTPUT REPLIC
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+yottadb.dat
+# Leaving a yottadb process open and calling ydb_env_set
+# Setting ^a and ^b and exiting
+# Toggling ydb_env_unset/ydb_env_set
+Checking $data(^a), $data(^b) Expected: 1 1; Actual: 1 1
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+Replication test cannot run with disabled journaling. Skipping test.
+##ALLOW_OUTPUT NON_REPLIC
+
+
+
+
+
+# ----------------------------------------------------------------------------------
+# Test 24 : Test of YDB#661 : ydb_env_set creates 3-region database by default
+# This implements the test plan at https://gitlab.com/YottaDB/DB/YDB/-/merge_requests/950#note_544517343.
+# ----------------------------------------------------------------------------------
+# Test 24 : Subtest A : Test that ydb_env_set creates YDBOCTO and YDBAIM regions by default
+# Verify that db & jnls exist under $ydb_dir/$ydb_rel/g for DEFAULT region
+# Verify that db & jnls exist under $ydb_dir/$ydb_rel/g for YDBOCTO region
+# Verify that db & jnls exist under $ydb_dir/$ydb_rel/g for YDBAIM region
+g/%ydbaim.dat
+g/%ydbaim.mjl
+g/%ydbocto.dat
+g/%ydbocto.mjl
+g/yottadb.dat
+g/yottadb.gld
+g/yottadb.mjl
+# Set some globals in the DEFAULT, YDBOCTO and YDBAIM regions
+; Set ^default=1 : Global maps to DEFAULT region
+; Set ^%ydboctotmp=2 : Global maps to YDBOCTO region
+; Set ^%ydbAIMtmp=3 : Global maps to YDBAIM region
+# source ydb_env_unset
+# source ydb_env_set
+# Confirm globals are still there
+^default=1
+^%ydboctotmp=2
+^%ydbAIMtmp=3
+# Verify gld settings of 3-region database created by ydb_env_set. GDE SHOW -COMMANDS output follows
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/##TEST_AWKr.*/g/yottadb.gld
+%GDE-I-VERIFY, Verification OK
+%GDE-I-NOACTION, Not updating Global Directory ##TEST_PATH##/##TEST_AWKr.*/g/yottadb.gld
+
+
+TEMPLATE -REGION -NOAUTODB
+TEMPLATE -REGION -COLLATION_DEFAULT=0
+TEMPLATE -REGION -EPOCHTAPER
+TEMPLATE -REGION -NOINST_FREEZE_ON_ERROR
+TEMPLATE -REGION -JOURNAL=(ALLOCATION=2048,AUTOSWITCHLIMIT=8386560,BEFORE_IMAGE,BUFFER_SIZE=2312,EXTENSION=2048)
+TEMPLATE -REGION -KEY_SIZE=1019
+TEMPLATE -REGION -LOCK_CRIT_SEPARATE
+TEMPLATE -REGION -NULL_SUBSCRIPTS=ALWAYS
+TEMPLATE -REGION -NOQDBRUNDOWN
+TEMPLATE -REGION -RECORD_SIZE=1048576
+TEMPLATE -REGION -STATS
+TEMPLATE -REGION -STDNULLCOLL
+!
+!
+TEMPLATE -SEGMENT -ACCESS_METHOD=BG
+TEMPLATE -SEGMENT -ALLOCATION=10000
+TEMPLATE -SEGMENT -NOASYNCIO
+TEMPLATE -SEGMENT -BLOCK_SIZE=2048
+TEMPLATE -SEGMENT -DEFER_ALLOCATE
+TEMPLATE -SEGMENT -NOENCRYPTION_FLAG
+TEMPLATE -SEGMENT -EXTENSION_COUNT=20000
+TEMPLATE -SEGMENT -FULLBLKWRT=0
+TEMPLATE -SEGMENT -GLOBAL_BUFFER_COUNT=2000
+TEMPLATE -SEGMENT -LOCK_SPACE=220
+TEMPLATE -SEGMENT -MUTEX_SLOTS=1024
+TEMPLATE -SEGMENT -RESERVED_BYTES=0
+!
+TEMPLATE -SEGMENT -ACCESS_METHOD=MM
+TEMPLATE -SEGMENT -ALLOCATION=10000
+TEMPLATE -SEGMENT -NOASYNCIO
+TEMPLATE -SEGMENT -BLOCK_SIZE=4096
+TEMPLATE -SEGMENT -DEFER
+TEMPLATE -SEGMENT -DEFER_ALLOCATE
+TEMPLATE -SEGMENT -NOENCRYPTION_FLAG
+TEMPLATE -SEGMENT -EXTENSION_COUNT=20000
+TEMPLATE -SEGMENT -FULLBLKWRT=0
+TEMPLATE -SEGMENT -GLOBAL_BUFFER_COUNT=10000
+TEMPLATE -SEGMENT -LOCK_SPACE=220
+TEMPLATE -SEGMENT -MUTEX_SLOTS=1024
+TEMPLATE -SEGMENT -RESERVED_BYTES=0
+!
+TEMPLATE -SEGMENT -ACCESS_METHOD=BG
+!
+DELETE -REGION DEFAULT
+DELETE -SEGMENT DEFAULT
+ADD -REGION DEFAULT -DYNAMIC_SEGMENT=DEFAULT -JOURNAL=(FILE_NAME="yottadb.mjl") -NULL_SUBSCRIPTS=NEVER
+ADD -REGION YDBAIM -DYNAMIC_SEGMENT=YDBAIM -JOURNAL=(FILE_NAME="%ydbaim.mjl")
+ADD -REGION YDBJNLF -AUTODB -DYNAMIC_SEGMENT=YDBJNLF -NOJOURNAL -NULL_SUBSCRIPTS=NEVER
+ADD -REGION YDBOCTO -DYNAMIC_SEGMENT=YDBOCTO -JOURNAL=(FILE_NAME="%ydbocto.mjl")
+!
+ADD -SEGMENT DEFAULT -BLOCK_SIZE=4096 -FILE_NAME="yottadb.dat" -GLOBAL_BUFFER_COUNT=10000
+ADD -SEGMENT YDBAIM -FILE_NAME="%ydbaim.dat"
+ADD -SEGMENT YDBJNLF -ACCESS_METHOD=MM -FILE_NAME="%ydbjnlf.dat"
+ADD -SEGMENT YDBOCTO -FILE_NAME="%ydbocto.dat"
+!
+LOCKS -REGION=DEFAULT
+ADD -NAME %ydbAIM* -REGION=YDBAIM
+ADD -NAME %ydbAIm* -REGION=YDBAIM
+ADD -NAME %ydbAiM* -REGION=YDBAIM
+ADD -NAME %ydbAim* -REGION=YDBAIM
+ADD -NAME %ydbJNLF* -REGION=YDBJNLF
+ADD -NAME %ydbJNLf* -REGION=YDBJNLF
+ADD -NAME %ydbJNlF* -REGION=YDBJNLF
+ADD -NAME %ydbJNlf* -REGION=YDBJNLF
+ADD -NAME %ydbJnLF* -REGION=YDBJNLF
+ADD -NAME %ydbJnLf* -REGION=YDBJNLF
+ADD -NAME %ydbJnlF* -REGION=YDBJNLF
+ADD -NAME %ydbJnlf* -REGION=YDBJNLF
+ADD -NAME %ydbOCTO* -REGION=YDBOCTO
+ADD -NAME %ydbOCTo* -REGION=YDBOCTO
+ADD -NAME %ydbOCtO* -REGION=YDBOCTO
+ADD -NAME %ydbOCto* -REGION=YDBOCTO
+ADD -NAME %ydbOcTO* -REGION=YDBOCTO
+ADD -NAME %ydbOcTo* -REGION=YDBOCTO
+ADD -NAME %ydbOctO* -REGION=YDBOCTO
+ADD -NAME %ydbOcto* -REGION=YDBOCTO
+ADD -NAME %ydbaIM* -REGION=YDBAIM
+ADD -NAME %ydbaIm* -REGION=YDBAIM
+ADD -NAME %ydbaiM* -REGION=YDBAIM
+ADD -NAME %ydbaim* -REGION=YDBAIM
+ADD -NAME %ydbjNLF* -REGION=YDBJNLF
+ADD -NAME %ydbjNLf* -REGION=YDBJNLF
+ADD -NAME %ydbjNlF* -REGION=YDBJNLF
+ADD -NAME %ydbjNlf* -REGION=YDBJNLF
+ADD -NAME %ydbjnLF* -REGION=YDBJNLF
+ADD -NAME %ydbjnLf* -REGION=YDBJNLF
+ADD -NAME %ydbjnlF* -REGION=YDBJNLF
+ADD -NAME %ydbjnlf* -REGION=YDBJNLF
+ADD -NAME %ydboCTO* -REGION=YDBOCTO
+ADD -NAME %ydboCTo* -REGION=YDBOCTO
+ADD -NAME %ydboCtO* -REGION=YDBOCTO
+ADD -NAME %ydboCto* -REGION=YDBOCTO
+ADD -NAME %ydbocTO* -REGION=YDBOCTO
+ADD -NAME %ydbocTo* -REGION=YDBOCTO
+ADD -NAME %ydboctO* -REGION=YDBOCTO
+ADD -NAME %ydbocto* -REGION=YDBOCTO
+!
+# Test 24 : Subtest B : Test of Crash handling of 3-region default database
+# Recreate default 3-region database of ydb_env_set using dbcreate.csh (as it is easy for crash/dbcheck etc.)
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+test24B.gld
+Using: ##SOURCE_PATH##/mupip
+%ydbaim.dat
+%ydbjnlf.dat
+%ydbocto.dat
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+test24B.gld
+Using: ##SOURCE_PATH##/mupip
+%ydbaim.dat
+%ydbjnlf.dat
+%ydbocto.dat
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Start a background yottadb process that updates globals in all 3 regions DEFAULT, YDBOCTO and YDBAIM
+# Kill the yottadb process and simulate a crash by deleting shared memory segments etc. for all three regions
+##TEST_AWKSimulating kill of GTM/YDB Processes with PID [0-9]*
+##SUSPEND_OUTPUT NON_REPLIC
+Simulating crash on primary in ##TEST_PATH##
+Primary crashed!
+Simulating crash on receiver in ##REMOTE_TEST_PATH##
+Receiver crashed!
+##ALLOW_OUTPUT NON_REPLIC
+# Confirming it is crashed
+##SUSPEND_OUTPUT REPLIC
+%YDB-E-REQRECOV, Error accessing database ##TEST_PATH##/yottadb.dat.  Must be recovered on cluster node ##TEST_HOST_SHORT####TEST_AWK[A-Za-z.]*.
+%YDB-I-TEXT, Error with database control shmctl
+##ALLOW_OUTPUT REPLIC
+##SUSPEND_OUTPUT NON_REPLIC
+##SUSPEND_OUTPUT NO_CUSTOM_ERRORS
+%YDB-E-REPLREQROLLBACK, Replication instance file ##TEST_PATH##/mumps.repl indicates abnormal shutdown or an incomplete ROLLBACK. Run MUPIP JOURNAL ROLLBACK first
+##TEST_AWK%YDB-I-TEXT, Error with semctl on Journal Pool SEMID \([0-9]*\)
+##ALLOW_OUTPUT NO_CUSTOM_ERRORS
+##SUSPEND_OUTPUT CUSTOM_ERRORS
+%YDB-E-REQROLLBACK, Error accessing database ##TEST_PATH##/yottadb.dat.  Run MUPIP JOURNAL -ROLLBACK -NOONLINE on cluster node ##TEST_HOST_SHORT####TEST_AWK[A-Za-z.]*.
+%YDB-I-TEXT, Error with database control shmctl
+##ALLOW_OUTPUT CUSTOM_ERRORS
+##ALLOW_OUTPUT NON_REPLIC
+##TEST_AWK%SYSTEM-E-ENO(22|43).*
+# Complete the crash simulation by sourcing ydb_env_unset
+# Source ydb_env_set to simulate restart of system
+# Confirm database file exists for YDBAIM in the existing $ydb_dir environment since it is journaled AND not an AUTODB region.
+# Confirm database file exists for YDBJNLF in the existing $ydb_dir environment if this test was run without -replic.
+# - In that case, this test did not open the YDBJNLF region and so that region did not have any REQRUNDOWN
+#   error (since the YDBJNLF region is not journaled) that needed to be fixed.
+# Confirm database file does NOT exist for YDBJNLF in the existing $ydb_dir environment if this test was run with -replic.
+# - In that case, the source server would have opened the YDBJNLF region (it opens all regions) and so that region would
+#   have a REQRECOVER error after the crash that needed to be fixed. And ydb_env_set would DELETE that database file since
+#   it has the AUTODB flag set and is not journaled.
+%ydbaim.dat
+##SUSPEND_OUTPUT REPLIC
+%ydbjnlf.dat
+##ALLOW_OUTPUT REPLIC
+%ydbocto.dat
+test24B.gld
+yottadb.dat
+# Verify that globals set in DEFAULT, YDBOCTO and YDBAIM exist
+Global ^default exists
+Global ^%ydboctotmp exists
+Global ^%ydbAIMtmp exists
+
+
+# Test 25
+# Test that ydb_env_set issues an error if ydb_gbldir points to a non-existent gld file
+# See https://gitlab.com/YottaDB/DB/YDB/-/merge_requests/1243#note_1169532091 for more details
+##TEST_AWKError file is at /tmp/ydb_env_.*/err
+%YDBENV-F-NOTAPATH Path nonexistent.gld does not exist
+$ZSTATUS="150379506,GLDEnsure+4^%YDBENV,%YDB-E-SETECODE, Non-empty value assigned to $ECODE (user-defined error trap)"
+
+
+# Test 26
+# Test that ydb_env_set will set the journal of all regions to be in the same folder
+# as the journal file for a preexisting DEFAULT region
+# Creating Single Region Database with before image journaling on
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+yottadb.gld
+Using: ##SOURCE_PATH##/mupip
+yottadb.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+# Journal file
+##TEST_PATH##/yottadb.mjl
+# Journal files
+##TEST_PATH##/yottadb.mjl
+##TEST_PATH##/%ydbaim.mjl
+##TEST_PATH##/%ydbocto.mjl
+##SUSPEND_OUTPUT NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##ALLOW_OUTPUT NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

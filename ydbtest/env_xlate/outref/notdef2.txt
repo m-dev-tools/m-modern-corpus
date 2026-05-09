@@ -1,0 +1,6 @@
+mumps.gld: THIS IS MUMPS
+a.gld: 
+%YDB-E-DLLNORTN, Failed to look up the location of the symbol ydb_env_xlate,##TEST_AWK%YDB-I-TEXT, .*: undefined symbol: ydb_env_xlate
+		At M source location notdef+2^notdef
+
+YDB>

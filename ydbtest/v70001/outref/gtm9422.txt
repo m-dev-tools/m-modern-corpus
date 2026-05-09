@@ -1,0 +1,43 @@
+# gtm9422 - Show that former toggle statistics are now counters
+#
+# The following statistics (ZSHOW "G") are changed from being toggle switches (value 1 while the
+# condition is active otherwise contain 0) to counters that are incremented whenever the condition
+# occurs: DEXA, GLB, JNL, MLK, PRC, TRX, ZAD, JOPA, AFRA, BREA, MLBA, TRGA
+#
+# This test launches 12 worker bee processes to cause at least some of these stats to accumulate.
+# We verify that the counts are always increasing instead of going up and down with toggle stats.
+
+# Create database
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+# Enable stat sharing
+Database file ##TEST_PATH##/mumps.dat now has sharing of gvstats set to  TRUE
+
+# Drive gtm9422 test routine
+
+# Unmonitored stats: PRC,ZAD (to be added in a future commit)
+
+# Monitored stats for test: DEXA,GLB,JNL,MLK,TRX,JOPA,AFRA,BREA,MLBA,TRGA
+
+##TEST_AWK..:..:.. Starting 12 workers
+##TEST_AWK..:..:.. Statistics @ 4 second intervals for 20 seconds
+##TEST_AWK%YGBLSTAT: DEXA:[0-9]*,GLB:[0-9]*,JNL:[0-9]*,MLK:[0-9]*,PRC:[0-9]*,TRX:[0-9]*,ZAD:[0-9]*,JOPA:[0-9]*,AFRA:[0-9]*,BREA:[0-9]*,MLBA:[0-9]*,TRGA:[0-9]*  \(.* milliseconds\)
+##TEST_AWK%YGBLSTAT: DEXA:[0-9]*,GLB:[0-9]*,JNL:[0-9]*,MLK:[0-9]*,PRC:[0-9]*,TRX:[0-9]*,ZAD:[0-9]*,JOPA:[0-9]*,AFRA:[0-9]*,BREA:[0-9]*,MLBA:[0-9]*,TRGA:[0-9]*  \(.* milliseconds\)
+##TEST_AWK%YGBLSTAT: DEXA:[0-9]*,GLB:[0-9]*,JNL:[0-9]*,MLK:[0-9]*,PRC:[0-9]*,TRX:[0-9]*,ZAD:[0-9]*,JOPA:[0-9]*,AFRA:[0-9]*,BREA:[0-9]*,MLBA:[0-9]*,TRGA:[0-9]*  \(.* milliseconds\)
+##TEST_AWK%YGBLSTAT: DEXA:[0-9]*,GLB:[0-9]*,JNL:[0-9]*,MLK:[0-9]*,PRC:[0-9]*,TRX:[0-9]*,ZAD:[0-9]*,JOPA:[0-9]*,AFRA:[0-9]*,BREA:[0-9]*,MLBA:[0-9]*,TRGA:[0-9]*  \(.* milliseconds\)
+##TEST_AWK%YGBLSTAT: DEXA:[0-9]*,GLB:[0-9]*,JNL:[0-9]*,MLK:[0-9]*,PRC:[0-9]*,TRX:[0-9]*,ZAD:[0-9]*,JOPA:[0-9]*,AFRA:[0-9]*,BREA:[0-9]*,MLBA:[0-9]*,TRGA:[0-9]*  \(.* milliseconds\)
+##TEST_AWK%YGBLSTAT: DEXA:[0-9]*,GLB:[0-9]*,JNL:[0-9]*,MLK:[0-9]*,PRC:[0-9]*,TRX:[0-9]*,ZAD:[0-9]*,JOPA:[0-9]*,AFRA:[0-9]*,BREA:[0-9]*,MLBA:[0-9]*,TRGA:[0-9]*  \(.* milliseconds\)
+##TEST_AWK..:..:.. Shutting down now
+
+SUCCESS - Saw at least one increment for each monitored counter stat above
+
+##TEST_AWK..:..:.. Complete
+
+# Verify database
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

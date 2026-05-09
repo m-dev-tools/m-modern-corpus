@@ -1,0 +1,10 @@
+##### gtm_init #####
+##### gtm_ci #####
+Square of 100 =  10000
+##### gtm_exit #####
+##### gtm_init #####
+ 150381530,(SimpleAPI),%YDB-E-CALLINAFTERXIT, After a ydb_exit(), a process cannot create a valid YottaDB context
+##### gtm_ci #####
+ 150381530,(SimpleAPI),%YDB-E-CALLINAFTERXIT, After a ydb_exit(), a process cannot create a valid YottaDB context
+Square of 200 =  0
+##### gtm_exit #####

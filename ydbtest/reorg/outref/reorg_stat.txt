@@ -1,0 +1,37 @@
+# Adjacency and % Used:
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+
+YDB>
+d in4^sfill("set",1,1)set PASS
+
+YDB>
+##SUSPEND_OUTPUT SPANNING_REGIONS
+# Data blocks, records, % used and adjacency before reorg
+Data               84           10006          55.841            17
+# Data blocks, records, % used and adjacency after reorg
+Data               47           10006          99.340            47
+##ALLOW_OUTPUT   SPANNING_REGIONS
+##SUSPEND_OUTPUT NONSPANNING_REGIONS
+##SUSPEND_OUTPUT COLLATION
+# Data blocks, records, % used and adjacency before reorg
+Data               99           11488          54.389             8
+# Data blocks, records, % used and adjacency after reorg
+Data               73           11488          73.553            38
+##ALLOW_OUTPUT   COLLATION
+##SUSPEND_OUTPUT NON_COLLATION
+# Data blocks, records, % used and adjacency before reorg
+Data               88            9217          49.169            23
+# Data blocks, records, % used and adjacency after reorg
+Data               58            9217          74.299            42
+##ALLOW_OUTPUT   NON_COLLATION
+##ALLOW_OUTPUT   NONSPANNING_REGIONS
+# If a global spans multiple regions, when -reg is passed, mupip reorg should act only on the select regions
+Global: afill (region AREG)
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

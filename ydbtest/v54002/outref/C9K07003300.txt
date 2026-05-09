@@ -1,0 +1,19 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+Starting DSE in the background
+Starting MUPIP SET  command now
+Database file mumps.dat now has extension count 400
+# Test if the output file exists
+%YDBPROCSTUCKEXEC_YYYYMMDD_HHMMSS_SEMOP_INFO*.out
+%YDBPROCSTUCKEXEC_YYYYMMDD_HHMMSS_SEMOP_INFO*dse.err
+%YDBPROCSTUCKEXEC_YYYYMMDD_HHMMSS_SEMOP_INFO*dse.out
+# Time after processes got over : ##FILTERED##GTM_TEST_DEBUGINFO.*
+# Check the operator log for the messages YDB-I-STUCKACT
+YDB-I-STUCKACT, Process stuck script invoked: SUCCESS : ##TEST_COM_PATH##/gtmprocstuck_get_stack_trace.csh
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

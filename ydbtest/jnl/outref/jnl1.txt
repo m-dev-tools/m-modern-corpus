@@ -1,0 +1,50 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+myjnl1.gld
+Using: ##SOURCE_PATH##/mupip
+myjnl1.dat
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/myjnl1.mjl created for database file ##TEST_PATH##/myjnl1.dat with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/myjnl1.dat is now ON
+
+YDB>
+s pass=16,ermax=3,start=1,commit=0
+
+YDB>
+d ^jnlbasf0
+
+
+JNLBASF0 test
+Caution: Database Block Certification Has Been Enabled
+
+JNLBASF0 test - unfenced transactions, 16 passes .... .... .... .... 
+JNLBASF0 test 1 fences on transactions, 16 passes .... .... .... .... 
+
+JNLBASF0 COMPLETE 
+YDB>
+h 5
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ myjnl1.dat
+No errors detected by integ.
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+
+YDB>
+s pass=16,ermax=3
+
+YDB>
+d ^jnlbasf1
+
+
+JNLBASF1 check of data after recovery 
+PASS 
+
+YDB>
+h 5
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ myjnl1.dat
+No errors detected by integ.

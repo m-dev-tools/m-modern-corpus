@@ -1,0 +1,381 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+YDB>
+
+YDB>
+
+YDB>
+
+TEST CASE 1a: Both certificate and key in the same file should work.
+			both cert and key name the same file.
+
+
+YDB>
+  PASSED: 1a
+
+YDB>
+
+TEST CASE 1b: Both certificate and key in the same file should work.
+			just cert specified and no key.
+
+
+YDB>
+  PASSED: 1b
+
+YDB>
+
+TEST CASE 1c: Private key without cert should issue an appropriate error.
+
+
+YDB>
+  PASSED: 1c
+
+YDB>
+
+TEST CASE 1d: Unable to open private key should issue an appropriate error.
+
+
+YDB>
+  PASSED: 1d
+
+YDB>
+
+TEST CASE 2: Check cipher-list option by excluding cipher from server list which is only one for client.
+
+
+YDB>
+  PASSED: 2
+
+YDB>
+
+TEST CASE 3: Test server without cert, missing tlsid in config, no tlsid
+
+
+YDB>
+  PASSED: 3a
+
+YDB>
+
+YDB>
+  PASSED: 3b
+
+YDB>
+
+YDB>
+  PASSED: 3c
+
+YDB>
+
+YDB>
+  PASSED: 3d
+
+YDB>
+
+YDB>
+  PASSED: 3e
+
+YDB>
+
+YDB>
+  PASSED: 3f
+
+YDB>
+
+TEST CASE 4: Test length of tlsid.
+
+
+YDB>
+  PASSED: 4
+
+YDB>
+
+TEST CASE 5: Test WRITE /TLS command formats and socket state.
+
+
+YDB>
+  PASSED: 5
+
+YDB>
+
+YDB>
+  PASSED: 5b
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 5c
+
+YDB>
+
+YDB>
+
+TEST CASE 6: Test client without config file.
+
+
+YDB>
+  PASSED: 6a.cunset
+
+YDB>
+
+YDB>
+  PASSED: 6b.cunset
+
+YDB>
+
+TEST CASE 7: Test config file options.
+
+
+YDB>
+  PASSED: 7a
+
+YDB>
+
+YDB>
+  PASSED: 7b
+
+YDB>
+
+YDB>
+  PASSED: 7c
+
+YDB>
+
+YDB>
+  PASSED: 7d
+
+YDB>
+
+YDB>
+  PASSED: 7e
+
+YDB>
+
+TEST CASE 8: Test providing password on WRITE /TLS.
+
+
+YDB>
+
+YDB>
+  PASSED: 8a
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 8b
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 8c
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 8d
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 8e
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 8f
+
+YDB>
+
+TEST CASE 9: Test providing config file options on WRITE /TLS.
+
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 9a
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 9b
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 9c
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 9d
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 9e
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 9f
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 9g
+
+YDB>
+
+TEST CASE 10: Test WRITE /TLS RENEGOTIATION.
+
+
+YDB>
+
+YDB>
+  PASSED: 10a
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 10b
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 10c
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 10d
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 10e
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 10f
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 10g
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+  PASSED: 10h
+
+YDB>
+
+TEST CASE 11: Test YottaDB/Util/YDBEncrypt#6
+
+# 11a : It is okay for client "ydbencrypt6a" to have a "format:" line but not "cert:" line
+
+YDB>
+  PASSED: 11a
+
+YDB>
+# 11b : It is okay for client "ydbencrypt6b" to have a "key:" line but not "cert:" line
+
+YDB>
+  PASSED: 11b
+
+YDB>
+# 11c : It is okay for client "ydbencrypt6c" to have a "key:" line and "format:" line but not "cert:" line
+
+YDB>
+  PASSED: 11c
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

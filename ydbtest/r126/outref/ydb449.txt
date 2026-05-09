@@ -1,0 +1,25 @@
+# Test that reverse $order/$query functions work correctly when $increment/VIEW "NOISOLATION" is in use
+# Disable ASYNCIO in test as it can cause rare test hangs and is not the primary purpose of this test
+# No GDB output will be printed if the test passes
+# If it fails the bad lines will end up in the log file
+# The full gdb output is in the gdb*.out files
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+isNoIso = 0, isOrder = 0
+PASS
+
+isNoIso = 0, isOrder = 1
+PASS
+
+isNoIso = 1, isOrder = 0
+PASS
+
+isNoIso = 1, isOrder = 1
+PASS
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

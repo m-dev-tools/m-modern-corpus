@@ -1,0 +1,63 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+c.dat
+d.dat
+e.dat
+f.dat
+g.dat
+mumps.dat
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+c.dat
+d.dat
+e.dat
+f.dat
+g.dat
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+# GTM Process starts in background...
+Simulating crash on primary in ##TEST_PATH##
+Primary crashed!
+Simulating crash on receiver in ##REMOTE_TEST_PATH##
+Receiver crashed!
+# Start a rollback
+Killed
+----------
+Error NOJNLPOOL seen in replic_shut.out1 as expected:
+%YDB-E-NOJNLPOOL, No journal pool info found in the replication instance of ##TEST_PATH##/mumps.repl
+----------
+----------
+Error NOJNLPOOL seen in replic_shut.out2 as expected:
+%YDB-E-NOJNLPOOL, No journal pool info found in the replication instance of ##TEST_PATH##/mumps.repl
+----------
+----------
+Error DBFLCORRP seen in passive_source.log as expected:
+%YDB-E-DBFLCORRP, ##TEST_PATH##/a.dat Header indicates database file is corrupt
+%YDB-E-DBFLCORRP, ##TEST_PATH##/b.dat Header indicates database file is corrupt
+%YDB-E-DBFLCORRP, ##TEST_PATH##/c.dat Header indicates database file is corrupt
+%YDB-E-DBFLCORRP, ##TEST_PATH##/mumps.dat Header indicates database file is corrupt
+%YDB-E-DBFLCORRP, ##TEST_PATH##/d.dat Header indicates database file is corrupt
+%YDB-E-DBFLCORRP, ##TEST_PATH##/e.dat Header indicates database file is corrupt
+%YDB-E-DBFLCORRP, ##TEST_PATH##/f.dat Header indicates database file is corrupt
+%YDB-E-DBFLCORRP, ##TEST_PATH##/g.dat Header indicates database file is corrupt
+----------
+----------
+Error DBNOREGION seen in passive_source.log as expected:
+%YDB-E-DBNOREGION, None of the database regions accessible
+----------
+# Do a healthy rollback
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

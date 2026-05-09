@@ -1,0 +1,33 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for file ##TEST_PATH##/mumps.dat with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for file ##TEST_PATH##/mumps.dat is now ON
+
+YDB>
+ Single region TP TESTING
+YDB>
+h 5
+
+YDB>
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/mumps.mjl is renamed to ##TEST_PATH##/mumps.mjl_[0-9]*(_[0-9]|[ ]*)
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for file ##TEST_PATH##/mumps.dat with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for file ##TEST_PATH##/mumps.dat is now ON
+
+YDB>
+ Single region TP TESTING
+YDB>
+h 5
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+Extact from database...
+
+Update successful

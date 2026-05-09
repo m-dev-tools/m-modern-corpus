@@ -1,0 +1,1250 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+---------------------------------------------------------------------
+######## Test various code issues identified by fuzz testing ########
+---------------------------------------------------------------------
+
+------------------------------------------------------------
+# Test $CHAR(0) in vector portion of $ZTIMEOUT does not SIG-11
+------------------------------------------------------------
+
+------------------------------------------------------------
+# Test LVUNDEF error is issued if $ZTIMEOUT is set to an undefined lvn
+------------------------------------------------------------
+%YDB-E-LVUNDEF, Undefined local variable: xyz
+
+------------------------------------------------------------
+# Test no memory leaks when invalid M code is specified in $ZTIMEOUT
+------------------------------------------------------------
+PASS : No memory leaks detected
+
+------------------------------------------------------------
+# Test $VIEW("YCOLLATE",coll,ver) does not SIG-11 if no collation library exists
+------------------------------------------------------------
+-1
+
+------------------------------------------------------------
+# Test NUMOFLOW operands in division operations do not cause %YDB-F-SIGINTDIV fatal errors
+------------------------------------------------------------
+PASS
+
+------------------------------------------------------------
+# Test retrying OPEN after INVMNEMCSPC error does not SIG-11
+# Expect INVMNEMCSPC error followed by USRIOINIT error
+------------------------------------------------------------
+
+YDB>
+
+YDB>
+%YDB-E-INVMNEMCSPC, Unsupported mnemonicspace invalidmnemonicspace
+
+YDB>
+%YDB-E-USRIOINIT, User-defined device driver not successfully initialized
+
+YDB>
+
+------------------------------------------------------------
+# Test $FNUMBER with a huge 3rd parameter does not cause a SIG-11 or assert failures
+------------------------------------------------------------
+PASS
+
+------------------------------------------------------------
+# Test $FNUMBER with a 3rd parameter >= 1Mb issues a MAXSTRLEN error
+------------------------------------------------------------
+# Trying length of 2**20 : Expect MAXSTRLEN error
+%YDB-E-MAXSTRLEN, Maximum string length exceeded
+# Trying length of 2**21 : Expect MAXSTRLEN error
+%YDB-E-MAXSTRLEN, Maximum string length exceeded
+# Trying length of 2**19 : Do not expect MAXSTRLEN error
+
+------------------------------------------------------------
+# Test $JUSTIFY and $FNUMBER with a huge 3rd parameter does not cause a SIG-11 or assert failures
+------------------------------------------------------------
+# Testing $FNUMBER with random huge 3rd argument
+# Testing $JUSTIFY with random huge 3rd argument
+# Testing $JUSTIFY with random huge 2nd and 3rd arguments
+PASS
+
+------------------------------------------------------------
+# Test no stack buffer overflow in lower_to_upper() call in sr_unix/io_open_try.c
+# Tests https://gitlab.com/YottaDB/DB/YDB/-/issues/828#note_793149685
+# Expect to see a %YDB-E-INVMNEMCSPC error
+------------------------------------------------------------
+%YDB-E-INVMNEMCSPC, Unsupported mnemonicspace invalidmnemonicspace
+
+------------------------------------------------------------
+# Test no stack buffer overflow in lower_to_upper() call in sr_unix/op_fnzparse.c
+# Tests https://gitlab.com/YottaDB/DB/YDB/-/issues/828#note_793151980
+# Expect to see a %YDB-E-ZPARSETYPE error
+------------------------------------------------------------
+%YDB-E-ZPARSETYPE, Illegal TYPE argument to $ZPARSE(): abcdefghijklmnopqrstuvwxyz
+
+------------------------------------------------------------
+# Test no stack buffer overflow in lower_to_upper() call in sr_port/iosocket_open.c
+# Tests https://gitlab.com/YottaDB/DB/YDB/-/issues/828#note_793151980
+# Expect to see no errors
+------------------------------------------------------------
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+------------------------------------------------------------
+# Test $INCREMENT(@glvn) with boolean expression in glvn subscript does not SIG-11
+# Expect to see 2 LVUNDEF errors in the first 2 tests. And y(2)=1 in the 3rd test.
+------------------------------------------------------------
+%YDB-E-LVUNDEF, Undefined local variable: x(1)
+%YDB-E-LVUNDEF, Undefined local variable: y
+y(2)=1
+
+------------------------------------------------------------
+# Test MUMPS_INT usages in code base with HUGE numeric arguments do not SIG-11 and/or assert fail
+------------------------------------------------------------
+# First test with XECUTE of such expressions
+# Testing $EXTRACT/$ZEXTRACT with random huge 2nd and/or 3rd argument
+# Testing $ZYHASH with random huge 2nd argument
+# Testing $TEXT with random huge offset argument
+# Testing $FIND with random huge 3rd argument
+# Testing $ZBITFIND with random huge 2nd and/or 3rd argument
+# Testing $ZBITSET with random huge 2nd and/or 3rd argument
+# Testing $ZBITGET with random huge 2nd argument
+# Testing $ZBITSTR with random huge 1st and/or 2nd argument
+# Testing $ZCHAR with random huge 1st argument
+# Testing $ZSIGPROC with random huge 2nd argument
+# Testing $CHAR with random huge 1st argument
+# Testing $JUSTIFY with random huge 2nd and/or 3rd argument
+# Testing $ZGETJPI with random huge 1st argument
+# Testing $RANDOM with random huge 1st argument
+# Testing $ZMESSAGE with random huge 1st argument
+# Testing $QSUBSCRIPT with random huge 2nd argument
+# Testing $ASCII with random huge 2nd argument
+# Testing $STACK with random huge 1st argument
+# Testing $ZATRANSFORM with random huge 2nd, 3rd and/or 4th arguments
+# Testing $ZCOLLATE with random huge 2nd and/or 3rd argument
+##SUSPEND_OUTPUT ASAN_ENABLED
+# Testing $ZPEEK with random huge 2nd and/or 3rd argument
+##ALLOW_OUTPUT ASAN_ENABLED
+# Testing $ZSEARCH with random huge 2nd argument
+# Testing $ZTRNLNM with random huge 3rd argument
+# Testing $ZWRITE with random huge 2nd argument
+# Testing $PIECE/$ZPIECE with random huge 3rd and/or 4th argument
+# Testing READ ? with random huge argument
+# Testing WRITE ? with random huge argument
+# Testing DO label+offset with random huge offfset
+# Testing ZBREAK label+offset with random huge offfset
+# Testing READ # with random huge argument
+# Testing WRITE * with random huge argument
+# Testing SET $PIECE/$ZPIECE/$EXTRACT/$ZEXTRACT with random huge 3rd and/or 4th argument
+# Testing TROLLBACK with random huge argument
+# Testing ZBREAK label::BreakpointCount with random huge BreakpointCount
+# Testing ZGOTO LEVEL with random huge LEVEL
+# Testing ZHALT LEVEL with random huge LEVEL
+# Testing ZMESSAGE with random huge 1st argument
+# Testing ZTCOMMIT with random huge 1st argument
+PASS
+# Next test with compile of such expressions
+
+------------------------------------------------------------
+# Test NEW:0 or BREAK:0 followed by other commands in same M line does not SIG-11
+------------------------------------------------------------
+# Try all test cases using [yottadb -run]
+------------------------------------------------------------
+# test1 : NEW:0 : Expect LVUNDEF error
+%YDB-E-LVUNDEF, Undefined local variable: i
+		At M source location test1+2^ydb828newbreak
+# test2 : NEW:0 : Expect LVUNDEF error
+%YDB-E-LVUNDEF, Undefined local variable: i
+		At M source location test2+2^ydb828newbreak
+
+YDB>
+# test3 : NEW:0 : Expect LVUNDEF error
+%YDB-E-LVUNDEF, Undefined local variable: i
+		At M source location test3+2^ydb828newbreak
+
+YDB>
+# test4 : NEW:0 : Expect LVUNDEF error
+%YDB-E-LVUNDEF, Undefined local variable: i
+		At M source location test4+2^ydb828newbreak
+
+YDB>
+# test5 : NEW:0 inside FOR loop : Expect LVUNDEF error
+%YDB-E-LVUNDEF, Undefined local variable: x
+		At M source location test5+2^ydb828newbreak
+
+YDB>
+# test6 : BREAK:0 : Expect LVUNDEF error
+%YDB-E-LVUNDEF, Undefined local variable: y
+		At M source location test6+2^ydb828newbreak
+
+YDB>
+# test7 : BREAK:0 inside FOR loop : Expect LVUNDEF error
+%YDB-E-LVUNDEF, Undefined local variable: y
+		At M source location test7+2^ydb828newbreak
+
+YDB>
+# test8 : NEW:0 : Expect 5 as output
+5
+# test9 : BREAK:0 : Expect 8 as output
+8
+# test10 : NEW:0 inside FOR loop : Expect 555 as output
+555
+# test11 : BREAK:0 inside FOR loop : Expect 888 as output
+888
+------------------------------------------------------------
+# Try all test cases using [yottadb -direct]
+------------------------------------------------------------
+
+YDB>
+# test1 : NEW:0 : Expect LVUNDEF error
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: i
+
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: i
+
+YDB>
+# test3 : NEW:0 : Expect LVUNDEF error
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: i
+
+YDB>
+# test4 : NEW:0 : Expect LVUNDEF error
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: i
+
+YDB>
+# test5 : NEW:0 inside FOR loop : Expect LVUNDEF error
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: x
+
+YDB>
+# test6 : BREAK:0 : Expect LVUNDEF error
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: y
+
+YDB>
+# test7 : BREAK:0 inside FOR loop : Expect LVUNDEF error
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: y
+
+YDB>
+# test8 : NEW:0 : Expect 5 as output
+
+YDB>
+
+YDB>
+5
+YDB>
+# test9 : BREAK:0 : Expect 8 as output
+
+YDB>
+
+YDB>
+8
+YDB>
+# test10 : NEW:0 inside FOR loop : Expect 555 as output
+
+YDB>
+
+YDB>
+555
+YDB>
+# test11 : BREAK:0 inside FOR loop : Expect 888 as output
+
+YDB>
+
+YDB>
+888
+YDB>
+
+------------------------------------------------------------
+# Test extended reference using ^[expratom1,expratom2] syntax does not cause SIG-11
+# Expect %YDB-E-ZGBLDIRACC errors below but no other errors (SIG-11, assert failures etc.)
+------------------------------------------------------------
+# Try all test cases using [yottadb -run]
+------------------------------------------------------------
+# test1 : Test unary NOT in gvn() use of expratom_coerce_mval() for expratom1
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/1.gld.  Retaining ##TEST_PATH##/mumps.gld.,%SYSTEM-E-ENO2, No such file or directory
+		At M source location test1+2^ydb828extendedreference
+
+YDB>
+# test2 : Test unary NOT in gvn() use of expratom_coerce_mval() for expratom2
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/0.gld.  Retaining ##TEST_PATH##/mumps.gld.,%SYSTEM-E-ENO2, No such file or directory
+		At M source location test2+2^ydb828extendedreference
+
+YDB>
+# test3 : Test unary NOT in name_glvn() use of expratom_coerce_mval() for expratom1
+^[1]x
+# test4 : Test unary NOT in name_glvn() use of expratom_coerce_mval() for expratom1
+^[0,0]x
+# test5 : Test unary NOT in lkglvn() use of expratom_coerce_mval() for expratom1
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/1.gld.  Retaining ##TEST_PATH##/mumps.gld.,%SYSTEM-E-ENO2, No such file or directory
+		At M source location test5+2^ydb828extendedreference
+
+YDB>
+# test6 : Test unary NOT in lkglvn() use of expratom_coerce_mval() for expratom1
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/0.gld.  Retaining ##TEST_PATH##/mumps.gld.,%SYSTEM-E-ENO2, No such file or directory
+		At M source location test6+2^ydb828extendedreference
+
+YDB>
+------------------------------------------------------------
+# Try all test cases using [yottadb -direct]
+------------------------------------------------------------
+
+YDB>
+# test1 : Test unary NOT in gvn() use of expratom_coerce_mval() for expratom1
+
+YDB>
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/1.gld.  Retaining ##TEST_PATH##/mumps.gld.
+%SYSTEM-E-ENO2, No such file or directory
+
+YDB>
+# test2 : Test unary NOT in gvn() use of expratom_coerce_mval() for expratom2
+
+YDB>
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/0.gld.  Retaining ##TEST_PATH##/mumps.gld.
+%SYSTEM-E-ENO2, No such file or directory
+
+YDB>
+# test3 : Test unary NOT in name_glvn() use of expratom_coerce_mval() for expratom1
+
+YDB>
+^[1]x
+YDB>
+# test4 : Test unary NOT in name_glvn() use of expratom_coerce_mval() for expratom1
+
+YDB>
+^[0,0]x
+YDB>
+# test5 : Test unary NOT in lkglvn() use of expratom_coerce_mval() for expratom1
+
+YDB>
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/1.gld.  Retaining ##TEST_PATH##/mumps.gld.
+%SYSTEM-E-ENO2, No such file or directory
+
+YDB>
+# test6 : Test unary NOT in lkglvn() use of expratom_coerce_mval() for expratom1
+
+YDB>
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/0.gld.  Retaining ##TEST_PATH##/mumps.gld.
+%SYSTEM-E-ENO2, No such file or directory
+
+YDB>
+
+------------------------------------------------------------
+# Test that compile time literal optimization on binary arithmetic operations does not cause assert failures/SIG-11
+# Only expect graceful runtime errors (e.g. NUMOFLOW/DIVZERO/NEGFRACPWR) below
+------------------------------------------------------------
+# Try all test cases using [yottadb -run]
+------------------------------------------------------------
+# test1 : Test compile-time NUMOFLOW error in op_add() while inside FOR loop
+%YDB-E-NUMOFLOW, Numeric overflow
+		At M source location test1+2^ydb828arithlit
+
+YDB>
+# test2 : Test compile-time NUMOFLOW error in op_sub() while inside FOR loop
+%YDB-E-NUMOFLOW, Numeric overflow
+		At M source location test2+2^ydb828arithlit
+
+YDB>
+# test3 : Test compile-time NUMOFLOW error in op_mul() while inside FOR loop
+%YDB-E-NUMOFLOW, Numeric overflow
+		At M source location test3+2^ydb828arithlit
+
+YDB>
+# test4 : Test compile-time DIVZERO error in op_div() while inside FOR loop
+#         Note that this test did not SIG-11 previously but is added for completeness
+%YDB-E-DIVZERO, Attempt to divide by zero
+		At M source location test4+3^ydb828arithlit
+
+YDB>
+# test5 : Test compile-time NUMOFLOW error in op_div() while inside FOR loop
+%YDB-E-NUMOFLOW, Numeric overflow
+		At M source location test5+2^ydb828arithlit
+
+YDB>
+# test6 : Test compile-time DIVZERO error in op_idiv() while inside FOR loop
+#         Note that this test did not SIG-11 previously but is added for completeness
+%YDB-E-DIVZERO, Attempt to divide by zero
+		At M source location test6+3^ydb828arithlit
+
+YDB>
+# test7 : Test compile-time NUMOFLOW error in op_idiv() while inside FOR loop
+%YDB-E-NUMOFLOW, Numeric overflow
+		At M source location test7+2^ydb828arithlit
+
+YDB>
+# test8 : Test compile-time DIVZERO error in flt_mod() while inside FOR loop
+#         Note that this test did not SIG-11 in GT.M V7.0-001
+%YDB-E-DIVZERO, Attempt to divide by zero
+		At M source location test8+3^ydb828arithlit
+
+YDB>
+# test9 : Test compile-time NUMOFLOW error in flt_mod() -> op_div() while inside FOR loop
+%YDB-E-NUMOFLOW, Numeric overflow
+		At M source location test9+2^ydb828arithlit
+
+YDB>
+# test10 : Test compile-time DIVZERO error in op_exp() while inside FOR loop
+#         Note that this test did not SIG-11 in GT.M V7.0-001
+%YDB-E-DIVZERO, Attempt to divide by zero
+		At M source location test10+3^ydb828arithlit
+
+YDB>
+# test11 : Test compile-time NUMOFLOW error in op_exp() -> op_mul() while inside FOR loop
+%YDB-E-NUMOFLOW, Numeric overflow
+		At M source location test11+2^ydb828arithlit
+
+YDB>
+# test12 : Test compile-time NEGFRACPWR error in op_exp() while inside FOR loop
+%YDB-E-NEGFRACPWR, Invalid operation: fractional power of negative number
+		At M source location test12+2^ydb828arithlit
+
+YDB>
+------------------------------------------------------------
+# Try all test cases using [yottadb -direct]
+------------------------------------------------------------
+
+YDB>
+
+YDB>
+
+YDB>
+# test1 : Test compile-time NUMOFLOW error in op_add() while inside FOR loop
+
+YDB>
+%YDB-E-NUMOFLOW, Numeric overflow
+
+YDB>
+
+YDB>
+# test2 : Test compile-time NUMOFLOW error in op_sub() while inside FOR loop
+
+YDB>
+%YDB-E-NUMOFLOW, Numeric overflow
+
+YDB>
+
+YDB>
+# test3 : Test compile-time NUMOFLOW error in op_mul() while inside FOR loop
+
+YDB>
+%YDB-E-NUMOFLOW, Numeric overflow
+
+YDB>
+
+YDB>
+# test4 : Test compile-time DIVZERO error in op_div() while inside FOR loop
+
+YDB>
+#         Note that this test did not SIG-11 previously but is added for completeness
+
+YDB>
+%YDB-E-DIVZERO, Attempt to divide by zero
+
+YDB>
+
+YDB>
+# test5 : Test compile-time NUMOFLOW error in op_div() while inside FOR loop
+
+YDB>
+%YDB-E-NUMOFLOW, Numeric overflow
+
+YDB>
+
+YDB>
+# test6 : Test compile-time DIVZERO error in op_idiv() while inside FOR loop
+
+YDB>
+#         Note that this test did not SIG-11 previously but is added for completeness
+
+YDB>
+%YDB-E-DIVZERO, Attempt to divide by zero
+
+YDB>
+
+YDB>
+# test7 : Test compile-time NUMOFLOW error in op_idiv() while inside FOR loop
+
+YDB>
+%YDB-E-NUMOFLOW, Numeric overflow
+
+YDB>
+
+YDB>
+# test8 : Test compile-time DIVZERO error in flt_mod() while inside FOR loop
+
+YDB>
+%YDB-E-DIVZERO, Attempt to divide by zero
+
+YDB>
+
+YDB>
+# test9 : Test compile-time NUMOFLOW error in flt_mod() -> op_div() while inside FOR loop
+
+YDB>
+%YDB-E-NUMOFLOW, Numeric overflow
+
+YDB>
+
+YDB>
+# test10 : Test compile-time DIVZERO error in op_exp() while inside FOR loop
+
+YDB>
+%YDB-E-DIVZERO, Attempt to divide by zero
+
+YDB>
+
+YDB>
+# test11 : Test compile-time NUMOFLOW error in op_exp() -> op_mul() while inside FOR loop
+
+YDB>
+%YDB-E-NUMOFLOW, Numeric overflow
+
+YDB>
+
+YDB>
+# test12 : Test compile-time NEGFRACPWR error in op_exp() while inside FOR loop
+
+YDB>
+%YDB-E-NEGFRACPWR, Invalid operation: fractional power of negative number
+
+YDB>
+
+YDB>
+------------------------------------------------------------
+# Try all test cases inside trigger xecute code : Use [mupip trigger -trigger]
+# Do not expect any errors
+------------------------------------------------------------
+File ydb828arithlit.trg, Line 1: No matching triggers found for deletion
+File ydb828arithlit.trg, Line 2: Added SET trigger on ^x named x1
+File ydb828arithlit.trg, Line 3: Added SET trigger on ^x named x2
+File ydb828arithlit.trg, Line 4: Added SET trigger on ^x named x3
+File ydb828arithlit.trg, Line 5: Added SET trigger on ^x named x4
+File ydb828arithlit.trg, Line 6: Added SET trigger on ^x named x5
+File ydb828arithlit.trg, Line 7: Added SET trigger on ^x named x6
+File ydb828arithlit.trg, Line 8: Added SET trigger on ^x named x7
+File ydb828arithlit.trg, Line 9: Added SET trigger on ^x named x8
+File ydb828arithlit.trg, Line 10: Added SET trigger on ^x named x9
+File ydb828arithlit.trg, Line 11: Added SET trigger on ^x named x10
+File ydb828arithlit.trg, Line 12: Added SET trigger on ^x named x11
+File ydb828arithlit.trg, Line 13: Added SET trigger on ^x named x12
+=========================================
+12 triggers added
+0 triggers deleted
+0 triggers modified
+12 trigger file entries did update database trigger content
+1 trigger file entries did not update database trigger content
+=========================================
+------------------------------------------------------------
+# Try all test cases inside trigger xecute code : Use [$ztrigger]
+# Do not expect any errors
+------------------------------------------------------------
+File ydb828arithlit.trg, Line 1: All existing triggers (count = 12) deleted
+File ydb828arithlit.trg, Line 2: Added SET trigger on ^x named x1
+File ydb828arithlit.trg, Line 3: Added SET trigger on ^x named x2
+File ydb828arithlit.trg, Line 4: Added SET trigger on ^x named x3
+File ydb828arithlit.trg, Line 5: Added SET trigger on ^x named x4
+File ydb828arithlit.trg, Line 6: Added SET trigger on ^x named x5
+File ydb828arithlit.trg, Line 7: Added SET trigger on ^x named x6
+File ydb828arithlit.trg, Line 8: Added SET trigger on ^x named x7
+File ydb828arithlit.trg, Line 9: Added SET trigger on ^x named x8
+File ydb828arithlit.trg, Line 10: Added SET trigger on ^x named x9
+File ydb828arithlit.trg, Line 11: Added SET trigger on ^x named x10
+File ydb828arithlit.trg, Line 12: Added SET trigger on ^x named x11
+File ydb828arithlit.trg, Line 13: Added SET trigger on ^x named x12
+=========================================
+12 triggers added
+12 triggers deleted
+0 triggers modified
+13 trigger file entries did update database trigger content
+0 trigger file entries did not update database trigger content
+=========================================
+
+------------------------------------------------------------
+# Test that opening same device multiple times and closing it does not cause SIG-11.
+# A YottaDB build that has ASAN enabled and does not have the code fixes used to show heap-use-after-free errors.
+------------------------------------------------------------
+# Test multiple device op_close() in close_source_file()
+# Expect ZLINKFILE/FILENOTFND/EXPR/NOTPRINCIO errors and %YDB-I-BREAK but no other errors
+
+YDB>
+
+YDB>
+
+YDB>
+	b c
+	   ^-----
+		At column 4, line 2, source module ydb828currdevice.m
+%YDB-E-SPOREOL, Either a space or an end-of-line was expected but not found
+%YDB-E-SPOREOL, Either a space or an end-of-line was expected but not found
+		At M source location b^ydb828currdevice
+
+YDB>
+%YDB-E-EXPR, Expression expected but not found
+	set x=;
+	      ^-----
+
+YDB>
+%YDB-I-BREAK, Break instruction encountered
+		At M source location b^ydb828currdevice
+
+YDB>
+# Test multiple device op_close() in trigger_trgfile_tpwrap_helper() -> file_input_close()
+# Expect %YDB-I-BREAK but no other errors
+
+YDB>
+
+YDB>
+File ydb828currdevice.trg, Line 1: Error : SET trigger on ^x not added as another trigger named x1 already exists
+=========================================
+1 trigger file entries have errors
+0 trigger file entries have no errors
+=========================================
+
+YDB>
+%YDB-I-BREAK, Break instruction encountered
+		At M source location +1^GTM$DMOD
+
+YDB>
+# Test multiple device op_close() in jobexam_dump()
+# Expect %YDB-I-BREAK but no other errors
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+x="##TEST_PATH##/ydb828currdevice.txt"
+
+YDB>
+%YDB-I-BREAK, Break instruction encountered
+		At M source location +1^GTM$DMOD
+
+YDB>
+# Test multiple device op_close() in close_list_file()
+# Expect %YDB-I-BREAK but no other errors
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-I-BREAK, Break instruction encountered
+		At M source location +1^GTM$DMOD
+
+YDB>
+All existing triggers (count = 12) deleted
+
+------------------------------------------------------------
+# Test DO & usages with LITNONGRAPH warning does not SIG-11 and/or assert fail
+------------------------------------------------------------
+# Try ydb828do.m using [yottadb -direct]
+
+YDB>
+%YDB-E-SPOREOL, Either a space or an end-of-line was expected but not found
+	 do &t"	"
+	      ^-----
+
+YDB>
+# Try ydb828do.m using [yottadb -run]
+	 do &t"	"
+	       ^-----
+		At column 8, line 1, source module ##TEST_PATH##/ydb828do.m
+%YDB-W-LITNONGRAPH, M standard requires graphics in string literals; found non-printable: $ZCHAR(9)
+	 do &t"	"
+	      ^-----
+		At column 7, line 1, source module ##TEST_PATH##/ydb828do.m
+%YDB-E-SPOREOL, Either a space or an end-of-line was expected but not found
+%YDB-E-SPOREOL, Either a space or an end-of-line was expected but not found
+		At M source location +1^ydb828do
+
+YDB>
+
+------------------------------------------------------------
+# Test that PATNOTFOUND error inside FOR does not SIG-11 and/or assert fail
+------------------------------------------------------------
+# Try ydb828forpatnotfound.m using [yottadb -direct]
+
+YDB>
+%YDB-E-PATNOTFOUND, Current pattern table has no characters with pattern code S
+	 FOR J=0:.0005:.0?1SS",
+	                       ^-----
+
+YDB>
+
+YDB>
+
+YDB>
+# Try ydb828forpatnotfound.m using [yottadb -run]
+%YDB-E-SPOREOL, Either a space or an end-of-line was expected but not found
+		At M source location +1^ydb828forpatnotfound
+
+YDB>
+
+------------------------------------------------------------
+# Test that OPEN /dev/full does not SIG-11
+------------------------------------------------------------
+# Try ydb828open.m using [yottadb -direct]
+
+YDB>
+
+YDB>
+# Try ydb828open.m using [yottadb -run]
+
+------------------------------------------------------------
+# Test that ZSHOW "D" on PIPE device does not SIG-11 if device parameters are specified multiple times
+------------------------------------------------------------
+# Try ydb828zshowd.m using [yottadb -direct]
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-INVCMD, Invalid command keyword encountered
+	ydb828zshowd; Test that ZSHOW "D" on PIPE device does not SIG-11 if device parameters are specified multiple times
+	^-----
+
+YDB>
+
+YDB>
+0 OPEN FIFO STREAM NOWRAP 
+0-out OPEN RMS STREAM NOWRAP 
+p OPEN PIPE COMMAND="pwd" STDERR="x" 
+
+YDB>
+0 OPEN FIFO STREAM NOWRAP 
+0-out OPEN RMS STREAM NOWRAP 
+p OPEN PIPE COMMAND="pwd" STDERR="x" 
+
+YDB>
+0 OPEN FIFO STREAM NOWRAP 
+0-out OPEN RMS STREAM NOWRAP 
+p OPEN PIPE COMMAND="pwd" STDERR="x" 
+
+YDB>
+0 OPEN FIFO STREAM NOWRAP 
+0-out OPEN RMS STREAM NOWRAP 
+p OPEN PIPE COMMAND="pwd" STDERR="x" 
+
+YDB>
+
+YDB>
+# Try ydb828zshowd.m using [yottadb -run]
+0 OPEN RMS STREAM NOWRAP 
+0-out OPEN RMS STREAM NOWRAP 
+p OPEN PIPE COMMAND="pwd" STDERR="x" 
+0 OPEN RMS STREAM NOWRAP 
+0-out OPEN RMS STREAM NOWRAP 
+p OPEN PIPE COMMAND="pwd" STDERR="x" 
+0 OPEN RMS STREAM NOWRAP 
+0-out OPEN RMS STREAM NOWRAP 
+p OPEN PIPE COMMAND="pwd" STDERR="x" 
+0 OPEN RMS STREAM NOWRAP 
+0-out OPEN RMS STREAM NOWRAP 
+p OPEN PIPE COMMAND="pwd" STDERR="x" 
+
+------------------------------------------------------------
+# Test that NEW @ inside FOR with a control variable does not SIG-11
+# Expecting only a LVUNDEF error instead
+------------------------------------------------------------
+# Try ydb828fornewat.m using [yottadb -direct]
+
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: i
+
+YDB>
+# Try ydb828fornewat.m using [yottadb -run]
+%YDB-E-LVUNDEF, Undefined local variable: i
+		At M source location +1^ydb828fornewat
+
+YDB>
+
+------------------------------------------------------------
+# Test GTM-9371 : OC_FORCENUM in boolean expressions does not cause SIG-11/GTMASSERT2 (used to before YDB@ba22f762)
+------------------------------------------------------------
+# Try all test cases using [yottadb -run]
+------------------------------------------------------------
+		write +$ef!^x
+		        ^-----
+		At column 10, line 31, source module ##IN_TEST_PATH##/inref/ydb828forcenumlit.m
+%YDB-E-INVSVN, Invalid special variable name
+# test1 : Trying [for j=+1!@x] : Expect LVUNDEF error (not SIG-11/GTMASSERT2)
+%YDB-E-LVUNDEF, Undefined local variable: x
+		At M source location test1+2^ydb828forcenumlit
+
+YDB>
+# test2 : Trying [for j=+1!zl_@x] : Expect LVUNDEF error (not SIG-11/GTMASSERT2)
+##TEST_AWK%YDB-E-LVUNDEF, Undefined local variable: (x|zl)
+		At M source location test2+2^ydb828forcenumlit
+
+YDB>
+# test3 : Trying [write +$ef!^x] : Expect INVSVN error (not SIG-11/GTMASSERT2)
+%YDB-E-INVSVN, Invalid special variable name
+		At M source location test3+2^ydb828forcenumlit
+
+YDB>
+# test4 : Trying [write +0!@(sub1)] : Expect LVUNDEF error (not SIG-11/GTMASSERT2)
+%YDB-E-LVUNDEF, Undefined local variable: sub1
+		At M source location test4+2^ydb828forcenumlit
+
+YDB>
+# test5 : Trying a fancy expression involving unary + : Expect no output (not SIG-11/GTMASSERT2)
+------------------------------------------------------------
+# Try all test cases using [yottadb -direct]
+------------------------------------------------------------
+
+YDB>
+
+YDB>
+# test1 : Trying [for j=+1!@x] : Expect LVUNDEF error (not SIG-11/GTMASSERT2)
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: x
+
+YDB>
+# test2 : Trying [for j=+1!zl_@x] : Expect LVUNDEF error (not SIG-11/GTMASSERT2)
+YDB>
+##TEST_AWK%YDB-E-LVUNDEF, Undefined local variable: (x|zl)
+
+YDB>
+# test3 : Trying [write +$ef!^x] : Expect INVSVN error (not SIG-11/GTMASSERT2)
+YDB>
+%YDB-E-INVSVN, Invalid special variable name
+
+YDB>
+# test4 : Trying [write +0!@(sub1)] : Expect LVUNDEF error (not SIG-11/GTMASSERT2)
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: sub1
+
+YDB>
+# test5 : Trying a fancy expression involving unary + : Expect no output (not SIG-11/GTMASSERT2)
+YDB>
+
+------------------------------------------------------------
+# Test that $query(@"a,") does not GTMASSERT2
+# Expecting only a INDEXTRACHARS error instead
+------------------------------------------------------------
+# Try ydb828dlrqueryindirect.m using [yottadb -direct]
+
+YDB>
+%YDB-E-INDEXTRACHARS, Indirection string contains extra trailing characters
+	a,
+	 ^-----
+
+YDB>
+# Try ydb828dlrqueryindirect.m using [yottadb -run]
+%YDB-E-INDEXTRACHARS, Indirection string contains extra trailing characters
+		At M source location +1^ydb828dlrqueryindirect
+
+YDB>
+
+------------------------------------------------------------
+# Test that parse error in device parameter specification does not GTMASSERT2
+# Trying out [use $principal:("] : Expecting a DEVPARPARSE error (not a GTMASSERT2 error)
+------------------------------------------------------------
+# Try ydb828devparparse1.m using [yottadb -direct]
+
+YDB>
+%YDB-E-DEVPARPARSE, Error parsing device parameter specification
+	 use $principal:("
+	                  ^-----
+
+YDB>
+# Try ydb828devparparse1.m using [yottadb -run]
+	 use $principal:("
+	                  ^-----
+		At column 19, line 1, source module ##TEST_PATH##/ydb828devparparse1.m
+%YDB-E-DEVPARPARSE, Error parsing device parameter specification
+%YDB-E-DEVPARPARSE, Error parsing device parameter specification
+		At M source location +1^ydb828devparparse1
+
+YDB>
+
+------------------------------------------------------------
+# Test that parse error in device parameter specification does not assert fail in linetail.c in Debug builds
+# Trying out [use $principal:("] : Expecting a DEVPARPARSE error
+# This used to previously (before YDB@d8e6fc32) fail as
+#     %YDB-F-ASSERT, Assert failed in sr_port/linetail.c line 40 for expression (TREF(source_error_found))
+------------------------------------------------------------
+# Try ydb828devparparse2.m using [yottadb -direct]
+
+YDB>
+%YDB-E-DEVPARPARSE, Error parsing device parameter specification
+	 open f:(commO"ecuse f
+	                      ^-----
+
+YDB>
+# Try ydb828devparparse2.m using [yottadb -run]
+	 open f:(commO"ecuse f
+	                      ^-----
+		At column 23, line 1, source module ##TEST_PATH##/ydb828devparparse2.m
+%YDB-E-DEVPARPARSE, Error parsing device parameter specification
+%YDB-E-DEVPARPARSE, Error parsing device parameter specification
+		At M source location +1^ydb828devparparse2
+
+YDB>
+
+------------------------------------------------------------
+# Test that > 31 subscripts in ZWRITE does not cause SIG-11 OR heap-buffer-overflow error (with ASAN)
+# Test instead that it issues MAXNRSUBSCRIPTS error
+# Invoking [yottadb -run ydb828zwritemaxnrsubs]
+------------------------------------------------------------
+ydb828zwritemaxnrsubs : PASSED
+
+------------------------------------------------------------
+# Test SETZDIRTOOLONG error is issued by SET $ZDIR when string is 4096 bytes long
+# This used to previously (before YDB@22aaad3d) fail with a stack-buffer-overflow ASAN error
+# Trying out [set $zdir=$justify(1," ",4096)] : Expecting a SETZDIRTOOLONG error
+------------------------------------------------------------
+# Try ydb828setzdirtoolong.m using [yottadb -direct]
+
+YDB>
+%YDB-E-SETZDIRTOOLONG, $ZDIR value specified is 4098 bytes long which is greater than the allowed maximum of 4096 bytes
+
+YDB>
+# Try ydb828setzdirtoolong.m using [yottadb -run]
+%YDB-E-SETZDIRTOOLONG, $ZDIR value specified is 4098 bytes long which is greater than the allowed maximum of 4096 bytes
+		At M source location +1^ydb828setzdirtoolong
+
+YDB>
+
+------------------------------------------------------------
+# Test NUMOFLOW error is issued by WRITE:+"1E47"
+# This used to previously (before YDB@108e062c) fail with a SIG-11
+# Trying out [write:+"1E47" "Should not see this string",!] : Expecting a SETZDIRTOOLONG error
+------------------------------------------------------------
+# Try ydb828numoflow.m using [yottadb -direct]
+
+YDB>
+%YDB-E-NUMOFLOW, Numeric overflow
+
+YDB>
+# Try ydb828numoflow.m using [yottadb -run]
+	 write:+"1E47" "Should not see this string",!
+	              ^-----
+		At column 15, line 1, source module ##TEST_PATH##/ydb828numoflow.m
+%YDB-E-NUMOFLOW, Numeric overflow
+%YDB-E-NUMOFLOW, Numeric overflow
+		At M source location +1^ydb828numoflow
+
+YDB>
+
+------------------------------------------------------------
+# Test EXTGBLDEL error is issued by SET ^[$ORDER(@x,1)
+# This used to previously (before YDB@4b499095) fail with a %YDB-F-GTMASSERT2 error
+# Trying out [set ^[$order(@x,1)] : Expecting a EXTGBLDEL error
+------------------------------------------------------------
+# Try ydb828extgbldel.m using [yottadb -direct]
+
+YDB>
+%YDB-E-EXTGBLDEL, Invalid delimiter for extended global syntax
+	 set ^[$order(@x,1)
+	                   ^-----
+
+YDB>
+# Try ydb828extgbldel.m using [yottadb -run]
+	 set ^[$order(@x,1)
+	                   ^-----
+		At column 20, line 1, source module ##TEST_PATH##/ydb828extgbldel.m
+%YDB-E-EXTGBLDEL, Invalid delimiter for extended global syntax
+%YDB-E-EXTGBLDEL, Invalid delimiter for extended global syntax
+		At M source location +1^ydb828extgbldel
+
+YDB>
+
+------------------------------------------------------------
+# Test EXPR error is issued for incomplete extended reference usages
+# This used to previously (before YDB@4b499095) fail with a %YDB-F-GTMASSERT2 error
+------------------------------------------------------------
+# Try ydb828extgblincmpl.m using [yottadb -direct]
+
+YDB>
+%YDB-E-EXPR, Expression expected but not found
+	 lock [$get(x,
+	              ^-----
+
+YDB>
+%YDB-E-EXPR, Expression expected but not found
+	 lock [$order(x,
+	                ^-----
+
+YDB>
+%YDB-E-EXPR, Expression expected but not found
+	 lock [$query(x,
+	                ^-----
+
+YDB>
+%YDB-E-EXPR, Expression expected but not found
+	 set ^[1,$get(x,
+	                ^-----
+
+YDB>
+# Try ydb828extgblincmpl.m using [yottadb -run]
+	 lock [$get(x,
+	              ^-----
+		At column 15, line 1, source module ##TEST_PATH##/ydb828extgblincmpl.m
+%YDB-E-EXPR, Expression expected but not found
+	 lock [$order(x,
+	                ^-----
+		At column 17, line 2, source module ##TEST_PATH##/ydb828extgblincmpl.m
+%YDB-E-EXPR, Expression expected but not found
+	 lock [$query(x,
+	                ^-----
+		At column 17, line 3, source module ##TEST_PATH##/ydb828extgblincmpl.m
+%YDB-E-EXPR, Expression expected but not found
+	 set ^[1,$get(x,
+	                ^-----
+		At column 17, line 4, source module ##TEST_PATH##/ydb828extgblincmpl.m
+%YDB-E-EXPR, Expression expected but not found
+%YDB-E-EXPR, Expression expected but not found
+		At M source location +1^ydb828extgblincmpl
+
+YDB>
+
+------------------------------------------------------------
+# Test ZWRITE works fine after LVUNDEF error in FOR command
+# This used to previously (before YDB@59a129ce) fail with a SIG-11/ASSERT
+------------------------------------------------------------
+# Try ydb828forlvundef.m using [yottadb -direct]
+
+YDB>
+
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: x("b")
+
+YDB>
+x("a")=1
+
+YDB>
+# Try ydb828forlvundef.m using [yottadb -run]
+%YDB-E-LVUNDEF, Undefined local variable: x("b")
+		At M source location +2^ydb828forlvundef
+
+YDB>
+
+------------------------------------------------------------
+# Test DEVPARPARSE error is issued even if it is followed by another parse error
+# This used to previously (before YDB@7c455a99) fail with a %YDB-F-GTMASSERT2 error
+# Trying out [U -I:R)"] : Expecting a DEVPARPARSE error
+------------------------------------------------------------
+# Try ydb828devparparse3.m using [yottadb -direct]
+
+YDB>
+%YDB-E-DEVPARPARSE, Error parsing device parameter specification
+	 U -I:R)"
+	         ^-----
+
+YDB>
+# Try ydb828devparparse3.m using [yottadb -run]
+	 U -I:R)"
+	      ^-----
+		At column 7, line 1, source module ##TEST_PATH##/ydb828devparparse3.m
+%YDB-E-DEVPARUNK, Deviceparameter unknown
+	 U -I:R)"
+	         ^-----
+		At column 10, line 1, source module ##TEST_PATH##/ydb828devparparse3.m
+%YDB-E-DEVPARPARSE, Error parsing device parameter specification
+%YDB-E-DEVPARPARSE, Error parsing device parameter specification
+		At M source location +1^ydb828devparparse3
+
+YDB>
+
+------------------------------------------------------------
+# Test $ZAHANDLE of undefined lvn when VIEW NOUNDEF is enabled does not SIG-11
+# This used to previously (before YDB@c79a3dee) fail with a SIG-11
+# Trying out [view "noundef" set res=$zahandle(x(1)) zwrite res] : Expecting empty string as the value of "res"
+------------------------------------------------------------
+# Try ydb828zahandlenoundef.m using [yottadb -direct]
+
+YDB>
+res=""
+
+YDB>
+# Try ydb828zahandlenoundef.m using [yottadb -run]
+res=""
+
+------------------------------------------------------------
+# Test CLOSE C:AFTER=... does not SIG-11 (used to before YDB@2c1bb3b7)
+# Trying out [close c:aftert="ping"] : Expecting no SIG-11 but a %YDB-E-DEVPARUNK error
+------------------------------------------------------------
+# Try ydb828closeafter.m using [yottadb -direct]
+
+YDB>
+%YDB-E-DEVPARUNK, Deviceparameter unknown
+
+YDB>
+# Try ydb828closeafter.m using [yottadb -run]
+	 close c:aftert="ping"
+	         ^-----
+		At column 10, line 1, source module ##TEST_PATH##/ydb828closeafter.m
+%YDB-E-DEVPARUNK, Deviceparameter unknown
+%YDB-E-DEVPARUNK, Deviceparameter unknown
+		At M source location +1^ydb828closeafter
+
+YDB>
+
+------------------------------------------------------------
+# Test $QUERY(lvn) works fine after ZSHOW "*":lvn
+# This used to previously (before YDB@9d6421e8) fail with a SIG-11/Assert
+# Expecting no errors in the below output
+------------------------------------------------------------
+# Try ydb828queryzshow.m using [yottadb -direct]
+
+YDB>
+
+
+YDB>
+
+
+YDB>
+# Try ydb828queryzshow.m using [yottadb -run]
+
+
+
+------------------------------------------------------------
+# Test $QUERY(lvn) works fine after ZSHOW "*":lvn where lvn is subscripted
+# This used to previously (before YDB@656ec6f6) fail with a SIG-11/Assert
+# Expecting no errors in the below output
+------------------------------------------------------------
+# Try ydb828queryzshow2.m using [yottadb -direct]
+
+YDB>
+
+YDB>
+
+YDB>
+
+
+YDB>
+x(1)="abcd"
+x(1,"V",1)="x(1)=""abcd"""
+x(1)
+
+
+YDB>
+# Try ydb828queryzshow2.m using [yottadb -run]
+
+x(1)="abcd"
+x(1,"V",1)="x(1)=""abcd"""
+x(1)
+
+
+------------------------------------------------------------
+# Test $INCREMENT(@glvn,boolexpr) works fine
+# This used to previously (before YDB@a3b15a64) fail with a SIG-11/Assert
+------------------------------------------------------------
+# Try ydb828incrindirectionglvn.m using [yottadb -direct]
+
+YDB>
+# Expecting LVUNDEF error below (but not SIG-11/Assert)
+
+YDB>
+%YDB-E-LVUNDEF, Undefined local variable: x
+
+YDB>
+# Expecting INVSVN error below (but not SIG-11/Assert)
+
+YDB>
+%YDB-E-INVSVN, Invalid special variable name
+
+YDB>
+# Expecting zwrite output to show "y=1" (no SIG-11/Assert)
+
+YDB>
+
+YDB>
+# Try ydb828incrindirectionglvn.m using [yottadb -run]
+	 write $increment(@x,$zz&r),!
+	                      ^-----
+		At column 23, line 4, source module ##TEST_PATH##/ydb828incrindirectionglvn.m
+%YDB-E-INVSVN, Invalid special variable name
+# Expecting LVUNDEF error below (but not SIG-11/Assert)
+%YDB-E-LVUNDEF, Undefined local variable: x
+		At M source location +2^ydb828incrindirectionglvn
+
+YDB>
+
+------------------------------------------------------------
+# Test $INCREMENT(glvn) in a boolexpr works fine
+# This used to previously (in YDB@a3b15a64) fail with a SIG-11/Assert
+------------------------------------------------------------
+# Try ydb828incrboolexpr.m using [yottadb -direct]
+
+YDB>
+
+YDB>
+# Expecting x=1,y=1,^x=1 in zwrite output below
+
+YDB>
+x=1
+y=1
+^x=1
+
+YDB>
+# Expecting x=1,y=1,^x=0 in zwrite output below
+
+YDB>
+x=1
+y=1
+^x=0
+
+YDB>
+# Expecting x=0,y=0,^x=0 in zwrite output below
+
+YDB>
+x=0
+y=0
+^x=0
+
+YDB>
+# Try ydb828incrboolexpr.m using [yottadb -run]
+# Expecting x=1,y=1,^x=1 in zwrite output below
+x=1
+y=1
+^x=1
+# Expecting x=1,y=1,^x=0 in zwrite output below
+x=1
+y=1
+^x=0
+# Expecting x=0,y=0,^x=0 in zwrite output below
+x=0
+y=0
+^x=0
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

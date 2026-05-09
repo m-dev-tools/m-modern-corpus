@@ -1,0 +1,197 @@
+#!/usr/bin/env tcsh
+#
+#################################################################
+#                                                               #
+# Copyright (c) 2020-2025 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.                                          #
+#                                                               #
+#       This source code contains the intellectual property     #
+#       of its copyright holder(s), and is made available       #
+#       under a license.  If you do not know the terms of       #
+#       the license, please stop and do not read further.       #
+#                                                               #
+#################################################################
+#
+# -----------------------------------------------------------------
+# Pre-commit hook that
+#	1) Enforces YottaDB Copyright in changed modules
+#
+set referencefile_extensions = "txt out dat key crt cfg inp json"
+
+set filelist = `git diff --name-only HEAD`
+set fixlist = ""
+set curyear = `date +%Y`
+@ exitstatus = 0
+
+foreach file ($filelist)
+	com/needs_copyright.sh $file
+	if ($status != 0) then
+		continue
+	endif
+	# Optimization: don't run the python script unless necessary
+	grep 'Copyright (c) .*'$curyear' YottaDB LLC' $file >& /dev/null
+	if ($status == 0) then
+		continue
+	endif
+	# Try to automatically add a copyright to the file
+	set tempfile = `mktemp`
+	./copyright.py $file > $tempfile
+	set copyright_status = $status
+	if ($copyright_status == 1) then
+		echo "note: automatically committing copyright updates to $file"
+		# Preserve the original file permissions
+		chmod --reference=$file $tempfile
+		mv $tempfile $file
+		git add $file
+	else if ($copyright_status != 0) then
+		set fixlist = "$fixlist $file"
+	endif
+end
+if ("" != "$fixlist") then
+	echo "  --> Hook $0 returned non-zero status"
+	echo "  --> Below files are missing YottaDB Copyright notice and/or current year $curyear. Fix and retry commit"
+	foreach file ($fixlist)
+		echo "	$file"
+	end
+	@ exitstatus = 1
+endif
+
+# -----------------------------------------------------------------
+# 2) Removes trailing white space
+# -----------------------------------------------------------------
+set filelist = `git diff --name-only HEAD`	# recompute "filelist" in case Step (1) had regenerated new files
+foreach file ($filelist)
+	if (! -e $file) then
+		# If file is being deleted as part of this commit, skip whitespace conversion on it
+		continue
+	endif
+	set extension = $file:e
+	# Extensions which indicate they are a reference file should not have whitespace conversion done
+	# as that would cause test failures.
+	set skip = 0
+	foreach ext ($referencefile_extensions)
+		if ($ext == $extension) then
+			set skip = 1
+			break
+		endif
+	end
+	if ($skip) then
+		continue
+	endif
+	grep -q '[ 	][ 	]*$' $file
+	if ! ($status) then
+		echo $file
+		sed -i 's/[ 	][ 	]*$//' $file
+		git add $file
+		if ($status) then
+			@ exitstatus = 1
+			echo "GITADD-E-FAIL : Command failed after removing trailing whitespace : git add $file"
+		endif
+	endif
+end
+
+# -----------------------------------------------------------------
+# 3) Checks changes to outref/<subtest>.txt file implies instream.csh contains this subtest
+# -----------------------------------------------------------------
+# "filelist" is usable since Step (2) did not regenerate any new files.
+foreach file ($filelist)
+	if (! -e $file) then
+		# If file is being deleted as part of this commit, skip <subtest>.txt check on this
+		continue
+	endif
+	if ($file !~ "*/outref/*.txt") then
+		# If file is not of the form <test>/outref/<subtest>.txt, then skip processing.
+		continue
+	endif
+	# There could be .txt files in outref directory even though there are no corresponding u_inref/<subtest>.csh files
+	# Skip those (e.g. ./v53003/outref/errors_ydb_gbldir.txt).
+	set subtest = $file:t:r
+	set test = $file:h:h
+	if (! -e $test/u_inref/$subtest.csh) then
+		continue
+	endif
+	# Check if instream.csh contains references to <subtest>
+	grep -q "subtest_list.*\<$subtest\>" $test/instream.csh
+	if ($status != 0) then
+		@ exitstatus = 1
+		echo "  --> File $test/outref/$subtest.txt exists but $subtest name not included in $test/instream.csh; Include in latter and retry commit"
+		continue
+	endif
+	# Check if com/SUITE contains references to <test>
+	grep -q "^\<$test\>" com/SUITE
+	if ($status != 0) then
+		@ exitstatus = 1
+		echo "  --> File $test/outref/$subtest.txt exists but test $test not included in com/SUITE; Include in latter and retry commit"
+		continue
+	endif
+end
+
+# -----------------------------------------------------------------
+# 4) Reports files using leading spaces as indentation
+# -----------------------------------------------------------------
+# "filelist" is usable since Step (3) did not regenerate any new files.
+
+set check_ext_list = "m csh sh c"
+set header = "Files with wrong indentation"
+
+foreach file ($filelist)
+	if (! -e $file) then
+		# If file is being deleted as part of this commit, skip processing this file.
+		continue
+	endif
+	set ext = $file:e
+	foreach check_ext ($check_ext_list)
+		if ($ext == $check_ext) then
+			if ($ext == "c") then
+				set bad_line_count = `cat $file | grep '^ ' | grep -v '^ \*' | wc -l`
+			else
+				set bad_line_count = `cat $file | grep '^ ' | wc -l`
+			endif
+			if (0 == $bad_line_count) continue
+			set exitstatus = 1
+			if ( "$header" != "" ) then
+				echo $header
+				set header = ""
+			endif
+			set plural = "s"
+			if ($bad_line_count == 1) set plural = ""
+			echo -n "  ${file} ($bad_line_count line${plural} found)"
+			echo ":"
+			if ($ext == "c") then
+				grep -n '^ ' $file | grep -v ': \*' | sed 's/^/    \> /g'
+			else
+				grep -n '^ ' $file | sed 's/^/    \> /g'
+			endif
+		endif
+	end
+end
+
+# ----------------------------------------------------------------------------------------
+# 5) Reports subtest additions to instream.csh that are missing "$subtest_list_non_replic"
+# ----------------------------------------------------------------------------------------
+
+set fixlist = ""
+
+foreach file ($filelist)
+	if ($file =~ */instream.csh) then
+		foreach testtype ("subtest_list_common" "subtest_list_non_replic" "subtest_list_replic")
+			grep -q "^setenv $testtype" $file
+			if ($status == 1) then
+				set fixlist = "$fixlist $file"
+				# We don't need to report the same file multiple times
+				continue
+			endif
+		end
+	endif
+end
+if ("" != "$fixlist") then
+	echo "  --> Hook $0 returned non-zero status"
+	echo '  --> Below files contain subtest declarations missing "$subtest_list_{common,non_replic,replic}":'
+	foreach file ($fixlist)
+		echo "	$file"
+	end
+	@ exitstatus = 1
+endif
+
+# -----------------------------------------------------------------
+exit $exitstatus

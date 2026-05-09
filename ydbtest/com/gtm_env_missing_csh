@@ -1,0 +1,71 @@
+#!/usr/local/bin/tcsh -f
+#################################################################
+#								#
+# Copyright (c) 2002-2016 Fidelity National Information		#
+# Services, Inc. and/or its subsidiaries. All rights reserved.	#
+#								#
+# Copyright (c) 2017-2021 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+#This script will work only if gtm_dist is defined!!!!!
+# I do not know what to do if gtm_dist is not defined!!!
+# $gtm_dist = /long/dir/tree/V_this_ver/this_image
+if ($?gtm_dist == 0) then
+   echo \$gtm_dist is not defined. Dont know what to do. Exiting
+   exit 40
+endif
+
+echo Going to try to determine the variables
+echo If they are not correct set them to correct values in the shell and run test again
+#set verbose
+#Assuming gtm_dist in the form /long/dir/tree/Version/image
+set __tmp = `dirname $gtm_dist`    #/long/dir/tree/Version
+set __dir = `dirname $__tmp`         #/long/dir/tree
+set __ver = `basename $__tmp`        #Version
+set __image = `basename $gtm_dist` #image
+#$__dir $__ver $__image
+check_setenv_echo gtm_tools $__dir/$__ver/tools
+check_setenv_echo gtm_root $__dir
+check_setenv_echo gtm_com  $gtm_root/com
+check_setenv_echo gtm_gtmdev `dirname $__dir`
+check_setenv_echo gtm_topdir `basename $__dir`
+check_setenv_echo gtm_curpro $__ver
+check_setenv_echo gtm_curdrl V990
+check_setenv_echo gtm_verno $__ver
+check_setenv_echo gtm_ver $__dir/$__ver
+#check_setenv_echo gtm_dist $gtm_dist
+check_setenv_echo gtm_exe $gtm_dist
+check_setenv_echo gtm_obj $gtm_dist/obj
+check_setenv_echo gtm_log $__dir/$__ver/log
+check_setenv_echo gtm_pct_list $__dir/$__ver/pct
+check_setenv_echo gtm_pct $gtm_pct_list
+check_setenv_echo gtm_inc_list $gtm_ver/inc
+if ($?gtm_chset) then
+	if ("$gtm_chset" != "UTF-8") then
+		set objdir = $gtm_exe
+	else
+		set objdir = $gtm_exe/utf8	# so UTF-8 .o files are picked in $gtmroutines
+	endif
+else
+	set objdir = $gtm_exe
+endif
+check_setenv_echo gtmroutines ". $objdir"
+check_setenv_echo gtm_inc $gtm_ver/inc
+check_setenv_echo gtm_src_list $gtm_ver/src
+check_setenv_echo gtm_src $gtm_ver/src
+check_setenv_echo gtm_vrt $gtm_ver
+
+check_setenv_echo  gt_cc_option_DDEBUG     "-DDEBUG"
+check_setenv_echo  gt_cc_option_I          "-I$gtm_inc"
+check_setenv_echo  gt_ld_option_output    "-o"
+
+setenv gtm_exe_realpath	`realpath $gtm_exe`
+setenv gtm_version_change 1	# to force gtm_env.csh to go into the codepath that initializes a lot of gt_* variables
+source $gtm_tools/gtm_env.csh
+

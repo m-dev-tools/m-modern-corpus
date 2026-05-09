@@ -1,0 +1,147 @@
+MUPIP D9J02002719
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+integ.gld
+Using: ##SOURCE_PATH##/mupip
+integ.dat
+
+YDB>
+
+YDB>
+
+File  	##TEST_PATH##/integ.dat
+Region	DEFAULT
+
+DSE> 
+Saving version 1 of block 2
+DSE> 
+Block 20 is marked free in its local bit map.
+
+DSE> 
+Restoring block 20 from version 1 of block 2
+
+DSE> DSE> DSE> Warning:  removed a star record from the end of this block.
+DSE> DSE> 
+Saving version 1 of block 20
+DSE> 
+Restoring block 2 from version 1 of block 20
+
+DSE> 
+
+Integ of region DEFAULT
+
+No errors detected by fast integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           2               2           0.732            NA
+Index               1               1           0.683             1
+Data                1              NA              NA             1
+Free              296              NA              NA            NA
+Total             300              NA              NA             2
+DSE> 
+Restoring block 2 from version 1
+
+DSE> 
+Removing version 1 of block 20
+DSE> 
+YDB>
+
+YDB>
+
+File  	##TEST_PATH##/integ.dat
+Region	DEFAULT
+
+DSE> 
+Saving version 1 of block 2
+DSE> DSE> 
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBBDBALLOC,         Nature: #DANGER***
+               6:0      B  Block doubly allocated
+                           Directory Path:  1:10, 2:23
+                           Path:  6:0
+Keys from ^b to the end are suspect.
+%YDB-W-DBLOCMBINC,         Nature: #Benign
+               0:0     FF  Local bit map incorrect
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               3:0     FF  Block incorrectly marked busy
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               4:0     FF  Block incorrectly marked busy
+
+Total error count from fast integ:		4.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           2               3           1.000            NA
+Index               1               1           0.683             1
+Data                1              NA              NA             1
+Free              296              NA              NA            NA
+Total             300              NA              NA             2
+%YDB-E-INTEGERRS, Database integrity errors
+DSE> 
+Restoring block 2 from version 1
+
+DSE> 
+YDB>
+
+YDB>
+
+File  	##TEST_PATH##/integ.dat
+Region	DEFAULT
+
+DSE> 
+Saving version 1 of block 4
+DSE> DSE> 
+
+Integ of region DEFAULT
+
+Block:Offset Level
+%YDB-E-DBINVGBL,         Nature: #DANGER***
+               4:10     1  Invalid mixing of global names
+                           Directory Path:  1:10, 2:10
+                           Path:  4:10
+Keys from ^a to the end are suspect.
+%YDB-W-DBLOCMBINC,         Nature: #Benign
+               0:0     FF  Local bit map incorrect
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               3:0     FF  Block incorrectly marked busy
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               7:0     FF  Block incorrectly marked busy
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               8:0     FF  Block incorrectly marked busy
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               9:0     FF  Block incorrectly marked busy
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               A:0     FF  Block incorrectly marked busy
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               B:0     FF  Block incorrectly marked busy
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               C:0     FF  Block incorrectly marked busy
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               D:0     FF  Block incorrectly marked busy
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               E:0     FF  Block incorrectly marked busy
+%YDB-W-DBMRKBUSY,         Nature: #Benign
+               F:0     FF  Block incorrectly marked busy
+Maximum number of incorrectly busy errors to display:  10, has been exceeded
+42 incorrectly busy errors encountered
+
+Total error count from fast integ:		44.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           2               3           1.000            NA
+Index               2               2           9.924             2
+Data                1              NA              NA             1
+Free              295              NA              NA            NA
+Total             300              NA              NA             3
+%YDB-E-INTEGERRS, Database integrity errors
+DSE> 
+Restoring block 4 from version 1
+
+DSE> ##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

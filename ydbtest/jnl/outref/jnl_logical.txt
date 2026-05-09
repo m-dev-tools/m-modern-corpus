@@ -1,0 +1,470 @@
+$GDE << \FIN
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+
+                                *** TEMPLATES ***
+                                                                          Std      Inst
+                                             Def      Rec   Key Null      Null     Freeze Qdb   Epoch              LOCK
+ Region                                     Coll     Size  Size Subs      Coll Jnl on Err Rndwn Taper AutoDB Stats Crit
+ ----------------------------------------------------------------------------------------------------------------------
+ <default>                                     0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+
+ Segment          Active              Acc Typ Block      Alloc Exten    Options
+ ------------------------------------------------------------------------------
+ <default>          *                 BG  DYN  4096        100   100    GLOB =1024
+                                                                        LOCK = 220
+                                                                        RES  =   0
+                                                                        ENCR = OFF
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        AIO  = OFF
+                                                                        FBWR =   0
+ <default>                            MM  DYN  4096        100   100    DEFER
+                                                                        LOCK = 220
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        FBWR =   0
+
+         *** NAMES ***
+ Global                             Region
+ ------------------------------------------------------------------------------
+ *                                  DEFAULT
+ A*                                 AREG
+ B*                                 BREG
+ C*                                 CREG
+ a*                                 AREG
+ b*                                 BREG
+ c*                                 CREG
+
+                                *** REGIONS ***
+                                                                                               Std      Inst
+                                 Dynamic                          Def      Rec   Key Null      Null     Freeze Qdb   Epoch              LOCK
+ Region                          Segment                         Coll     Size  Size Subs      Coll Jnl on Err Rndwn Taper AutoDB Stats Crit
+ -------------------------------------------------------------------------------------------------------------------------------------------
+ AREG                            ASEG                               0      256    64 NEVER     Y    Y   N      N     Y     N      Y     Sep
+ BREG                            BSEG                               0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+ CREG                            CSEG                               0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+ DEFAULT                         DEFAULT                            0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+
+                          *** JOURNALING INFORMATION ***
+ Region                          Jnl File (def ext: .mjl)  Before Buff      Alloc      Exten   AutoSwitch
+ --------------------------------------------------------------------------------------------------------
+ AREG                            $logi                     Y      2312       2048       2048      8386560
+
+
+                                *** SEGMENTS ***
+ Segment                         File (def ext: .dat)Acc Typ Block      Alloc Exten     Options
+ ----------------------------------------------------------------------------------------------
+ ASEG                            a.dat               BG  DYN  4096        100   100     GLOB=1024
+                                                                                        LOCK= 220
+                                                                                        RES =   0
+                                                                                        ENCR= OFF
+                                                                                        MSLT=1024
+                                                                                        DALL= YES
+                                                                                        AIO = OFF
+                                                                                        FBWR=   0
+ BSEG                            b.dat               BG  DYN  4096        100   100     GLOB=1024
+                                                                                        LOCK= 220
+                                                                                        RES =   0
+                                                                                        ENCR= OFF
+                                                                                        MSLT=1024
+                                                                                        DALL= YES
+                                                                                        AIO = OFF
+                                                                                        FBWR=   0
+ CSEG                            c.dat               BG  DYN  4096        100   100     GLOB=1024
+                                                                                        LOCK= 220
+                                                                                        RES =   0
+                                                                                        ENCR= OFF
+                                                                                        MSLT=1024
+                                                                                        DALL= YES
+                                                                                        AIO = OFF
+                                                                                        FBWR=   0
+ DEFAULT                         mumps.dat           BG  DYN  4096        100   100     GLOB=1024
+                                                                                        LOCK= 220
+                                                                                        RES =   0
+                                                                                        ENCR= OFF
+                                                                                        MSLT=1024
+                                                                                        DALL= YES
+                                                                                        AIO = OFF
+                                                                                        FBWR=   0
+
+                                  *** MAP ***
+   -  -  -  -  -  -  -  -  -  - Names -  -  - -  -  -  -  -  -  -
+ From                            Up to                            Region / Segment / File(def ext: .dat)
+ --------------------------------------------------------------------------------------------------------------------------
+ %                               A                                REG = DEFAULT
+                                                                  SEG = DEFAULT
+                                                                  FILE = mumps.dat
+ A                               B                                REG = AREG
+                                                                  SEG = ASEG
+                                                                  FILE = a.dat
+ B                               C                                REG = BREG
+                                                                  SEG = BSEG
+                                                                  FILE = b.dat
+ C                               D                                REG = CREG
+                                                                  SEG = CSEG
+                                                                  FILE = c.dat
+ D                               a                                REG = DEFAULT
+                                                                  SEG = DEFAULT
+                                                                  FILE = mumps.dat
+ a                               b                                REG = AREG
+                                                                  SEG = ASEG
+                                                                  FILE = a.dat
+ b                               c                                REG = BREG
+                                                                  SEG = BSEG
+                                                                  FILE = b.dat
+ c                               d                                REG = CREG
+                                                                  SEG = CSEG
+                                                                  FILE = c.dat
+ d                               ...                              REG = DEFAULT
+                                                                  SEG = DEFAULT
+                                                                  FILE = mumps.dat
+ LOCAL LOCKS                                                      REG = DEFAULT
+                                                                  SEG = DEFAULT
+                                                                  FILE = mumps.dat
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+if ( "ENCRYPT" == "$test_encryption" ) then
+##SUSPEND_OUTPUT  NON_ENCRYPT
+$gtm_tst/com/create_key_file.csh > & create_key_file_dbload.out
+endif
+##ALLOW_OUTPUT NON_ENCRYPT
+setenv logi xxx.mjl
+$MUPIP create
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/a.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/b.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/c.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+$MUPIP set -journal=enable,before -region "*" | & sort -f
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/xxx.mjl created for region AREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+ls *.mjl*
+b.mjl
+c.mjl
+mumps.mjl
+xxx.mjl
+$GDE << FIN
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+
+GDE> 
+
+                                *** TEMPLATES ***
+                                                                          Std      Inst
+                                             Def      Rec   Key Null      Null     Freeze Qdb   Epoch              LOCK
+ Region                                     Coll     Size  Size Subs      Coll Jnl on Err Rndwn Taper AutoDB Stats Crit
+ ----------------------------------------------------------------------------------------------------------------------
+ <default>                                     0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+
+ Segment          Active              Acc Typ Block      Alloc Exten    Options
+ ------------------------------------------------------------------------------
+ <default>          *                 BG  DYN  4096        100   100    GLOB =1024
+                                                                        LOCK = 220
+                                                                        RES  =   0
+                                                                        ENCR = OFF
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        AIO  = OFF
+                                                                        FBWR =   0
+ <default>                            MM  DYN  4096        100   100    DEFER
+                                                                        LOCK = 220
+                                                                        MSLT =1024
+                                                                        DALL = YES
+                                                                        FBWR =   0
+
+         *** NAMES ***
+ Global                             Region
+ ------------------------------------------------------------------------------
+ *                                  DEFAULT
+ A*                                 AREG
+ B*                                 BREG
+ C*                                 CREG
+ a*                                 AREG
+ b*                                 BREG
+ c*                                 CREG
+
+                                *** REGIONS ***
+                                                                                               Std      Inst
+                                 Dynamic                          Def      Rec   Key Null      Null     Freeze Qdb   Epoch              LOCK
+ Region                          Segment                         Coll     Size  Size Subs      Coll Jnl on Err Rndwn Taper AutoDB Stats Crit
+ -------------------------------------------------------------------------------------------------------------------------------------------
+ AREG                            ASEG                               0      256    64 NEVER     Y    Y   N      N     Y     N      Y     Sep
+ BREG                            BSEG                               0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+ CREG                            CSEG                               0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+ DEFAULT                         DEFAULT                            0      256    64 NEVER     Y    N   N      N     Y     N      Y     Sep
+
+                          *** JOURNALING INFORMATION ***
+ Region                          Jnl File (def ext: .mjl)  Before Buff      Alloc      Exten   AutoSwitch
+ --------------------------------------------------------------------------------------------------------
+ AREG                            $logi                     Y      2312       2048       2048      8386560
+
+
+                                *** SEGMENTS ***
+ Segment                         File (def ext: .dat)Acc Typ Block      Alloc Exten     Options
+ ----------------------------------------------------------------------------------------------
+ ASEG                            a.dat               BG  DYN  4096        100   100     GLOB=1024
+                                                                                        LOCK= 220
+                                                                                        RES =   0
+##SUSPEND_OUTPUT NON_ENCRYPT
+                                                                                        ENCR=  ON
+##ALLOW_OUTPUT ENCRYPT NON_ENCRYPT
+##SUSPEND_OUTPUT ENCRYPT
+                                                                                        ENCR= OFF
+##ALLOW_OUTPUT ENCRYPT NON_ENCRYPT
+                                                                                        MSLT=1024
+                                                                                        DALL= YES
+                                                                                        AIO = OFF
+                                                                                        FBWR=   0
+ BSEG                            b.dat               BG  DYN  4096        100   100     GLOB=1024
+                                                                                        LOCK= 220
+                                                                                        RES =   0
+##SUSPEND_OUTPUT  NON_ENCRYPT
+                                                                                        ENCR=  ON
+##ALLOW_OUTPUT ENCRYPT NON_ENCRYPT
+##SUSPEND_OUTPUT ENCRYPT
+                                                                                        ENCR= OFF
+##ALLOW_OUTPUT ENCRYPT NON_ENCRYPT
+                                                                                        MSLT=1024
+                                                                                        DALL= YES
+                                                                                        AIO = OFF
+                                                                                        FBWR=   0
+ CSEG                            c.dat               BG  DYN  4096        100   100     GLOB=1024
+                                                                                        LOCK= 220
+                                                                                        RES =   0
+##SUSPEND_OUTPUT  NON_ENCRYPT
+                                                                                        ENCR=  ON
+##ALLOW_OUTPUT ENCRYPT NON_ENCRYPT
+##SUSPEND_OUTPUT ENCRYPT
+                                                                                        ENCR= OFF
+##ALLOW_OUTPUT ENCRYPT NON_ENCRYPT
+                                                                                        MSLT=1024
+                                                                                        DALL= YES
+                                                                                        AIO = OFF
+                                                                                        FBWR=   0
+ DEFAULT                         mumps.dat           BG  DYN  4096        100   100     GLOB=1024
+                                                                                        LOCK= 220
+                                                                                        RES =   0
+##SUSPEND_OUTPUT  NON_ENCRYPT
+                                                                                        ENCR=  ON
+##ALLOW_OUTPUT ENCRYPT NON_ENCRYPT
+##SUSPEND_OUTPUT ENCRYPT
+                                                                                        ENCR= OFF
+##ALLOW_OUTPUT ENCRYPT NON_ENCRYPT
+                                                                                        MSLT=1024
+                                                                                        DALL= YES
+                                                                                        AIO = OFF
+                                                                                        FBWR=   0
+
+                                  *** MAP ***
+   -  -  -  -  -  -  -  -  -  - Names -  -  - -  -  -  -  -  -  -
+ From                            Up to                            Region / Segment / File(def ext: .dat)
+ --------------------------------------------------------------------------------------------------------------------------
+ %                               A                                REG = DEFAULT
+                                                                  SEG = DEFAULT
+                                                                  FILE = mumps.dat
+ A                               B                                REG = AREG
+                                                                  SEG = ASEG
+                                                                  FILE = a.dat
+ B                               C                                REG = BREG
+                                                                  SEG = BSEG
+                                                                  FILE = b.dat
+ C                               D                                REG = CREG
+                                                                  SEG = CSEG
+                                                                  FILE = c.dat
+ D                               a                                REG = DEFAULT
+                                                                  SEG = DEFAULT
+                                                                  FILE = mumps.dat
+ a                               b                                REG = AREG
+                                                                  SEG = ASEG
+                                                                  FILE = a.dat
+ b                               c                                REG = BREG
+                                                                  SEG = BSEG
+                                                                  FILE = b.dat
+ c                               d                                REG = CREG
+                                                                  SEG = CSEG
+                                                                  FILE = c.dat
+ d                               ...                              REG = DEFAULT
+                                                                  SEG = DEFAULT
+                                                                  FILE = mumps.dat
+ LOCAL LOCKS                                                      REG = DEFAULT
+                                                                  SEG = DEFAULT
+                                                                  FILE = mumps.dat
+GDE> 
+%GDE-I-NOACTION, Not updating Global Directory ##TEST_PATH##/mumps.gld
+$GTM << XXX
+
+YDB>
+
+YDB>
+setenv logi yyy.mjl
+$MUPIP set -jour="enable,before" -reg "*" | & sort -f
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/b.mjl is renamed to ##TEST_PATH##/b.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/c.mjl is renamed to ##TEST_PATH##/c.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/mumps.mjl is renamed to ##TEST_PATH##/mumps.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/xxx.mjl is renamed to ##TEST_PATH##/xxx.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/xxx.mjl created for region AREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+ls *.mjl*
+b.mjl
+##TEST_AWKb.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+c.mjl
+##TEST_AWKc.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+mumps.mjl
+##TEST_AWKmumps.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+xxx.mjl
+##TEST_AWKxxx.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+$GTM << XXX
+
+YDB>
+
+YDB>
+$MUPIP set -jour="enable,before" -reg BREG | & sort -f
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/b.mjl is renamed to ##TEST_PATH##/b.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+ls *.mjl*
+b.mjl
+##TEST_AWKb.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+##TEST_AWKb.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+c.mjl
+##TEST_AWKc.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+mumps.mjl
+##TEST_AWKmumps.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+xxx.mjl
+##TEST_AWKxxx.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+$GTM << XXX
+
+YDB>
+
+YDB>
+
+YDB>
+$MUPIP set -jour="enable,before" -reg "*" | & sort -f
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/b.mjl is renamed to ##TEST_PATH##/b.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/c.mjl is renamed to ##TEST_PATH##/c.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/mumps.mjl is renamed to ##TEST_PATH##/mumps.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/xxx.mjl is renamed to ##TEST_PATH##/xxx.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/xxx.mjl created for region AREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+rm *.dat
+$MUPIP create
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/a.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/b.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/c.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+ls *.mjl*
+b.mjl
+##TEST_AWKb.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+##TEST_AWKb.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+##TEST_AWKb.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+c.mjl
+##TEST_AWKc.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+##TEST_AWKc.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+mumps.mjl
+##TEST_AWKmumps.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+##TEST_AWKmumps.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+xxx.mjl
+##TEST_AWKxxx.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+##TEST_AWKxxx.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+
+$MUPIP journal -recover -forward xxx.mjl,b.mjl,c.mjl,mumps.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##TEST_AWK%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/xxx.mjl_[0-9]*(_[0-9][0-9]*|[0-9]) included for database file ##TEST_PATH##/a.dat
+##TEST_AWK%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/xxx.mjl_[0-9]*(_[0-9][0-9]*|[0-9]) included for database file ##TEST_PATH##/a.dat
+##TEST_AWK%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/b.mjl_[0-9]*(_[0-9][0-9]*|[0-9]) included for database file ##TEST_PATH##/b.dat
+##TEST_AWK%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/b.mjl_[0-9]*(_[0-9][0-9]*|[0-9]) included for database file ##TEST_PATH##/b.dat
+##TEST_AWK%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/b.mjl_[0-9]*(_[0-9][0-9]*|[0-9]) included for database file ##TEST_PATH##/b.dat
+##TEST_AWK%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/c.mjl_[0-9]*(_[0-9][0-9]*|[0-9]) included for database file ##TEST_PATH##/c.dat
+##TEST_AWK%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/mumps.mjl_[0-9]*(_[0-9][0-9]*|[0-9]) included for database file ##TEST_PATH##/mumps.dat
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+ls *.mjl*
+b.mjl
+##TEST_AWKb.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+##TEST_AWKb.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+##TEST_AWKb.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+c.mjl
+##TEST_AWKc.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+##TEST_AWKc.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+mumps.mjl
+##TEST_AWKmumps.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+##TEST_AWKmumps.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+xxx.mjl
+##TEST_AWKxxx.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+##TEST_AWKxxx.mjl_[0-9]*(_[0-9][0-9]*|[0-9])
+$GTM << XXX
+
+YDB>
+2 = 2
+YDB>
+3 = 3
+YDB>
+4 = 4
+YDB>
+2 = 2
+YDB>
+9 = 9
+YDB>
+4 = 4
+YDB>
+4 = 4
+YDB>
+$MUPIP set -jour="enable,before" -reg "*" | & sort -f
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/b.mjl is renamed to ##TEST_PATH##/b.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/c.mjl is renamed to ##TEST_PATH##/c.mjl_##TIMESTAMP##
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/mumps.mjl is renamed to ##TEST_PATH##/mumps.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/yyy.mjl created for region AREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+
+$gtm_tst/com/dbcheck.csh
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

@@ -1,0 +1,35 @@
+#################################################################
+#								#
+# Copyright (c) 2018-2022 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+# This module is derived from FIS GT.M.
+#################################################################
+
+set timeout 10
+set gtm_dist [lrange $argv 0 0]
+
+spawn $gtm_dist/mumps -dir
+expect -exact "YDB>"
+send -- "f i=1:1:10 s a(i)=i*2,b(i)=i\r"
+expect -exact "YDB>"
+send -- "set \$zinterrupt=\"zwr a m a=b\"\r"
+expect "YDB>"
+send -- "zsy \"mupip intr \"_\$j\r"
+expect  "INTRPT issued to process "
+exp_pid
+expect "YDB>%YDB-E-ZINTRECURSEIO, Attempt to do IO to the active device in \$ZINTERRUPT"
+expect "%YDB-E-ERRWZINTR, Error while processing \$ZINTERRUPT"
+expect  "YDB>"
+send -- "\r"
+expect  "YDB>"
+send -- "h"
+expect "h"
+send -- "\r"
+expect eof

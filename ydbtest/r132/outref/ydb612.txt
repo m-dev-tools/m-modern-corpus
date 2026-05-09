@@ -1,0 +1,41 @@
+# yottadb direct mode suspends from SIGSTOP and resumes again without
+# an assert
+spawn /usr/local/bin/tcsh -f
+> stty cols 132
+> set shellprompt=SHELL
+> set prompt=$shellprompt
+SHELLsetenv term_env `tty`; echo $term_env > term_env.txt
+SHELL$ydb_dist/yottadb -dir
+
+YDB>
+Suspended (signal)
+SHELLjobs
+[1]  + Suspended (signal)            ##SOURCE_PATH##/yottadb -dir
+SHELLfg
+##SOURCE_PATH##/yottadb -dir
+
+
+YDB>write "abc
+Suspended (signal)
+SHELLfg
+##SOURCE_PATH##/yottadb -dir
+d"
+abcd
+YDB>"xyz"
+Suspended (signal)
+SHELLfg
+##SOURCE_PATH##/yottadb -dir
+##SUSPEND_OUTPUT YDB_READLINE
+     w"xyz"     r"xyz"     i"xyz"     t"xyz"     e"xyz"      "xyz"
+##ALLOW_OUTPUT YDB_READLINE
+##SUSPEND_OUTPUT NON_YDB_READLINE
+##SUSPEND_OUTPUT YDB_READLINE6_OR_LESS
+##TEST_AWKwrite (|"xyz")
+##ALLOW_OUTPUT YDB_READLINE6_OR_LESS
+##SUSPEND_OUTPUT YDB_READLINE7_OR_MORE
+w"xyz"r"xyz"i"xyz"t"xyz"e"xyz" "xyz"
+##ALLOW_OUTPUT YDB_READLINE7_OR_MORE
+##ALLOW_OUTPUT NON_YDB_READLINE
+xyz
+YDB>
+SHELL

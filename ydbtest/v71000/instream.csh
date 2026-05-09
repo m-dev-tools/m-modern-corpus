@@ -1,0 +1,79 @@
+#!/usr/local/bin/tcsh -f
+#################################################################
+#								#
+# Copyright (c) 2024-2026 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+#
+#----------------------------------------------------------------------------------------------------------------------------------
+# List of subtests of the form "subtestname [author] description"
+#----------------------------------------------------------------------------------------------------------------------------------
+# lockargs_identical-gtmde340906	[jon]	Attempting a LOCK with more identical arguments than GT.M supports for the command generates an error
+# numoflow_exponential-gtmde388565	[jon]	Avoid inappropriate NUMOFLOW from a literal Boolean argument with exponential (E) form
+# fallintoflst_warning-gtmde37623	[jon]	When GT.M inserts an implicit QUIT to prevent a possible error, it generates a FALLINTOFLST WARNING message
+# commandlen_parse-gtmde422089		[jon]	Test ARGSLONGLINE (LINETOOLONG) error reporting in utility commands
+# lockargs_identical-gtmde340906	[jon]	Attempting a LOCK with more identical arguments than GT.M supports for the command generates an error
+# mupipbackup_fastercopy-gtmde408789	[jon]	MUPIP BACKUP -DATABASE uses faster copy mechanism when available
+# rctldump_superseded-gtmf135385	[jon]	MUPIP RTCLDUMP reports the number of times a routine has been replaced (rtnsupersede) in the autorelink cache
+# locklimit_lockincr2high-gtmde340950	[jon]	Test that exceeding the LOCK level limit for the same resource name generates a LOCKINCR2HIGH error
+# triple_mupipstop-gtmde421008		[jon]	Triple MUPIP STOP within a minute similar, but slightly better than kill -9
+# fdsizelmt_errmsg-gtmde325871		[jon]	Test FDSIZELIMIT error when running GT.CM server with over 1021 open file descriptors
+# inplaceconv_V6toV7-gtmf135427		[jon]	Support in-place conversion from V6 to V7 database formats
+#----------------------------------------------------------------------------------------------------------------------------------
+
+echo "v71000 test starts..."
+
+# List the subtests seperated by spaces under the appropriate environment variable name
+setenv subtest_list_common	""
+setenv subtest_list_non_replic	""
+setenv subtest_list_non_replic	"$subtest_list_non_replic lockargs_identical-gtmde340906"
+setenv subtest_list_non_replic	"$subtest_list_non_replic numoflow_exponential-gtmde388565"
+setenv subtest_list_non_replic	"$subtest_list_non_replic fallintoflst_warning-gtmde376239"
+setenv subtest_list_non_replic	"$subtest_list_non_replic commandlen_parse-gtmde422089"
+setenv subtest_list_non_replic	"$subtest_list_non_replic mupipbackup_fastercopy-gtmde408789"
+setenv subtest_list_non_replic	"$subtest_list_non_replic rctldump_superseded-gtmf135385"
+setenv subtest_list_non_replic	"$subtest_list_non_replic locklimit_lockincr2high-gtmde340950"
+setenv subtest_list_non_replic	"$subtest_list_non_replic triple_mupipstop-gtmde421008"
+setenv subtest_list_non_replic	"$subtest_list_non_replic fdsizelmt_errmsg-gtmde325871"
+setenv subtest_list_non_replic	"$subtest_list_non_replic inplaceconv_V6toV7-gtmf135427"
+setenv subtest_list_replic	""
+
+if ($?test_replic == 1) then
+	setenv subtest_list "$subtest_list_common $subtest_list_replic"
+else
+	setenv subtest_list "$subtest_list_common $subtest_list_non_replic"
+endif
+
+setenv subtest_exclude_list ""
+
+# Skip the mupipbackup_fastercopy-gtmde408789 subtest when either the `copy_file_range()` system
+# call is unavailable, or the test output directory and /tmp have the same filesystem types, as
+# this can cause test failures due to the following reasons:
+#   1. Per the reasoning at `v70001/u_inref/gtm9424.csh`, running the test when the `copy_file_range()`
+#      system call is available and the test output directory and /tmp have different filesystem
+#      types would lead to an EXDEV error, which is desirable as that is what this subtest is testing.
+#   2. When an EXDEV error happens because of reason 1, it is silently ignored causing the backup to
+#      instead issue a %GTM-I-BKUPRETRY message, and then go down the `cp/pax` backup path.
+if ((0 == $ydb_test_copy_file_range_avail) || ($tst_dir_fstype == $tmp_dir_fstype)) then
+	setenv subtest_exclude_list "$subtest_exclude_list mupipbackup_fastercopy-gtmde408789"
+endif
+
+# Use $subtest_exclude_list to remove subtests that are to be disabled on a particular host or OS
+if ("pro" == "$tst_image") then
+	setenv subtest_exclude_list "$subtest_exclude_list"
+endif
+
+if ("dbg" == "$tst_image") then
+	setenv subtest_exclude_list "$subtest_exclude_list"
+endif
+
+# Submit the list of subtests
+$gtm_tst/com/submit_subtest.csh
+
+echo "v71000 test DONE."

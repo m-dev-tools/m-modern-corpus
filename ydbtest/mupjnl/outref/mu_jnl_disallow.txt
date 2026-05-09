@@ -1,0 +1,126 @@
+Will test various disallowed mupip parameter sets.
+Since all commands in this script are disallowed, none will run,
+hence no database is necessary 
+==============================================================
+##SOURCE_PATH##/mupip journal
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: RECOVER VERIFY SHOW EXTRACT ROLLBACK
+##SOURCE_PATH##/mupip journal -recover -rollback
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: RECOVER ROLLBACK
+##SOURCE_PATH##/mupip journal -recover
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FORWARD BACKWARD
+##SOURCE_PATH##/mupip journal -recover -forward -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FORWARD BACKWARD
+##SOURCE_PATH##/mupip journal -recover -forward -since="0 00:00:01"
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: SINCE FORWARD
+##SOURCE_PATH##/mupip journal -recover -forward -lookback_limit="time=0 00:00:01"
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: LOOKBACK_LIMIT FORWARD
+##SOURCE_PATH##/mupip journal -recover -backward -checktn
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: CHECKTN BACKWARD
+##SOURCE_PATH##/mupip journal -rollback -back -resync=1 -fetchresync=2
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: RESYNC FETCHRESYNC
+##SOURCE_PATH##/mupip journal -recover -resync=1 -back -lost=x.lost
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: RESYNC ROLLBACK
+##SOURCE_PATH##/mupip journal -recover -fetchresync=1 -back -lost=x.lost
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: RESYNC FETCHRESYNC ROLLBACK
+##SOURCE_PATH##/mupip journal -recover -online -back -lost=x.lost
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: RESYNC FETCHRESYNC ONLINE ROLLBACK
+##SOURCE_PATH##/mupip journal -rollback -fetchresync=1 -forward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FETCHRESYNC FORWARD
+##SOURCE_PATH##/mupip journal -rollback -online -forward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FETCHRESYNC ONLINE FORWARD
+##SOURCE_PATH##/mupip journal -rollback -backward -rsync_strm=1
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: RSYNC_STRM RESYNC
+##SOURCE_PATH##/mupip journal -rollback -forward -resync=2 -rsync_strm=1
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: RSYNC_STRM FORWARD
+##SOURCE_PATH##/mupip journal -show -losttrans=1 -back
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: LOSTTRANS RECOVER ROLLBACK EXTRACT
+##SOURCE_PATH##/mupip journal -verify -losttrans=1 -back
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: LOSTTRANS RECOVER ROLLBACK EXTRACT
+##SOURCE_PATH##/mupip journal -show -brokentrans=mumps.brk -back
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: BROKENTRANS RECOVER ROLLBACK EXTRACT
+##SOURCE_PATH##/mupip journal -verify -brokentrans=mumps.brk -back
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: BROKENTRANS RECOVER ROLLBACK EXTRACT
+##SOURCE_PATH##/mupip journal -recover -extract -full -forward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FULL RECOVER
+##SOURCE_PATH##/mupip journal -rollback -extract -full -forward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: FULL RECOVER ROLLBACK
+##SOURCE_PATH##/mupip journal -show -detail -forward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: DETAIL EXTRACT
+##SOURCE_PATH##/mupip journal -show -after="-- 18:00:00" -back
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: AFTER FORWARD
+##SOURCE_PATH##/mupip journal -recover -after="-- 18:00:00" -forward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: AFTER RECOVER
+##SOURCE_PATH##/mupip journal -rollback -after="-- 18:00:00" -forward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: AFTER RECOVER ROLLBACK
+##SOURCE_PATH##/mupip journal -rollback -backward -lookback
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: LOOKBACK_LIMIT VERIFY RECOVER EXTRACT SHOW
+##SOURCE_PATH##/mupip journal -verify -backward -apply_after_image
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: APPLY_AFTER_IMAGE ROLLBACK RECOVER
+##SOURCE_PATH##/mupip journal -show -backward -apply_after_image
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: APPLY_AFTER_IMAGE ROLLBACK RECOVER
+##SOURCE_PATH##/mupip journal -extract -backward -apply_after_image
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: APPLY_AFTER_IMAGE ROLLBACK RECOVER
+##SOURCE_PATH##/mupip journal -rollback -backward -redirect=bgdbb.dat=test.dat
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: REDIRECT RECOVER
+##SOURCE_PATH##/mupip journal -extract -backward -redirect=bgdbb.dat=test.dat
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: REDIRECT RECOVER
+##SOURCE_PATH##/mupip journal -verify -backward -redirect=bgdbb.dat=test.dat
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: REDIRECT RECOVER
+##SOURCE_PATH##/mupip journal -show -backward -redirect=bgdbb.dat=test.dat
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: REDIRECT RECOVER
+##SOURCE_PATH##/mupip journal -recover -backward -redirect=(bgdbb.dat=test.dat)
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: REDIRECT BACKWARD
+##SOURCE_PATH##/mupip journal -recover -backward -nochain
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: BACKWARD CHAIN
+##SOURCE_PATH##/mupip journal -rollback -after="1 0:18:00" -forward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: AFTER RECOVER ROLLBACK
+##SOURCE_PATH##/mupip journal -rollback -extract -backward -lookback_limit
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: ROLLBACK AFTER LOOKBACK_LIMIT
+##SOURCE_PATH##/mupip journal -recover -global="^a" -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL RECOVER
+##SOURCE_PATH##/mupip journal -rollback -global="^a" -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL RECOVER ROLLBACK
+##SOURCE_PATH##/mupip journal -verify -global="^a" -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL RECOVER ROLLBACK VERIFY
+##SOURCE_PATH##/mupip journal -recover -user=gtmtest -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL USER RECOVER
+##SOURCE_PATH##/mupip journal -rollback -user=gtmtest -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL USER RECOVER ROLLBACK
+##SOURCE_PATH##/mupip journal -verify -user=gtmtest -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL USER RECOVER ROLLBACK VERIFY
+##SOURCE_PATH##/mupip journal -recover -id=1234 -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL USER ID RECOVER
+##SOURCE_PATH##/mupip journal -rollback -id=1234 -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL USER ID RECOVER ROLLBACK
+##SOURCE_PATH##/mupip journal -verify -id=1234 -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL USER ID RECOVER ROLLBACK VERIFY
+##SOURCE_PATH##/mupip journal -recover -transaction=kill -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL USER ID SEQNO GVPATFILE TRANSACTION RECOVER
+##SOURCE_PATH##/mupip journal -rollback -transaction=kill -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL USER ID SEQNO GVPATFILE TRANSACTION RECOVER ROLLBACK
+##SOURCE_PATH##/mupip journal -verify -transaction=kill -backward
+%YDB-E-CLIERR, Missing or illegal combination of command elements - check documentation: GLOBAL USER ID SEQNO GVPATFILE TRANSACTION RECOVER ROLLBACK VERIFY
+unset echo
+==============================================================
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+Turn journaling on...
+##SOURCE_PATH##/mupip journal -recover -forward -redirect=bgdbb.dat=test.dat *
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-E-STARFILE, Star(*) argument cannot be specified with REDIRECT qualifier
+%YDB-E-MUPCLIERR, Action not taken due to CLI errors
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+##SOURCE_PATH##/mupip journal -rollback -back -lost=1 a.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-E-NOSTARFILE, Only star(*) argument can be specified with ROLLBACK -BACKWARD qualifier
+%YDB-E-MUPCLIERR, Action not taken due to CLI errors
+%YDB-I-FILENOTCREATE, Lost transactions extract file 1 not created
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+unset echo
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

@@ -1,0 +1,62 @@
+Contents of tempfile:
+The quick
+brown fox
+jumps over
+the lazy
+dog.
+
+modified by:
+$gtm_exe/mumps -r linerepl --match=/the/ --replace=:A: tempfile
+
+Contents of tempfile after linerepl change:
+A quick
+A lazy
+
+Executing posixtest and expect PASS for all
+
+PASS Invocation
+PASS $zhorolog
+PASS $ZHOROLOG
+##TEST_AWKDaylight Savings Time is (not )*in effect
+PASS mktime()
+PASS Microsecond resolution
+PASS GETRLIMIT
+PASS GETUID
+PASS regmatch^%ydbposix 1
+PASS regfree^%ydbposix
+PASS REGMATCH^%ydbposix 1
+PASS REGFREE^%ydbposix
+PASS regmatch^%ydbposix 2
+PASS REGMATCH^%ydbposix 2
+PASS regmatch^%ydbposix 3
+PASS REGMATCH^%ydbposix 3
+PASS regmatch^%ydbposix 3
+PASS REGMATCH^%ydbposix 3
+PASS regmatch^%ydbposix 4
+PASS REGMATCH^%ydbposix 4
+PASS regmatch^%ydbposix 5
+PASS REGMATCH^%ydbposix 5
+PASS mktmpdir
+PASS statfile.times
+PASS statfile.ids
+PASS filemodeconst^%ydbposix
+PASS signal
+PASS STATFILE.times
+PASS STATFILE.ids
+PASS syslog1
+PASS syslog2
+PASS setenv
+PASS unsetenv
+PASS rmdir
+PASS MKTMPDIR
+PASS mkdir
+PASS MKDIR
+PASS UTIMES
+PASS UMASK
+PASS CHMOD
+PASS SYMLINK
+PASS REALPATH
+PASS CP
+PASS Nanosecond resolution
+PASS SYSCONF
+PASS LIBM

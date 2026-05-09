@@ -1,0 +1,31 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+YDB>
+d ^zjobdrv(5)
+##TEST_AWKJobbed off process \([0-9][0-9]*\): PASSED:
+##TEST_AWKJobbed off process \([0-9][0-9]*\): PASSED:
+##TEST_AWKJobbed off process \([0-9][0-9]*\): PASSED:
+##TEST_AWKJobbed off process \([0-9][0-9]*\): PASSED:
+##TEST_AWKJobbed off process \([0-9][0-9]*\): PASSED:
+
+YDB>
+zjobi^zjobdrv
+##TEST_AWK[0-9][0-9]*
+%YDB-E-JOBFAIL, JOB command failure,%YDB-I-TEXT, Job error in routine or label or offset specification.
+		At M source location zjobi+3^zjobdrv
+
+YDB>
+0
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##TEST_PATH##/zjobi.mje
+%YDB-E-RTNLABOFF, Label invlab and/or offset 0 not found in routine zjob

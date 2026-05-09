@@ -1,0 +1,55 @@
+This section tests external calls using unicode string
+######################################################
+setenv gtm_chset UTF-8
+unset echo
+
+YDB>
+do unistrtest
+
+Testing strlen
+ZLength of 1a2b3c4d computed by M = 8
+Length of 1a2b3c4d computed by M = 8
+Length of 1a2b3c4d computed by C = 8
+
+Testing strlen
+ZLength of 2β3私4𠞉5 computed by M = 13
+Length of 2β3私4𠞉5 computed by M = 7
+Length of 2β3私4𠞉5 computed by C = 7
+
+Testing strcat
+concat done by M : 3私は_𠞉𠟠_42β3私
+concat done by C : 3私は_𠞉𠟠_42β3私
+
+Testing strcpy
+expected output  :2β3私
+strcpy done by C :2β3私
+
+YDB>
+
+YDB>
+do uniprealloc
+Value returned from prealloc = "αβγ Message"
+
+After alloc32: Now length is : 32766
+Passed
+After alloc64: Now length is : 65535
+Passed
+After alloc75: Now length is : 74997
+Passed
+After alloc1mb: Now length is : 1048572
+Passed
+
+YDB>
+
+YDB>
+do unimaxprealloc
+%YDB-I-EXTSRCLIN, 	allocerr:	void	xc_new_alloc_err(O:xc_char_t *[1048578])
+
+								^-----
+%YDB-I-EXTSRCLOC, 		At column 40, line 2, source module gtmxc_unimaxprealloc.tab
+%YDB-E-ZCPREALLVALINV, The pre-allocation value exceeded the maximum string length
+		At M source location unimaxprealloc+3^unimaxprealloc
+
+YDB>
+######################################################
+Section done...

@@ -1,0 +1,34 @@
+ENTERING D9H12002672
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+mumps.dat
+# Set kill_in_prog=1 for second region : ##FILTERED##GTM_TEST_DEBUGINFO.*
+# Start backup process in background
+# Ensure that while backup process is waiting we dont hold any crits
+
+DSE> CRIT is currently unowned on all regions
+# The backup process is running in background and waiting for KIP to reset.
+# We test future kills are inhibited on all the regions. We also test that set should work normally on all regions.
+
+YDB>
+
+YDB>
+
+YDB>
+Start set in region : 
+End set in region : 
+Start Kill in region : 
+End Kill in region : 
+
+YDB>
+1
+YDB>
+# Unset kill_in_prog=1 for second region : ##FILTERED##GTM_TEST_DEBUGINFO.*
+# LEAVING D9H12002672
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

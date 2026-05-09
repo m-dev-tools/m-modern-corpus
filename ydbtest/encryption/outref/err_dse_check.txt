@@ -1,0 +1,137 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+----------------------------------------------------------
+dump file header without gtm_paswd and expect to work
+----------------------------------------------------------
+%YDB-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file ##TEST_PATH##/a.dat. Environment variable ydb_passwd/gtm_passwd not set
+%YDB-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file ##TEST_PATH##/mumps.dat. Environment variable ydb_passwd/gtm_passwd not set
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+
+File            ##TEST_PATH##/a.dat
+Region          AREG
+##TEST_AWKDate/Time       [0-9][0-9]-[A-Z][A-Z][A-Z]-[0-9][0-9][0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9] ..H = [5-9][0-9][0-9][0-9][0-9],[0-9]+.
+  Access method                                  BG  Global Buffers                        1024
+                                                     Block size (in bytes)                 4096
+  Maximum record size                           256  Starting VBN                          8193
+  Maximum key size                               64  Total blocks            0x0000000000000065
+  Null subscripts                             NEVER  Free blocks             0x0000000000000062
+  Standard Null Collation                      TRUE  Free space                      0x00000000
+  Last Record Backup             0x0000000000000001  Extension Count                        100
+  Last Database Backup           0x0000000000000001  Number of local maps                     1
+  Last Bytestream Backup         0x0000000000000001  Lock space                      0x000000DC
+  In critical section                    0x00000000  Timers pending                           0
+  Cache freeze id                        0x00000000  Flush timer                    00:00:01:00
+  Freeze match                           0x00000000  Flush trigger                          960
+  Freeze online                               FALSE  Freeze online autorelease            FALSE
+  Current transaction            0x0000000000000001  No. of writes/flush                      7
+  Maximum TN                     0xFFFFFFF803FFFFFF  Certified for Upgrade to                V7
+  Maximum TN Warn                0xFFFFFFD813FFFFFF  Desired DB Format                       V7
+  Master Bitmap Size                           8176  Blocks to Upgrade       0x0000000000000000
+  Create in progress                          FALSE  Modified cache blocks                    0
+  Reference count                                 1  Wait Disk                                0
+  Journal State                            DISABLED
+  Mutex Hard Spin Count                         128  Mutex Sleep Spin Count                 128
+  Mutex Queue Slots                            1024  KILLs in progress                        0
+  Replication State                             OFF  Region Seqno            0x0000000000000001
+  Zqgblmod Seqno                 0x0000000000000000  Zqgblmod Trans          0x0000000000000000
+  Endian Format              ##FILTERED####ENDIAN##  Commit Wait Spin Count                  16
+  Database file encrypted              ##FILTERED##  Inst Freeze on Error                 ##FILTERED##
+  Spanning Node Absent                 ##FILTERED##  Maximum Key Size Assured          ##FILTERED##
+  Defer allocation                     ##FILTERED##  Spin sleep time mask          ##FILTERED##
+##SUSPEND_OUTPUT ASYNCIO
+  Async IO                                      OFF  WIP queue cache blocks                   0
+##ALLOW_OUTPUT ASYNCIO
+##SUSPEND_OUTPUT NOASYNCIO
+  Async IO                                       ON  WIP queue cache blocks                   0
+##ALLOW_OUTPUT NOASYNCIO
+  DB is auto-created                          FALSE  DB shares gvstats                     TRUE
+  LOCK shares DB critical section             FALSE  Read Only                              OFF
+  Recover interrupted                         FALSE  Full Block Write                         0
+  StatsDB Allocation                           2050
+  Data Reserved Bytes                             0  Index Reserved Bytes                     0
+##TEST_AWK  Max conc proc time         [0-9 ]{22}  Max Concurrent processes                 1
+##SUSPEND_OUTPUT MUTEX_TYPE_PTHREAD
+##SUSPEND_OUTPUT MUTEX_TYPE_YDB
+  Reorg Sleep Nanoseconds                         0  Mutex Manager Type          ADAPTIVE (YDB)
+##ALLOW_OUTPUT MUTEX_TYPE_YDB
+##SUSPEND_OUTPUT MUTEX_TYPE_ADAPTIVE MUTEX_TYPE_RANDOM MUTEX_TYPE_DEFAULT
+  Reorg Sleep Nanoseconds                         0  Mutex Manager Type                     YDB
+##ALLOW_OUTPUT MUTEX_TYPE_ADAPTIVE MUTEX_TYPE_RANDOM MUTEX_TYPE_DEFAULT
+##ALLOW_OUTPUT MUTEX_TYPE_PTHREAD
+##SUSPEND_OUTPUT MUTEX_TYPE_ADAPTIVE MUTEX_TYPE_YDB MUTEX_TYPE_RANDOM MUTEX_TYPE_DEFAULT
+  Reorg Sleep Nanoseconds                         0  Mutex Manager Type                 PTHREAD
+##ALLOW_OUTPUT MUTEX_TYPE_ADAPTIVE MUTEX_TYPE_YDB MUTEX_TYPE_RANDOM MUTEX_TYPE_DEFAULT
+----------------------------------------------------------
+Rename a_dat_key as a_key
+----------------------------------------------------------
+%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/a.dat. In config file gtmcrypt.cfg, could not obtain the real path of 'database.keys' entry #1's key. No such file or directory
+%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/mumps.dat. In config file gtmcrypt.cfg, could not obtain the real path of 'database.keys' entry #1's key. No such file or directory
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> 
+Block 0  Size 90  Level -1  TN 0 V7   Master Status: Free Space
+
+                       	Low order                         High order
+Block                0:	|  XXX.....  ........  ........  ........  |
+Block               20:	|  ........  ........  ........  ........  |
+Block               40:	|  ........  ........  ........  ........  |
+Block               60:	|  ........  ........  ........  ........  |
+Block               80:	|  ........  ........  ........  ........  |
+Block               A0:	|  ........  ........  ........  ........  |
+Block               C0:	|  ........  ........  ........  ........  |
+Block               E0:	|  ........  ........  ........  ........  |
+Block              100:	|  ........  ........  ........  ........  |
+Block              120:	|  ........  ........  ........  ........  |
+Block              140:	|  ........  ........  ........  ........  |
+Block              160:	|  ........  ........  ........  ........  |
+Block              180:	|  ........  ........  ........  ........  |
+Block              1A0:	|  ........  ........  ........  ........  |
+Block              1C0:	|  ........  ........  ........  ........  |
+Block              1E0:	|  ........  ........  ........  ........  |
+
+'X' == BUSY  '.' == FREE  ':' == REUSABLE  '?' == CORRUPT
+
+DSE> 
+%YDB-E-CRYPTBADCONFIG, Could not retrieve data from encrypted file ##TEST_PATH##/a.dat due to bad encryption configuration. Please look at prior messages related to encryption for more details
+DSE> 
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> 
+Block 0  Size 90  Level -1  TN 0 V7   Master Status: Free Space
+
+                       	Low order                         High order
+Block                0:	|  XXX.....  ........  ........  ........  |
+Block               20:	|  ........  ........  ........  ........  |
+Block               40:	|  ........  ........  ........  ........  |
+Block               60:	|  ........  ........  ........  ........  |
+Block               80:	|  ........  ........  ........  ........  |
+Block               A0:	|  ........  ........  ........  ........  |
+Block               C0:	|  ........  ........  ........  ........  |
+Block               E0:	|  ........  ........  ........  ........  |
+Block              100:	|  ........  ........  ........  ........  |
+Block              120:	|  ........  ........  ........  ........  |
+Block              140:	|  ........  ........  ........  ........  |
+Block              160:	|  ........  ........  ........  ........  |
+Block              180:	|  ........  ........  ........  ........  |
+Block              1A0:	|  ........  ........  ........  ........  |
+Block              1C0:	|  ........  ........  ........  ........  |
+Block              1E0:	|  ........  ........  ........  ........  |
+
+'X' == BUSY  '.' == FREE  ':' == REUSABLE  '?' == CORRUPT
+
+DSE> 
+%YDB-E-CRYPTBADCONFIG, Could not retrieve data from encrypted file ##TEST_PATH##/mumps.dat due to bad encryption configuration. Please look at prior messages related to encryption for more details
+DSE> 
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

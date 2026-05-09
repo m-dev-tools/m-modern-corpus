@@ -1,0 +1,26 @@
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+
+YDB>
+
+YDB>
+%YDB-I-RECORDSTAT, ^test:	  Key cnt: 10000  max subsc len: 10  max rec len: 100  max node len: 114
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 10000  max subsc len: 10  max rec len: 100  max node len: 114
+
+YDB>
+
+YDB>
+##TEST_AWKLabel = ##FILTERED##GDS BINARY EXTRACT LEVEL ....................................*YottaDB MUPIP EXTRACT.*
+
+Beginning LOAD at record number: 2
+
+LOAD TOTAL		Key Cnt: 10000  Max Subsc Len: 10  Max Data Len: 100
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 18
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

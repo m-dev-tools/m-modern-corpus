@@ -1,0 +1,34 @@
+# Test that a fatal signal (randomly uses either SIGINT or SIGTERM) cleanly shuts down YDBGo process with no cores
+# This test uses the threeenp* subtests as sample processes
+# Building threeenp1B1
+Terminating threeenp1B1; Run 1
+##TEST_AWKgoPID  [0-9]*
+Terminating threeenp1B1; Run 2
+##TEST_AWKgoPID  [0-9]*
+Terminating threeenp1B1; Run 3
+##TEST_AWKgoPID  [0-9]*
+done
+# Building threeenp1B2
+Terminating threeenp1B2; Run 1
+##TEST_AWKgoPID  [0-9]*
+Terminating threeenp1B2; Run 2
+##TEST_AWKgoPID  [0-9]*
+Terminating threeenp1B2; Run 3
+##TEST_AWKgoPID  [0-9]*
+done
+# Building threeenp1C2
+Terminating threeenp1C2; Run 1
+##TEST_AWKgoPID  ([0-9]* )*[0-9]*
+Terminating threeenp1C2; Run 2
+##TEST_AWKgoPID  ([0-9]* )*[0-9]*
+Terminating threeenp1C2; Run 3
+##TEST_AWKgoPID  ([0-9]* )*[0-9]*
+done
+# Building ydb3n1
+Terminating ydb3n1; Run 1
+##TEST_AWKgoPID  ([0-9]* )*[0-9]*
+Terminating ydb3n1; Run 2
+##TEST_AWKgoPID  ([0-9]* )*[0-9]*
+Terminating ydb3n1; Run 3
+##TEST_AWKgoPID  ([0-9]* )*[0-9]*
+done

@@ -1,0 +1,23 @@
+/****************************************************************
+ *								*
+ * Copyright (c) 2019-2020 YottaDB LLC and/or its subsidiaries.	*
+ * All rights reserved.						*
+ *								*
+ *	This source code contains the intellectual property	*
+ *	of its copyright holder(s), and is made available	*
+ *	under a license.  If you do not know the terms of	*
+ *	the license, please stop and do not read further.	*
+ *								*
+ ****************************************************************/
+
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+#define	YDBOCTO_MAJOR_VERSION	@YDBOCTO_MAJOR_VERSION@
+#define	YDBOCTO_MINOR_VERSION	@YDBOCTO_MINOR_VERSION@
+#define	YDBOCTO_PATCH_VERSION	@YDBOCTO_PATCH_VERSION@
+#define	YDB_RELEASE_STRING	"@YDB_RELEASE_STRING@"
+
+#define	YDB_TLS_AVAILABLE	@YDB_TLS_AVAILABLE@
+
+#endif

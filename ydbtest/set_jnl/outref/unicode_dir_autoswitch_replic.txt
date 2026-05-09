@@ -1,0 +1,79 @@
+setenv gtm_chset UTF-8
+unset echo
+Files Created in ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而:
+Using: ##SOURCE_PATH##/mumps -run GDE
+ＡＢＣ能吞下玻璃而.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+c.dat
+ＡＢＣ能吞下玻璃而.dat
+On Primary:
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/a.mjl is renamed to ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/a.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/a.mjl created for region AREG with (NO|)BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/b.mjl is renamed to ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/b.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/b.mjl created for region BREG with (NO|)BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/c.mjl is renamed to ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/c.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/c.mjl created for region CREG with (NO|)BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/ＡＢＣ能吞下玻璃而.mjl is renamed to ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/ＡＢＣ能吞下玻璃而.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/ＡＢＣ能吞下玻璃而.mjl created for region DEFAULT with (NO|)BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+On Secondary:
+Files Created in ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而:
+Using: ##SOURCE_PATH##/mumps -run GDE
+ＡＢＣ能吞下玻璃而.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+c.dat
+d.dat
+e.dat
+ＡＢＣ能吞下玻璃而.dat
+##FILTERED##%YDB-I-FILERENAME, File ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/b.mjl is renamed to ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/b.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/b.mjl created for region BREG with (NO|)BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/c.mjl is renamed to ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/c.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/c.mjl created for region CREG with (NO|)BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/d.mjl is renamed to ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/d.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/d.mjl created for region DREG with (NO|)BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DREG is now ON
+Starting GTM processes...
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/a.mjl is renamed to ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/a.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/a.mjl created for region AREG with (NO|)BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/b.mjl is renamed to ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/b.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/b.mjl created for region BREG with (NO|)BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+##SUSPEND_OUTPUT FORWARD_ROLLBACK
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/last_a.mjl created for region AREG with (NO|)BEFORE_IMAGES
+##ALLOW_OUTPUT FORWARD_ROLLBACK
+##SUSPEND_OUTPUT NOFORWARD_ROLLBACK
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/last_a.mjl created for region AREG with (NO|)BEFORE_IMAGES
+##ALLOW_OUTPUT NOFORWARD_ROLLBACK
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+##SUSPEND_OUTPUT FORWARD_ROLLBACK
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##REMOTE_TEST_PATH##/last_a.mjl created for region BREG with (NO|)BEFORE_IMAGES
+##ALLOW_OUTPUT FORWARD_ROLLBACK
+##SUSPEND_OUTPUT NOFORWARD_ROLLBACK
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##REMOTE_TEST_PATH##/αβγδε.能吞.ＡＢＣ.能吞下玻璃而/last_a.mjl created for region BREG with (NO|)BEFORE_IMAGES
+##ALLOW_OUTPUT NOFORWARD_ROLLBACK
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+Stopping GTM processes...
+DATABASE EXTRACT PASSED
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Rollback successful
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Rollback successful
+DATABASE EXTRACT PASSED after rollback

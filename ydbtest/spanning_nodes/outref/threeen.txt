@@ -1,0 +1,40 @@
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+ 261
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           2               6          15.527            NA
+Index               5               8           7.734             2
+Data                8               7          30.615             6
+##SUSPEND_OUTPUT 4G_ABOVE_DB_BLKS
+Free            81485              NA              NA            NA
+##ALLOW_OUTPUT 4G_ABOVE_DB_BLKS
+##SUSPEND_OUTPUT 4G_BELOW_DB_BLKS
+Free       4286659662              NA              NA            NA
+##ALLOW_OUTPUT 4G_BELOW_DB_BLKS
+##SUSPEND_OUTPUT 4G_ABOVE_DB_BLKS
+Total           81500              21              NA             8
+##ALLOW_OUTPUT 4G_ABOVE_DB_BLKS
+##SUSPEND_OUTPUT 4G_BELOW_DB_BLKS
+Total      4286659677              21              NA             8
+##ALLOW_OUTPUT 4G_BELOW_DB_BLKS
+[Spanning Nodes:1 ; Blocks:4]

@@ -1,0 +1,350 @@
+# This test runs MUPIP BACKUPs with backup directory paths from
+# 220 to 265 characters where there are 2 database files with
+# separate names, regions and segments. The backups are run with
+# and without the -noonline option. The expected result is for
+# paths of 255 or less to work but for paths of more than 255
+# to result in errors.
+###################################################################
+# Setting up the global directory mumps.gld and creating the
+# databases mumps.dat and a.dat from that global directory.
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/a.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+##SUSPEND_OUTPUT pro
+###################################################################
+# Starting the -noonline MUPIP BACKUPs. For these, we
+# generate directory paths of 220 to 266 characters,
+# expecting lengths of 220 to 226 to succeed and longer
+# lengths to result in errors. Lengths of 227 or larger
+# fail due to the space needed for the temporary file which
+# would otherwise overflow a buffer in sr_port/mubfilcpy.c
+####### Testing backup directory length [220] with -noonline #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [221] with -noonline #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [222] with -noonline #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [223] with -noonline #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [224] with -noonline #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [225] with -noonline #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [226] with -noonline #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [227] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [228] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [229] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [230] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [231] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [232] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [233] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [234] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [235] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [236] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [237] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [238] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [239] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [240] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [241] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [242] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [243] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [244] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [245] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [246] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [247] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [248] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [249] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [250] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [251] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [252] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [253] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [254] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [255] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [256] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [257] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [258] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [259] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [260] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [261] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [262] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [263] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [264] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [265] with -noonline #########
+%YDB-E-FILENAMETOOLONG, File name too long
+###################################################################
+# Starting the online MUPIP BACKUPs. For these, we generate
+# directory paths of 220 to 266 characters including the
+# length of the test directory. The test directory is included
+# in the length for these backups because online backups use the
+# full directory path for the temporary file. This means that a
+# backup directory length of even 220 would always generate an
+# error if run from the test directory. Setting the minimum of
+# the range to a lower number wouldn't work because the length of
+# the test directory can vary based on factors such as the build
+# name and which user is running the test which would make it
+# impossible to predict where the FILENAMETOOLONG errors should
+# first show up. So we subtract the length of the test dir from
+# the directory length to ensure predictable results in this
+# section of the test. We expect a path, including the test
+# of 227 or more characters to produce a FILENAMETOOLONG error
+####### Testing backup directory length [220] (online backup) #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [221] (online backup) #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [222] (online backup) #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [223] (online backup) #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [224] (online backup) #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [225] (online backup) #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [226] (online backup) #########
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+####### Testing backup directory length [227] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [228] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [229] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [230] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [231] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+Files backed up before above error are OK.
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+####### Testing backup directory length [232] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [233] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [234] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [235] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [236] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [237] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [238] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [239] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [240] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [241] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [242] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [243] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [244] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [245] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [246] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [247] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [248] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [249] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [250] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [251] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [252] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [253] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [254] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [255] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [256] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [257] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [258] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [259] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [260] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [261] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [262] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [263] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [264] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+####### Testing backup directory length [265] (online backup) #########
+%YDB-E-FILENAMETOOLONG, File name too long
+##ALLOW_OUTPUT pro
+###################################################################
+# Starting backups with path lengths from 230 to 235 testing
+# MUPIP BACKUP -noonline -bytestream -since= where since is
+# equal to either incremental, database, record or "". These
+# backups used to generate errors on ASAN builds due to a memcmp
+# bug that was fixed by YDB#864.
+
+YDB>
+
+YDB>
+####### Testing backup directory length [230] with noonline, bytestream and since= #########
+############ Testing -since=incremental
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=database
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=record
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing 
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+
+YDB>
+
+YDB>
+####### Testing backup directory length [231] with noonline, bytestream and since= #########
+############ Testing -since=incremental
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=database
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=record
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing 
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+
+YDB>
+
+YDB>
+####### Testing backup directory length [232] with noonline, bytestream and since= #########
+############ Testing -since=incremental
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=database
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=record
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing 
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+
+YDB>
+
+YDB>
+####### Testing backup directory length [233] with noonline, bytestream and since= #########
+############ Testing -since=incremental
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=database
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=record
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing 
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+
+YDB>
+
+YDB>
+####### Testing backup directory length [234] with noonline, bytestream and since= #########
+############ Testing -since=incremental
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=database
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=record
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing 
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+
+YDB>
+
+YDB>
+####### Testing backup directory length [235] with noonline, bytestream and since= #########
+############ Testing -since=incremental
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=database
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing -since=record
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+############ Testing 
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+###################################################################
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

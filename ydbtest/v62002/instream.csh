@@ -1,0 +1,145 @@
+#!/usr/local/bin/tcsh -f
+#################################################################
+#								#
+# Copyright (c) 2015-2016 Fidelity National Information		#
+# Services, Inc. and/or its subsidiaries. All rights reserved.	#
+#                                                               #
+# Copyright (c) 2017-2026 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+#
+#-------------------------------------------------------------------------------------
+# List of subtests of the form "subtestname [author] description"
+#-------------------------------------------------------------------------------------
+# gtm8197          [partridger] Test to verify that an over-length trigger specification produces a TRIGNAMENF error
+# gtm3912          [partridger] Test that narrow terminal widths don't cause problems for ZSHOW "D" (GTM-3912) or ZWRITE (GTM-5756)
+# gtm8187          [nars]       Test to verify that mupip reorg -truncate does optimal truncation
+# gtm8167          [base]       Verify buffer overrun does not occur when job command arguments are greater than 1024 bytes long
+# gtm4911          [partridger] Test that timed read longer than the heartbeat timer (8 seconds) works appropriately
+# gtm8241          [nars]       Test to ensure lock wait does not hog crit as # of waiting processes runs to thousands
+# gtm8228          [nars]       Releasing M-lock should not require crit at process exit
+# gtm8214          [nars]       SIG-11 and/or garbage printed in $ztrigger update operations
+# gtm8269          [nars]       KILL of global with NOISOLATION removes extra global nodes
+# gtm8087          [maimoneb]   test zshow "C"
+# gtm8261          [partridger] test that switching NOFULL_BOOLEAN off and on does not cause an assert
+# gtm5894          [base]       Test the ability to fully allocate the database file
+# gtm8245          [nars]       TPFAIL uuuu in MERGE ^GBL1=^GBL2 where GBL2 contains spanning nodes
+# gtm8282          [base]       Verify that the time passed in the interrupt handler counts towards the lock timeout
+# rtnxfertst       [estess]     Test various control transfer methods exercising glue code routines.
+# gtm7949          [base]       Verify $ZHOROLOG and $ZUT display the correct time
+# gtm6638          [maimoneb]   Test for dirty buffer tapering to epoch
+# zwritesvn        [shaha]      Should be able to zwrite all ISVs
+# gtm8317          [estess]     Testing of INVTMPDIR and INVLINKTMPDIR
+# gtm8290          [nars]       SIG-11 when a routine with active breakpoints is recursively relinked
+# gtm8183          [nars]       JNLBADRECFMT error when filesystem-block-size is greater than os-page-size
+# gtm8240          [base]       Verfiy that setting $gtm_autorelink_ctlmax changes maximum number of autorelink routines
+# gtm8332          [nars]       White-box test : Journal files can have out-of-order timestamps even if system time does not go back
+# waitpid_no_timer [sopini]     Verify that waitpid does not rely on timers when they are unavailable or process is exiting.
+# gtm8370          [nars]       SIG-11 from ZSHOW after a MERGE/Trigger-invocation/Runtime-error/ZGOTO sequence
+# gtm8371          [nars]       SIG-11 in $QUERY(lvn) after ZSHOW "V":lvn when no variables exist
+#-------------------------------------------------------------------------------------
+
+echo "v62002 test starts..."
+
+# List the subtests separated by spaces under the appropriate environment variable name
+setenv subtest_list_common     ""
+setenv subtest_list_common     "$subtest_list_common gtm8214"
+setenv subtest_list_common     "$subtest_list_common gtm8269"
+setenv subtest_list_non_replic ""
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8197"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm3912"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8187"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8167"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm4911"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8241"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8228"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8087"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8261"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm5894"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8245"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8282"
+setenv subtest_list_non_replic "$subtest_list_non_replic rtnxfertst"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm7949"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm6638"
+setenv subtest_list_non_replic "$subtest_list_non_replic zwritesvn"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8317"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8290"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8240"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8332"
+setenv subtest_list_non_replic "$subtest_list_non_replic waitpid_no_timer"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8370"
+setenv subtest_list_non_replic "$subtest_list_non_replic gtm8371"
+setenv subtest_list_replic     ""
+setenv subtest_list_replic     "$subtest_list_replic gtm8183"
+
+if ($?test_replic == 1) then
+	setenv subtest_list "$subtest_list_common $subtest_list_replic"
+else
+	setenv subtest_list "$subtest_list_common $subtest_list_non_replic"
+endif
+
+# Use $subtest_exclude_list to remove subtests that are to be disabled on a particular host or OS
+setenv subtest_exclude_list	""
+
+# gtm5894 relies on allocated disk space (using "du") which will not be accurate on compressed file systems. So skip it there.
+if (1 == $is_tst_dir_cmp_fs) then
+	setenv subtest_exclude_list "$subtest_exclude_list gtm5894"
+else if ("zfs" == "$tst_dir_fstype") then
+	# On ZFS, "du" on a newly created file does not return the allocated size immediately after a "mupip create". It could
+	# take a few seconds before it returns the fully allocated size (these are called "pending changes" in ZFS). That can
+	# cause the "gtm5894" subtest to fail as it does "du" on the file a lot of times. Therefore disable this subtest if ZFS.
+	setenv subtest_exclude_list "$subtest_exclude_list gtm5894"
+else if ("xfs" == "$tst_dir_fstype") then
+	# On xfs, we have seen that the allocation/extent of sparse files can be noticeably high and cause the "gtm5894"
+	# subtest to fail because it has strict checks on how much space a sparse .dat file can occupy in the file system.
+	# Therefore disable this subtest in that case.
+	setenv subtest_exclude_list "$subtest_exclude_list gtm5894"
+endif
+# Remove rtnxfertst, gtm8290 and gtm8240 subtests from Linux-32bit and HPUX-IA64 as they involve auto-relink or recursive-relink
+if ((HOST_LINUX_IX86 == "$gtm_test_os_machtype") || (HOST_HP-UX_IA64 == "$gtm_test_os_machtype")) then
+	setenv subtest_exclude_list "$subtest_exclude_list rtnxfertst gtm8290 gtm8240"
+endif
+
+# Filter out white box tests that cannot run in pro
+if ("pro" == "$tst_image") then
+	setenv subtest_exclude_list	"$subtest_exclude_list gtm8332"
+endif
+
+# If the platform/host does not have prior GT.M versions, disable tests that require them
+if ($?gtm_test_nopriorgtmver) then
+	setenv subtest_exclude_list "$subtest_exclude_list gtm7949"
+endif
+# If the platform/host does not have GG structured build directory, disable tests that require them
+if ($?gtm_test_noggbuilddir) then
+	setenv subtest_exclude_list "$subtest_exclude_list gtm8087"
+endif
+
+if ($?gtm_test_temporary_disable) then
+	setenv subtest_exclude_list "$subtest_exclude_list gtm8240"
+endif
+
+# Disable certain heavyweight tests on single-cpu systems
+if ($gtm_test_singlecpu) then
+	setenv subtest_exclude_list "$subtest_exclude_list gtm6638"
+endif
+
+if ($?ydb_readline) then
+	# Right now, the readline implementation does not support stopping wrapping
+	# Disable this test until we switch to use the Readline callback interface, which will
+	# allow us to arbitrarily wrap whenever we want
+	# This is tracked at https://gitlab.com/YottaDB/DB/YDB/-/issues/1039
+	if ( "0" != $ydb_readline ) then
+		setenv subtest_exclude_list "$subtest_exclude_list gtm3912"
+	endif
+endif
+
+# Submit the list of subtests
+$gtm_tst/com/submit_subtest.csh
+
+echo "v62002 test DONE."

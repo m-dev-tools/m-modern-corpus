@@ -1,0 +1,72 @@
+Test case 70: Recovery needs standlaone access
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+mupip set -journal=enable,on,before -reg DEFAULT
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+mupip set -journal=enable,on,before -reg AREG
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/a.mjl created for region AREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+^x=1
+
+YDB>
+##SOURCE_PATH##/mupip journal -recover -back mumps.mjl,a.mjl
+
+YDB>
+
+YDB>
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+YDB>
+------------------------------------------------------------------------------------
+
+YDB>
+^a=1
+
+YDB>
+##SOURCE_PATH##/mupip journal -recover -back mumps.mjl,a.mjl
+
+YDB>
+
+YDB>
+------------------------------------------------------------------------------------
+
+YDB>
+^x=1
+
+YDB>
+##SOURCE_PATH##/mupip journal -recover -forw -nochecktn mumps.mjl,a.mjl
+
+YDB>
+
+YDB>
+------------------------------------------------------------------------------------
+
+YDB>
+^a=1
+
+YDB>
+##SOURCE_PATH##/mupip journal -recover -forw -nochecktn mumps.mjl,a.mjl
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

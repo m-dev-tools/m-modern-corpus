@@ -1,0 +1,23 @@
+
+YDB>
+begin of SET $EXTRACT testing...
+
+YDB>
+14
+
+YDB>
+1
+
+YDB>
+1
+
+YDB>
+14
+
+YDB>
+14
+
+YDB>
+...end of SET $EXTRACT
+
+YDB>

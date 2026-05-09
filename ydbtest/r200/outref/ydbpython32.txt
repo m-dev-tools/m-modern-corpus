@@ -1,0 +1,13 @@
+# Starting test for CTRL-C on Interactive (started from terminal) Flask Application terminates properly
+# Cloning and Installing YDBPython
+# Setting up Virtual environment and installing flask
+# Verify that YDBPython linked against the correct version of YottaDB
+##TEST_AWK	libyottadb##TEST_SHL_SUFFIX## => ##SOURCE_PATH##/libyottadb##TEST_SHL_SUFFIX## \(0x.*\)
+# Creating db file
+Files Created in ##TEST_PATH##/YDBPython:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+# Running expect script simulating two sessions with CTRL-C at the end for flask
+# %YDB-SUCCESS: Test successful

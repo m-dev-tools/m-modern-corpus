@@ -1,0 +1,8 @@
+----------
+Error FORCEDHALT seen in mumps.out as expected:
+%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+----------
+----------
+Error FORCEDHALT seen in ith.mje as expected:
+%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+----------

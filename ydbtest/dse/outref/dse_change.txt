@@ -1,0 +1,316 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+##SUSPEND_OUTPUT NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+
+YDB>
+
+YDB>
+TEST DSE - CHANGE COMMAND
+--------------------- Test 1 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> Error: invalid bsiz.
+DSE> Error: invalid bsiz.
+DSE> DSE> DSE> --------------------- Test 2 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+Seized write critical section.
+
+##TEST_AWKDSE> DSE> Database ##TEST_PATH##/a.dat : CRIT Owned by pid .*
+DSE> Error: invalid level for a bit map block.
+DSE> DSE> DSE> --------------------- Test 3 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> %YDB-E-CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
+DSE> %YDB-E-CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
+DSE> %YDB-E-CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
+DSE> %YDB-E-CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
+DSE> DSE> --------------------- Test 4 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> DSE> 
+Block 27   Size 272   Level 1   TN 4D6 V7
+
+DSE> DSE> DSE> 
+Block 27   Size 272   Level 0   TN 4D7 V7
+
+DSE> DSE> --------------------- Test 5 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> DSE> 
+Block 27   Size 272   Level 0   TN 1000 V7
+
+DSE> DSE> DSE> DSE> 
+Rec:4  Blk 27  Off 9B  Size 2B  Cmpc 0  Key ^%(44064)
+
+DSE> DSE> DSE> 
+Rec:4  Blk 27  Off 9B  Size 2B  Cmpc A  Key ^aglobal(1224,44064)
+
+DSE> DSE> --------------------- Test 6 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> Error: invalid rsiz.
+DSE> DSE> DSE> 
+Rec:4  Blk 27  Off 9B  Size 4  Cmpc A  Key ^aglobal(1200)
+
+DSE> DSE> DSE> 
+Rec:4  Blk 27  Off 9B  Size 3B  Cmpc A  Key ^aglobal(1224,44064)
+
+DSE> DSE> DSE> 
+Rec:4  Blk 27  Off 9B  Size 2B  Cmpc A  Key ^aglobal(1224,44064)
+
+DSE> DSE> --------------------- Test 7 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> DSE> 
+Rec:4  Blk 27  Off 9B  Size 2B  Cmpc 0  Key ^%(44064)
+
+DSE> DSE> DSE> 
+Rec:4  Blk 27  Off 9B  Size 2B  Cmpc A  Key ^aglobal(1224,44064)
+
+DSE> DSE> Error: invalid rsiz.
+DSE> DSE> DSE> 
+Rec:4  Blk 27  Off 9B  Size 4  Cmpc A  Key ^aglobal(1200)
+
+DSE> DSE> DSE> 
+Rec:4  Blk 27  Off 9B  Size 3B  Cmpc A  Key ^aglobal(1224,44064)
+
+DSE> DSE> DSE> 
+Rec:4  Blk 27  Off 9B  Size 2B  Cmpc A  Key ^aglobal(1224,44064)
+
+DSE> DSE> --------------------- Test 8 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> Error: invalid bsiz.
+DSE> DSE> DSE> 
+Block 27   Size 10   Level 0   TN 4E4 V7
+
+DSE> DSE> Error: invalid bsiz.
+DSE> DSE> DSE> 
+Block 27   Size 272   Level 0   TN 4E5 V7
+
+DSE> DSE> --------------------- Test 9 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> Error: last record in blk is E
+DSE> Error: record less than 1
+DSE> DSE> --------------------- Test 10 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> Error: offset less than blk header
+DSE> Warning:  specified compression count is larger than the current expanded key size.
+DSE> 
+Rec:1  Blk 27  Off 10  Size 35  Cmpc A  Key ^aglobal(1221,43956)
+
+DSE> DSE> 
+Rec:1  Blk 27  Off 10  Size 35  Cmpc 0  Key ^aglobal(1221,43956)
+
+DSE> Error: offset greater than blk size of 272
+DSE> DSE> 
+Rec:E  Blk 27  Off 247  Size 2B  Cmpc 0  Key ^5(44424)
+
+DSE> DSE> 
+Rec:E  Blk 27  Off 247  Size 2B  Cmpc A  Key ^aglobal(1234,44424)
+
+DSE> DSE> --------------------- Test 11 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> %YDB-I-BLKSIZ512, Block size 0 rounds to 512
+DSE> --------------------- Test 12 ---------------------
+                                                     Block size (in bytes)                  512
+  Create in progress                          FALSE  Modified cache blocks                    0
+--------------------- Test 13 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> %YDB-I-BLKSIZ512, Block size 1023 rounds to 1024
+DSE> --------------------- Test 14 ---------------------
+                                                     Block size (in bytes)                 1024
+--------------------- Test 15 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> DSE> DSE> DSE> DSE> DSE> DSE> --------------------- Test 16 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> DSE> DSE> DSE> DSE> DSE> DSE> DSE> DSE> --------------------- Test 17 ---------------------
+--------------------- Test 18 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> CRIT is currently unowned on all regions
+DSE> DSE> %YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceeded
+%YDB-I-GVIS, 		Global variable: ^aglobal("abcdefghijklmnop")
+DSE> DSE> DSE> CRIT is currently unowned on all regions
+DSE> --------------------- Test 19 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> CRIT is currently unowned on all regions
+DSE> 
+Seized write critical section.
+
+DSE> DSE> %YDB-E-REC2BIG, Record size (23) is greater than maximum (22) for region: AREG
+%YDB-I-GVIS, 		Global variable: aglobal
+##TEST_AWKDSE> Database ##TEST_PATH##/a.dat : CRIT Owned by pid \[.*\]
+DSE> --------------------- Test 20 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> DSE> DSE> DSE> DSE> 
+Rec:2  Blk 27  Off 45  Size AE  Cmpc 8  Key ^aglobal("abcdefghij","klmnopqrstuvwxyz")
+
+DSE> DSE> DSE> --------------------- Test 21 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> DSE> %YDB-E-BLKINVALID, 0x0000000000000027 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000010 total blocks
+DSE> %YDB-E-BLKINVALID, 0x0000000000000011 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000010 total blocks
+DSE> DSE> DSE> 
+Rec:E  Blk 27  Off 247  Size 2B  Cmpc A  Key ^aglobal(1234,44424)
+
+DSE> DSE> DSE> 
+Rec:E  Blk 27  Off 247  Size 2B  Cmpc A  Key ^aglobal(1234,44424)
+
+DSE> DSE> --------------------- Test 22 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> %YDB-I-TIMRBADVAL, Bad value specified.  Timer not changed.
+DSE> DSE> --------------------- Test 23 ---------------------
+  Cache freeze id                        0x00000000  Flush timer                    00:00:00:02
+--------------------- Test 24 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> --------------------- Test 25 ---------------------
+  Cache freeze id                        0x00000000  Flush timer                    00:00:01:00
+--------------------- Test 26 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> %YDB-I-TIMRBADVAL, Bad value specified.  Timer not changed.
+DSE> --------------------- Test 27 ---------------------
+  Cache freeze id                        0x00000000  Flush timer                    00:00:01:00
+--------------------- Test 28 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> --------------------- Test 29 ---------------------
+  Cache freeze id                        0x00000000  Flush timer                    01:00:00:00
+--------------------- Test 30 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> %YDB-I-TIMRBADVAL, Bad value specified.  Timer not changed.
+DSE> --------------------- Test 31 ---------------------
+  Cache freeze id                        0x00000000  Flush timer                    01:00:00:00
+--------------------- Test 32 ---------------------
+--------------------- Test 33 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> %YDB-I-TIMRBADVAL, Bad value specified.  Timer not changed.
+DSE> --------------------- Test 34 ---------------------
+  Cache freeze id                        0x00000000  Flush timer                    01:00:00:00
+  Cache freeze id                        0x00000000  Flush timer                    01:00:00:00
+--------------------- Test 35 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> DSE> --------------------- Test 36 ---------------------
+  Freeze match                           0x00000000  Flush trigger                         2048
+--------------------- Test 37 ---------------------
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> DSE> --------------------- Test 38 ---------------------
+  Freeze match                           0x00000000  Flush trigger                         1024
+--------------------- Test 39 ---------------------
+# Test that MUPIP JOURNAL EXTRACT shows the DSE commands as AIMG records
+##SUSPEND_OUTPUT NON_REPLIC
+AIMG change -block=0 -bsiz=90
+AIMG change -block=0 -tn=10
+AIMG change -block=0 -level=FF
+AIMG change  -leve=1 -block=27
+AIMG change -block=27 -level=0
+AIMG change  -tn=1000 -block=27
+AIMG change  -tn=4D2 -block=27
+AIMG change  -reco=4 -cmpc=0 -block=27
+AIMG change -reco=4 -cm=A -block=27
+AIMG change -record=4 -rs=4 -block=27
+AIMG change -record=4 -rsiz=3B  -block=27
+AIMG change -record=4 -rsiz=2B -block=27
+AIMG change  -offs=9E -cmpc=0 -block=27
+AIMG change -offs=9E -cmpc=A -block=27
+AIMG change -offset=9E -rsiz=4 -block=27
+AIMG change -offset=9E -rsiz=3B -block=27
+AIMG change -offset=9E -rsiz=2B -block=27
+AIMG change -bsiz=10 -block=27
+AIMG change  -bsiz=272  -block=27
+AIMG change -offset=10 -cmpc=A -block=27
+AIMG change -offset=10 -cmpc=0 -block=27
+AIMG change -offset=271 -cmpc=0 -block=27
+AIMG change -offset=271 -cmpc=A -block=27
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+##ALLOW_OUTPUT NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

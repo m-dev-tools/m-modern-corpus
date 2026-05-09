@@ -1,0 +1,69 @@
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/gtmgbldir.gld
+
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/gtmgbldir.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-ZGBLDIRUNDEF, Global Directory env var $ydb_gbldir/$gtmgbldir is undefined
+
+YDB>
+
+YDB>
+%YDB-E-ZGBLDIRUNDEF, Global Directory env var $ydb_gbldir/$gtmgbldir is undefined
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/foo.gld.  Retaining ##TEST_PATH##/gtmgbldir.gld.
+%SYSTEM-E-ENO2, No such file or directory
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/foo.gld.  Cannot continue.
+%SYSTEM-E-ENO2, No such file or directory
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+^val("five")=5
+^val("four")=4
+^val("one")=1
+^val("seven")=7
+
+YDB>
+Now test mupip functions:
+setenv gtmgbldir foo.gld
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/foo.gld.  Cannot continue.
+%SYSTEM-E-ENO2, No such file or directory
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/foo.gld.  Cannot continue.
+%SYSTEM-E-ENO2, No such file or directory
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/foo.gld.  Cannot continue.
+%SYSTEM-E-ENO2, No such file or directory
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/foo.gld.  Cannot continue.
+%SYSTEM-E-ENO2, No such file or directory
+%YDB-E-ZGBLDIRACC, Cannot access global directory ##TEST_PATH##/foo.gld.  Cannot continue.
+%SYSTEM-E-ENO2, No such file or directory
+unsetenv gtmgbldir
+%YDB-E-ZGBLDIRUNDEF, Global Directory env var $ydb_gbldir/$gtmgbldir is undefined
+%YDB-E-ZGBLDIRUNDEF, Global Directory env var $ydb_gbldir/$gtmgbldir is undefined
+%YDB-E-ZGBLDIRUNDEF, Global Directory env var $ydb_gbldir/$gtmgbldir is undefined
+%YDB-E-ZGBLDIRUNDEF, Global Directory env var $ydb_gbldir/$gtmgbldir is undefined
+%YDB-E-ZGBLDIRUNDEF, Global Directory env var $ydb_gbldir/$gtmgbldir is undefined

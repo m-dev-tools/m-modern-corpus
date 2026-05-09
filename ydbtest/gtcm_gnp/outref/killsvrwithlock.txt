@@ -1,0 +1,77 @@
+Create database on GT.CM Servers ( ##TEST_GTCM_SERVER_LIST##)...
+##GT.CM##Files Created in ##TEST_REMOTE_PATH_GTCM##:
+##GT.CM##Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+##GT.CM##mumps.gld
+##GT.CM##Using: ##REMOTE_SOURCE_PATH##/mupip
+Create local (client) database...
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+The database layout is:
+ASEG	a.dat
+BSEG	##TEST_REMOTE_NODE_PATH_GTCM##/b.dat
+CSEG	##TEST_REMOTE_NODE_PATH_GTCM##/c.dat
+DEFAULT	##TEST_REMOTE_NODE_PATH_GTCM##/mumps.dat
+Starting the GT.CM Servers...
+Lock status from remote host 2:
+
+BREG
+^b Owned by PID= <PID> which is an existing process
+##TEST_AWK%YDB-I-LOCKSPACEINFO, Region: BREG: processes on queue: 0/(880|1173); LOCK slots in use: 1/(597|820); SUBSCRIPT slot bytes in use: (8|16)/(28072|28084)
+##TEST_AWK.YDB-I-LOCKSPACEUSE, Estimated free lock space: [0-9]*. of 220 pages
+
+DEFAULT
+^d Owned by PID= <PID> which is an existing process
+a Owned by PID= <PID> which is an existing process
+b Owned by PID= <PID> which is an existing process
+##TEST_AWK%YDB-I-LOCKSPACEINFO, Region: DEFAULT: processes on queue: 0/(880|1173); LOCK slots in use: 3/(597|820); SUBSCRIPT slot bytes in use: (24|48)/(28072|28084)
+##TEST_AWK.YDB-I-LOCKSPACEUSE, Estimated free lock space: [0-9]*. of 220 pages
+##TEST_AWK.1. [0-9]*
+##TEST_AWK.*Done.*##SOURCE_PATH##/mumps -run lbcl . /dev/null .. lockb_on_client.log
+##TEST_AWKI will now lock .b.*
+%YDB-E-NETLCKFAIL, Lock operation across Net failed
+##TEST_AWK.SYSTEM-E-.*
+,%YDB-E-LCKSCANCELLED, Error on remote node holding LOCKs or ZALLOCATEs.  All LOCKs and ZALLOCATEs cancelled.
+		At M source location lock+12^lbcl
+
+YDB>
+Re-start the server (on ##TEST_REMOTE_HOST_GTCM_2##)
+GT.CM Server up again, retry the lock (the lock is still held on the server side)...
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+Could not get the lock, just as expected
+
+YDB>
+Release lock on the server side...
+Retry the lock on the client side now...
+
+YDB>
+
+YDB>
+
+YDB>
+I got the lock, as expected
+
+YDB>
+
+YDB>
+Stopping the GT.CM Servers...
+Check the databases on the GT.CM Servers...
+##GT.CM####REMOTE_SOURCE_PATH##/mupip
+##GT.CM####REMOTE_SOURCE_PATH##/mupip integ -REG *
+##GT.CM##No errors detected by integ.
+Check local (client) database...
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ a.dat
+No errors detected by integ.
+##TEST_REMOTE_HOST_SHORT##:##TEST_PATH##/lockb_on_client.log
+%YDB-E-NETLCKFAIL, Lock operation across Net failed
+##TEST_AWK.SYSTEM-E-.*
+,%YDB-E-LCKSCANCELLED, Error on remote node holding LOCKs or ZALLOCATEs.  All LOCKs and ZALLOCATEs cancelled.

@@ -1,0 +1,237 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+#####################################################################
+######## Test various code issues identified by fuzz testing ########
+#####################################################################
+
+------------------------------------------------------------
+# Test of https://gitlab.com/YottaDB/DB/YDB/-/issues/994#note_1385299862
+# Test GVSUBOFLOW error
+# Prior to YDB@cb4697bf, this test failed with an assert/SIG-11
+# Expecting only GVSUBOFLOW errors in below output in each invocation
+------------------------------------------------------------
+# Try ydb994gvsuboflow.m using [yottadb -run]
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+150372986,gvsuboflow+1^ydb994gvsuboflow,%YDB-E-GVSUBOFLOW, Maximum combined length of subscripts exceed
+
+------------------------------------------------------------
+# Test of https://gitlab.com/YottaDB/DB/YDB/-/issues/994#note_1607739778
+# Prior to merging GT.M V7.0-001, this test failed with a GTMASSERT in cache_cleanup.c
+# Expecting only %YDB-E-INVCMD and %YDB-W-ZTIMEOUT errors in below output
+------------------------------------------------------------
+# Try ydb994zhelpgtmassert.m using [yottadb -direct]
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-INVCMD, Invalid command keyword encountered
+	ydb994objfilerr	;
+	^-----
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-INVCMD, Invalid command keyword encountered
+	Wr
+	^-----
+
+YDB>
+
+YDB>
+%YDB-W-ZTIMEOUT, Time expired
+
+YDB>
+
+YDB>
+
+YDB>
+# Try ydb994zhelpgtmassert.m using [yottadb -run]
+ZSTATUS=ydb994objfilerr+3^ydb994zhelpgtmassert,%YDB-W-ZTIMEOUT, Time expired
+ZSTATUS=ydb994objfilerr+5^ydb994zhelpgtmassert,%YDB-W-ZTIMEOUT, Time expired
+
+------------------------------------------------------------
+# Test of https://gitlab.com/YottaDB/DB/YDB/-/issues/994#note_1609142435
+# Prior to r1.36, this test failed with an assert in trans_code_cleanup.c
+# Expecting only %YDB-E-FILENOTFND and %YDB-W-ZLINKFILE errors in below output
+------------------------------------------------------------
+# Try ydb994transcodecleanup.m using [yottadb -direct]
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-INVCMD, Invalid command keyword encountered
+	ydb994transcodecleanup
+	^-----
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-ZLINKFILE, Error while zlinking "foo"
+%YDB-E-FILENOTFND, File foo.m not found
+%YDB-E-FILENOTFND, File foo.o not found
+%YDB-E-ERRWZINTR, Error while processing $ZINTERRUPT
+
+YDB>
+
+YDB>
+
+YDB>
+# Try ydb994transcodecleanup.m using [yottadb -run]
+ZSTATUS=ydb994transcodecleanup+4^ydb994transcodecleanup,%YDB-E-ERRWZINTR, Error while processing $ZINTERRUPT,-YDB-E-ZLINKFILE, Error while zlinking "foo",%YDB-E-FILENOTFND, File foo.m not found,%YDB-E-FILENOTFND, File foo.o not found
+
+------------------------------------------------------------
+# Test of https://gitlab.com/YottaDB/DB/YDB/-/issues/994#note_1609147517
+# At some prior point in time, this test failed with an assert in trans_code_cleanup.c
+# Expecting only %YDB-E-INVCMD error (only in [yottadb -direct] invocation) in below output
+------------------------------------------------------------
+# Try ydb994transcodecleanup2.m using [yottadb -direct]
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-INVCMD, Invalid command keyword encountered
+	ydb994transcodecleanup2
+	^-----
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+# Try ydb994transcodecleanup2.m using [yottadb -run]
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

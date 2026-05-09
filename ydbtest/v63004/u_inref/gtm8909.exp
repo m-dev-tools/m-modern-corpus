@@ -1,0 +1,36 @@
+#################################################################
+#								#
+# Copyright (c) 2018-2020 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+#
+# The timeout is set to 120 seconds because we've had some test failures on ARM machines
+# due to the test timing out after 60 seconds.
+set timeout 120
+set promptList {LKE DSE MUPIP}
+spawn /usr/local/bin/tcsh -f
+source $::env(gtm_tst)/com/expectinit.exp
+
+foreach prompt $promptList {
+	puts "# Start $prompt help facility"
+	send -- "\$gtm_dist/[string tolower $prompt]\r"
+	expect -exact "$prompt>"
+	send -- "help\r"
+	expect  "Topic?"
+	puts "#<Ctrl-C>"
+	send -- "\x03"
+	expect  "Topic?"
+	send -- "\r"
+	if { $prompt != "MUPIP" } {
+		puts "\n# Exit $prompt>"
+		expect -exact "$prompt>"
+		send -- "exit\r"
+	}
+	expect "SHELL"
+}

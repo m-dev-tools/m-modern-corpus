@@ -1,0 +1,420 @@
+setenv gtm_chset UTF-8
+unset echo
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+#####################1###################
+Testing FL
+
+YDB>
+
+First Line Lister
+
+Routine: 
+unicodertn          unicodertn1         unicodertn45678     unicodertn456789    
+unicodertn45678901234567890   unicodertn4567890123456789012345678901  unicodertnx         
+Current total of 7 routines.
+
+Routine: 
+unicodertn1         unicodertnx         
+Current total of 5 routines.
+
+Routine: 
+unicodertnx         
+Current total of 6 routines.
+
+Routine: 
+%G        
+Current total of 7 routines.
+
+Routine: 
+
+%G        unicodertn          unicodertn45678     unicodertn456789    unicodertn45678901234567890   
+unicodertn4567890123456789012345678901  unicodertnx         
+Routine: 
+
+Output device: <terminal>: 
+
+Routine First Line Lister Utility
+##TEST_AWKGT.M .*
+%G
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ ;                                                              ;
+ ;      Copyright 1987, 2009 Fidelity Information Services, Inc ;
+ ;                                                              ;
+ ;      This source code contains the intellectual property     ;
+ ;      of its copyright holder(s), and is made available       ;
+ ;      under a license.  If you do not know the terms of       ;
+ ;      the license, please stop and do not read further.       ;
+ ;                                                              ;
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+%G      ;GT.M %G utility - global lister
+
+unicodertn
+unicodertn      ;; 
+        ;; This is the description for unicodertn
+        ; Ｙａｄａ ｙａｄａ
+
+unicodertn45678
+unicodertn45678 ;; 
+        ;; This is the description for unicodertn45678
+        ; Ｙａｄａ ｙａｄａ
+
+unicodertn456789
+unicodertn456789        ;; 
+        ;; This is the description for unicodertn456789
+        ; Ｙａｄａ ｙａｄａ
+
+unicodertn45678901234567890
+unicodertn45678901234567890     ;; 
+        ;; This is the description for unicodertn45678901234567890
+        ; Ｙａｄａ ｙａｄａ
+
+unicodertn4567890123456789012345678901
+unicodertn4567890123456789012345678901  ;; 
+        ;; This is the description for unicodertn4567890123456789012345678901
+        ; Ｙａｄａ ｙａｄａ
+
+unicodertnx
+unicodertnx     ;; 
+        ;; This is the description for unicodertnx
+        ; Ｙａｄａ ｙａｄａ
+
+
+
+Total of 29 lines in 7 routines.
+
+
+YDB>
+#####################2###################
+Testing RCE 1
+
+YDB>
+
+Routine Change Every occurrence
+
+Routine: 
+unicodetmpy         unicodetmpz         
+Current total of 2 routines.
+
+Routine: 
+
+Old string: 
+New string: 
+Replace all occurrences of:
+>始开始OLD<
+With: 
+>开开开NEW<
+
+Show changed lines <Yes>?: 
+
+Output device: <terminal>: 
+
+
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodetmpy.m
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodetmpz.m
+
+Total of 2 routines parsed.
+0 occurrences changed in 0 routines.
+
+YDB>
+
+YDB>
+
+YDB>
+
+Routine Change Every occurrence
+
+Routine: 
+unicodertn          unicodertn1         unicodertn45678     unicodertn456789    
+unicodertn45678901234567890   unicodertn4567890123456789012345678901  unicodertnx         
+Current total of 7 routines.
+
+Routine: 
+
+Old string: 
+The find string contains control characters
+New string: 
+The New string contains control characters
+Replace all occurrences of:
+>ಕಖಗಘಙ	<
+With: 
+>ಚ	ಛಜಝಞ<
+
+Show changed lines <Yes>?: 
+
+Output device: <terminal>: 
+
+
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn.m
+Was: 	w "ಕಖಗಘಙ	",!
+Now: 	w "ಚ	ಛಜಝಞ",!
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn1.m
+Was: 	w "ಕಖಗಘಙ	",!
+Now: 	w "ಚ	ಛಜಝಞ",!
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn45678.m
+Was: 	w "ಕಖಗಘಙ	",!
+Now: 	w "ಚ	ಛಜಝಞ",!
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn456789.m
+Was: 	w "ಕಖಗಘಙ	",!
+Now: 	w "ಚ	ಛಜಝಞ",!
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn45678901234567890.m
+Was: 	w "ಕಖಗಘಙ	",!
+Now: 	w "ಚ	ಛಜಝಞ",!
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn4567890123456789012345678901.m
+Was: 	w "ಕಖಗಘಙ	",!
+Now: 	w "ಚ	ಛಜಝಞ",!
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertnx.m
+Was: 	w "ಕಖಗಘಙ	",!
+Now: 	w "ಚ	ಛಜಝಞ",!
+
+Total of 7 routines parsed.
+7 occurrences changed in 7 routines.
+
+YDB>
+
+YDB>
+
+YDB>
+#####################3###################
+Testing RCE 2
+
+YDB>
+
+Routine Change Every occurrence
+
+Routine: 
+unicodertn          unicodertn1         unicodertn45678     unicodertn456789    
+unicodertn45678901234567890   unicodertn4567890123456789012345678901  unicodertnx         
+Current total of 7 routines.
+
+Routine: 
+
+Old string: 
+New string: 
+Replace all occurrences of:
+>Ｙａｄａ<
+With: 
+>Ａｄａｙ<
+
+Show changed lines <Yes>?: 
+
+unicodertn          unicodertn1         unicodertn45678     unicodertn456789    
+unicodertn45678901234567890   unicodertn4567890123456789012345678901  unicodertnx         
+
+Total of 7 routines parsed.
+14 occurrences changed in 7 routines.
+
+YDB>
+
+YDB>
+#####################4###################
+Testing RSEL and CALL RCE 1
+unicodertn1	;; 
+	;; This is the description for unicodertn1
+	; Ａｄａｙ ｙａｄａ
+	w "ಚ	ಛಜಝಞ",!
+	set ^xyz1="Ａｄａｙ",^xyz2="ｙａｄａ"
+	write "安刀就开始开始",!
+	q
+
+YDB>
+
+Routine: 
+unicodertn1         
+Current total of 1 routine.
+
+Routine: 
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+%ZC=1
+%ZD="ｒｓｅ.out"
+%ZF="Ａｄａｙ"
+%ZN="☀★☃☂☁☢"
+%ZR=""
+%ZR("unicodertn1")="##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/"
+
+YDB>
+##TEST_AWK.*
+Routine Change Every occurrence of:
+>Ａｄａｙ<
+To:
+>☀★☃☂☁☢<
+
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn1.m
+Was: 	; Ａｄａｙ ｙａｄａ
+Now: 	; ☀★☃☂☁☢ ｙａｄａ
+Was: 	set ^xyz1="Ａｄａｙ",^xyz2="ｙａｄａ"
+Now: 	set ^xyz1="☀★☃☂☁☢",^xyz2="ｙａｄａ"
+unicodertn1	;; 
+	;; This is the description for unicodertn1
+	; ☀★☃☂☁☢ ｙａｄａ
+	w "ಚ	ಛಜಝಞ",!
+	set ^xyz1="☀★☃☂☁☢",^xyz2="ｙａｄａ"
+	write "安刀就开始开始",!
+	q
+#####################5###################
+Testing RSE 1
+
+YDB>
+
+Routine Search for Every occurrence
+
+Routine: 
+unicodertn          unicodertn1         unicodertn45678     unicodertn456789    
+unicodertn45678901234567890   unicodertn4567890123456789012345678901  unicodertnx         
+Current total of 7 routines.
+
+Routine: 
+unicodetmpy         unicodetmpz         
+Current total of 9 routines.
+
+Routine: 
+unicodertn          unicodertn1         unicodertn45678     unicodertn456789    
+unicodertn45678901234567890   unicodertn4567890123456789012345678901  unicodertnx         
+Current total of 2 routines.
+
+Routine: 
+
+Find string: 
+Find all occurrences of:
+>开开开NEW<
+
+Output device: <terminal>: 
+
+
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodetmpy.m
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodetmpz.m
+
+Total of 2 routines parsed.
+0 occurrences found in 0 routines.
+
+YDB>
+
+YDB>
+#####################6###################
+Testing RSE 2
+
+YDB>
+RSE SHOULD NOT match the string below
+YDB>
+
+Routine Search for Every occurrence
+
+Routine: 
+unicodertn          unicodertn1         unicodertn45678     unicodertn456789    
+unicodertn45678901234567890   unicodertn4567890123456789012345678901  unicodertnx         
+Current total of 7 routines.
+
+Routine: 
+
+Find string: 
+Find all occurrences of:
+>ಚಛಜಝಞ<
+
+Output device: <terminal>: 
+
+
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn.m
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn1.m
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn45678.m
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn456789.m
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn45678901234567890.m
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn4567890123456789012345678901.m
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertnx.m
+
+Total of 7 routines parsed.
+0 occurrences found in 0 routines.
+
+YDB>
+
+YDB>
+#####################7###################
+Testing RSEL and CALL RCE 2
+
+YDB>
+
+Routine: 
+unicodertn1         
+Current total of 1 routine.
+
+Routine: 
+unicodezz 
+Current total of 2 routines.
+
+Routine: 
+
+YDB>
+
+YDB>
+
+ w "ಕಖಗಘಙ	",!
+    ^^^^^
+YDB>
+%ZF="ಕಖಗಘಙ"
+%ZR=""
+%ZR("unicodertn1")="##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/"
+%ZR("unicodezz")="##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/"
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+%ZD="callｒｓｅ.out"
+%ZF="ಕಖಗಘಙ"
+%ZR=""
+%ZR("unicodertn1")="##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/"
+%ZR("unicodezz")="##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/"
+
+YDB>
+
+YDB>
+##TEST_AWK.*
+Routine Search for Every occurrence of:
+>ಕಖಗಘಙ<
+
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodertn1.m
+
+##TEST_PATH##/dirｄｉｒｅｃｔｏｒｙ/rtns/unicodezz.m
+ w "ಕಖಗಘಙ	",!
+    ^^^^^
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

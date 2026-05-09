@@ -1,0 +1,3 @@
+##TEST_PATH##/error.out
+%YDB-E-LSEXPECTED, A line separator is expected here
+%YDB-E-LSEXPECTED, A line separator is expected here

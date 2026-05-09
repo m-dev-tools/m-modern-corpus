@@ -1,0 +1,19 @@
+Entering D9C02-2044 subtest
+IF <condition that evaluates to false> <bad GT.M ref>
+Should complain at compile time
+However the object should run without error
+zcompile iftest.m
+
+YDB>
+		if a Bhaskar
+		     ^-----
+		At column 7, line 4, source module ##TEST_PATH##/iftest.m
+%YDB-E-INVCMD, Invalid command keyword encountered
+
+YDB>
+now d^iftest
+
+YDB>
+
+YDB>
+Leaving D9C02-2044 subtest

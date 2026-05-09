@@ -1,0 +1,9 @@
+
+YDB>
+%YDB-E-ZLINKFILE, Error while zlinking "d002692"
+%YDB-E-ZLMODULE, Object file name does not match module name: foo
+
+YDB>
+
+Pass from D9I07002692
+YDB>

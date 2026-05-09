@@ -1,0 +1,175 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+mupip set -journal=enable,on,before,file=mumps1.mjl -reg "*"
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps1.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+
+YDB>
+
+YDB>
+mupip set -journal=enable,on,before,file=mumps2.mjl -reg "*"
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps2.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+
+YDB>
+
+YDB>
+mupip set -journal=enable,on,before,file=mumps3.mjl -reg "*"
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps3.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+
+YDB>
+
+YDB>
+----------------------------------------------------------------------------
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+mupip journal -recover -forward "*"
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/mumps2.mjl included for database file ##TEST_PATH##/mumps.dat
+%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/mumps1.mjl included for database file ##TEST_PATH##/mumps.dat
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+YDB>
+^x=1,^y=2,^z=3
+
+YDB>
+----------------------------------------------------------------------------
+mupip journal -recover -forward mumps3.mjl,mumps2.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/mumps1.mjl included for database file ##TEST_PATH##/mumps.dat
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+----------------------------------------------------------------------------
+mupip journal -recover -forward mumps3.mjl,mumps1.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-E-JNLTNOUTOFSEQ, End transaction [0x00000002] of journal ##TEST_PATH##/mumps1.mjl different from Begin transaction [0x00000003] of next generation journal ##TEST_PATH##/mumps3.mjl
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+----------------------------------------------------------------------------
+mupip journal -recover -forward mumps2.mjl,mumps1.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+YDB>
+^x=1,^y=2,^z=
+%YDB-E-GVUNDEF, Global variable undefined: ^z
+
+YDB>
+----------------------------------------------------------------------------
+mupip journal -recover -forward mumps3.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/mumps2.mjl included for database file ##TEST_PATH##/mumps.dat
+%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/mumps1.mjl included for database file ##TEST_PATH##/mumps.dat
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+YDB>
+^x=1,^y=2,^z=3
+
+YDB>
+----------------------------------------------------------------------------
+mupip journal -recover -forward -nochain mumps3.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-E-JNLDBTNNOMATCH, Journal file ##TEST_PATH##/mumps3.mjl has beginning transaction number [0x00000003], but database ##TEST_PATH##/mumps.dat has current transaction number [0x00000001]
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+----------------------------------------------------------------------------
+mupip journal -recover -forward -chain mumps2.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-I-MUJNLPREVGEN, Previous generation journal file ##TEST_PATH##/mumps1.mjl included for database file ##TEST_PATH##/mumps.dat
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+YDB>
+^x=1
+
+YDB>
+^y=2
+
+YDB>
+^z=
+%YDB-E-GVUNDEF, Global variable undefined: ^z
+
+YDB>
+----------------------------------------------------------------------------
+mupip journal -recover -forward -nochain -nochecktn mumps3.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+YDB>
+^z=3
+
+YDB>
+^x=
+%YDB-E-GVUNDEF, Global variable undefined: ^x
+
+YDB>
+^y=
+%YDB-E-GVUNDEF, Global variable undefined: ^y
+
+YDB>
+----------------------------------------------------------------------------
+mupip journal -recover -forward -chain mumps3.mjl,mumps1.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-E-JNLTNOUTOFSEQ, End transaction [0x00000002] of journal ##TEST_PATH##/mumps1.mjl different from Begin transaction [0x00000003] of next generation journal ##TEST_PATH##/mumps3.mjl
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+----------------------------------------------------------------------------
+mupip journal -recover -forward -chain -nochecktn mumps3.mjl,mumps1.mjl
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+YDB>
+^x=1
+
+YDB>
+^z=3
+
+YDB>
+^y=
+%YDB-E-GVUNDEF, Global variable undefined: ^y
+
+YDB>
+----------------------------------------------------------------------------

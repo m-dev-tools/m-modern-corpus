@@ -1,0 +1,44 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+# Starting Background Updates...
+Simulating crash on receiver in ##REMOTE_TEST_PATH##
+Receiver crashed!
+# Start forward recovery using the journals from Primary...
+# We should see JNLSUCCESS messages and should NOT see any .broken or .lost files created
+# Previous generation journal files should NOT be included and so we should NOT see MUJNLPREVGEN message
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Recover successful
+# Forward recovery ends
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+Checking database on ##TEST_PATH##
+
+YDB>
+##SUSPEND_OUTPUT ASYNCIO
+do checkdb
+checkdb PASSED.
+##ALLOW_OUTPUT ASYNCIO
+##SUSPEND_OUTPUT NOASYNCIO
+Verify Pass
+##ALLOW_OUTPUT NOASYNCIO
+
+YDB>

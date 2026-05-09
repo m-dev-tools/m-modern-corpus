@@ -1,0 +1,7 @@
+Entering PATCODE subtest
+
+YDB>
+
+PASS from patcode
+YDB>
+Leaving PATCODE subtest

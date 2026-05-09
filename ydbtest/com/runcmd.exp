@@ -1,0 +1,31 @@
+#################################################################
+#								#
+# Copyright (c) 2018 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+#
+#
+# USAGE:
+#	runcmd.exp <cmd>
+#		where cmd is a string of ; delimited commands issued at the shell (tcsh) prompt
+#
+
+# Note: Timeout set at 1 hour below since an arbitrary input script (<cmd>) is executed
+# and could take a lot longer than the usual 1 minute that we have for expect command timeout.
+set timeout 3600
+spawn /usr/local/bin/tcsh -f
+source $::env(gtm_tst)/com/expectinit.exp
+
+# Send the first argument as a command
+set cmd [lindex $argv 0]
+send -- $cmd
+send -- "\r"
+
+# Wait for shell prompt to return
+expect -exact "SHELL"

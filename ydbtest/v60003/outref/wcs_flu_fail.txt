@@ -1,0 +1,45 @@
+Case #1
+###################################################################
+Killed
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##SUSPEND_OUTPUT JNL_BEFORE
+%YDB-E-MUUSERECOV, Abnormal shutdown of journaled database ##TEST_PATH##/mumps.dat detected
+%YDB-I-TEXT, Run MUPIP JOURNAL RECOVER
+##ALLOW_OUTPUT JNL_BEFORE
+##SUSPEND_OUTPUT JNL_NOBEFORE
+%YDB-E-JNLORDBFLU, Error flushing database blocks to ##TEST_PATH##/mumps.dat. See related messages in the operator log
+##ALLOW_OUTPUT JNL_NOBEFORE
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+Case #2
+###################################################################
+Killed
+##SUSPEND_OUTPUT BG
+%YDB-E-JNLORDBFLU, Error flushing database blocks to ##TEST_PATH##/mumps.dat. See related messages in the operator log
+%YDB-I-TEXT, To force the operation to proceed, use the OVERRIDE qualifier
+%YDB-W-MUNOTALLSEC, WARNING: not all global sections accessed were successfully rundown
+##ALLOW_OUTPUT BG
+##SUSPEND_OUTPUT MM
+##TEST_AWK%YDB-I-SHMREMOVED, Removed Shared Memory id [0-9]* corresponding to file ##TEST_PATH##/mumps.dat
+##TEST_AWK%YDB-I-SEMREMOVED, Semaphore id [0-9]* removed from the system
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/mumps.dat successfully rundown
+##ALLOW_OUTPUT MM
+
+Case #3
+###################################################################
+Killed
+%YDB-E-MUUSERECOV, Abnormal shutdown of journaled database ##TEST_PATH##/mumps.dat detected
+%YDB-I-TEXT, Run MUPIP JOURNAL RECOVER
+%YDB-W-MUNOTALLSEC, WARNING: not all global sections accessed were successfully rundown
+
+Case #4
+###################################################################
+Killed
+##TEST_AWK%YDB-I-SHMREMOVED, Removed Shared Memory id [0-9]* corresponding to file ##TEST_PATH##/mumps.dat
+##TEST_AWK%YDB-I-SEMREMOVED, Semaphore id [0-9]* removed from the system
+%YDB-I-MUFILRNDWNSUC, File ##TEST_PATH##/mumps.dat successfully rundown
+%YDB-E-MUUSERECOV, Abnormal shutdown of journaled database ##TEST_PATH##/mumps.dat detected
+%YDB-I-TEXT, Run MUPIP JOURNAL RECOVER
+%YDB-W-MUNOTALLSEC, WARNING: not all global sections accessed were successfully rundown
+

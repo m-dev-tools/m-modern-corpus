@@ -1,0 +1,24 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+YDB>
+150373850,test11+6^d002197,%YDB-E-LVUNDEF, Undefined local variable: a(2)
+
+YDB>
+^c="one-setleft"
+
+YDB>
+
+YDB>
+150373850,test21+7^d002197,%YDB-E-LVUNDEF, Undefined local variable: %VS(1)
+
+YDB>
+^B(12)="two-setleft"
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

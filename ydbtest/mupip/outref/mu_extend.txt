@@ -1,0 +1,84 @@
+MUPIP EXTEND
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+extend.gld
+Using: ##SOURCE_PATH##/mupip
+extend.dat
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+extend.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+extend.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+
+Caution: Database Block Certification Has Been Enabled
+
+YDB>
+do in0^dbfill("set")
+set PASS
+
+YDB>
+h
+#
+# Extend with a bad region
+#
+%YDB-E-NOREGION, REGION not found: FREELUNCH
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+##SUSPEND_OUTPUT 4G_ABOVE_DB_BLKS
+Extension successful, file ##TEST_PATH##/extend.dat extended by 400 blocks.  Total blocks = ##TEST_AWK[1-2][0-9]00.
+##ALLOW_OUTPUT 4G_ABOVE_DB_BLKS
+##SUSPEND_OUTPUT 4G_BELOW_DB_BLKS
+Extension successful, file ##TEST_PATH##/extend.dat extended by 400 blocks.  Total blocks = 42865##TEST_AWK[7-8][0-9][0-9]77.
+##ALLOW_OUTPUT 4G_BELOW_DB_BLKS
+
+YDB>
+
+Caution: Database Block Certification Has Been Enabled
+
+YDB>
+do in0^dbfill("ver")
+ver PASS
+
+YDB>
+do in1^dbfill("set")
+set PASS
+
+YDB>
+h
+##SUSPEND_OUTPUT 4G_ABOVE_DB_BLKS
+Extension successful, file ##TEST_PATH##/extend.dat extended by 100 blocks.  Total blocks = ##TEST_AWK[1-2][0-9]00.
+##ALLOW_OUTPUT 4G_ABOVE_DB_BLKS
+##SUSPEND_OUTPUT 4G_BELOW_DB_BLKS
+Extension successful, file ##TEST_PATH##/extend.dat extended by 100 blocks.  Total blocks = 42865##TEST_AWK[7-8][0-9][0-9]77.
+##ALLOW_OUTPUT 4G_BELOW_DB_BLKS
+
+YDB>
+
+Caution: Database Block Certification Has Been Enabled
+
+YDB>
+do in1^dbfill("ver")
+ver PASS
+
+YDB>
+
+YDB>
+SUCCESS
+YDB>
+h
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

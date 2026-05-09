@@ -1,0 +1,37 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+YDB>
+
+YDB>
+%YDB-E-VIEWNOTFOUND, View parameter ^TRACE( not valid
+%YDB-I-TEXT, Right parenthesis expected
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-VIEWNOTFOUND, View parameter ^TRACE( not valid
+%YDB-I-TEXT, Right parenthesis expected
+
+YDB>
+
+YDB>
+d ^examin ^TRACE
+The number of executions:
+^TRACE("one","one"): 1
+^TRACE("one","one",0): 1
+^TRACE("one","one",1): 1
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

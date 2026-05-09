@@ -1,0 +1,6 @@
+
+YDB>
+Testing YottaDB Startup check ...
+
+YDB>
+TEST PASSED

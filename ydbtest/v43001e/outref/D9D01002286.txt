@@ -1,0 +1,11 @@
+
+YDB>
+SET $ZRO test is successfull
+
+YDB>
+SET $ZRO test is successfull
+
+YDB>
+SET $ZRO test is successfull
+
+YDB>

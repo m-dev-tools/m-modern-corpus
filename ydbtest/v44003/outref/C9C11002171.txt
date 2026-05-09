@@ -1,0 +1,25 @@
+C9C11002171 subtest begins
+exception for  sequential file where no file exists
+
+YDB>
+Inside Error handler
+$ZSTATUS="150379354,opexcep+4^opexrm,%YDB-E-DEVOPENFAIL, Error opening abc.txt,%SYSTEM-E-ENO2, No such file or directory"
+
+YDB>
+----------------------------------------------------
+exception for sequential file where no directory exists
+
+YDB>
+Inside error handler
+$ZSTATUS="150379354,opnodir+9^opnodir,%YDB-E-DEVOPENFAIL, Error opening nosuchdir/abc.txt,%SYSTEM-E-ENO20, Not a directory"
+
+YDB>
+----------------------------------------------------
+exception for fifo where permission is denied
+
+YDB>
+We are inside error handler
+$ZSTATUS="150379354,opexff+3^opexff,%YDB-E-DEVOPENFAIL, Error opening /abc.txt,%SYSTEM-E-ENO13, Permission denied"
+
+YDB>
+End of C9C11002171 subtest

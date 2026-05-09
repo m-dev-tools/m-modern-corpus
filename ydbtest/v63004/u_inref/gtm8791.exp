@@ -1,0 +1,47 @@
+#################################################################
+#								#
+# Copyright (c) 2018 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+#
+set timeout 60
+spawn /usr/local/bin/tcsh -f
+source $::env(gtm_tst)/com/expectinit.exp
+
+
+expect_after {
+	timeout { timeout_procedure }
+}
+
+proc timeout_procedure { } {
+	puts "timeout occurred"
+	exit -1
+}
+
+send -- "\$gtm_dist/lke\r"
+
+# Send <Ctrl-Z>
+expect -exact "LKE>"
+send -- "\x1A\r"
+
+expect -exact "Suspended (signal)"
+expect "SHELL"
+send -- "fg\r"
+expect -exact "lke"	# the shell prints the process' executable name whenever a backgrounded process is foregrounded
+# Sometimes a LKE> prompt might show up. Sometimes it might not. To be sure send one more \r.
+# Because of this non-determinism, the below portions of the test are filtered out from the reference file.
+send -- "\r"
+expect -exact "LKE>"
+#exits from the LKE prompt
+send -- "exit\r"
+
+#exits from the tcsh shell
+expect -exact "SHELL"
+send -- "exit\r"
+

@@ -1,0 +1,145 @@
+Test case 15 - recov_post_jnl_switch
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+b.dat
+c.dat
+d.dat
+mumps.dat
+mupip set -journal=enable,before,ep=300,alignsize=4096 -reg "*"
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/a.mjl created for region AREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/d.mjl created for region DREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+%YDB-I-JNLSTATE, Journaling state for region DREG is now ON
+##TEST_AWKtime1 = .*
+
+YDB>
+d t1^test15
+
+YDB>
+d t2^test15
+
+YDB>
+d t3^test15
+
+YDB>
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/mumps.mjl is renamed to ##TEST_PATH##/mumps.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/a.mjl is renamed to ##TEST_PATH##/a.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/a.mjl created for region AREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/a.mjl is renamed to ##TEST_PATH##/a.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/a.mjl created for region AREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/b.mjl is renamed to ##TEST_PATH##/b.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/b.mjl is renamed to ##TEST_PATH##/b.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/b.mjl is renamed to ##TEST_PATH##/b.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/c.mjl is renamed to ##TEST_PATH##/c.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/c.mjl is renamed to ##TEST_PATH##/c.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/c.mjl is renamed to ##TEST_PATH##/c.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/c.mjl is renamed to ##TEST_PATH##/c.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/d.mjl is renamed to ##TEST_PATH##/d.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/d.mjl created for region DREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/d.mjl is renamed to ##TEST_PATH##/d.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/d.mjl created for region DREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/d.mjl is renamed to ##TEST_PATH##/d.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/d.mjl created for region DREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/d.mjl is renamed to ##TEST_PATH##/d.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/d.mjl created for region DREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DREG is now ON
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/d.mjl is renamed to ##TEST_PATH##/d.mjl_##TIMESTAMP##
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/d.mjl created for region DREG with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DREG is now ON
+mupip journal -recov -back "*" -since=time1
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+-------------------------------------------------------------------------
+mupip journal -recov -forw -verify "*"
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/a.dat is now OFF
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/b.dat is now OFF
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/c.dat is now OFF
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/d.dat is now OFF
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+-------------------------------------------------------------------------
+move databases and journals and create new ones
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/a.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/b.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/c.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/d.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+mupip set -journal=enable,before -reg *
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/a.mjl created for region AREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/b.mjl created for region BREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/c.mjl created for region CREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/d.mjl created for region DREG with BEFORE_IMAGES
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region AREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region BREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region CREG is now ON
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+%YDB-I-JNLSTATE, Journaling state for region DREG is now ON
+Make update only to AREG
+##TEST_AWKtime2 = .*
+
+YDB>
+
+YDB>
+mupip journal -recov -back '*' -since=time2
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+-------------------------------------------------------------------------
+mupip journal -recov -forw -verify "*"
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/a.dat is now OFF
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/b.dat is now OFF
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/c.dat is now OFF
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/d.dat is now OFF
+%YDB-S-JNLSUCCESS, Show successful
+%YDB-S-JNLSUCCESS, Verify successful
+%YDB-S-JNLSUCCESS, Recover successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+YDB>
+^a(1)= 1, ^a(100)= 100
+
+YDB>
+============================================================================
+END of test

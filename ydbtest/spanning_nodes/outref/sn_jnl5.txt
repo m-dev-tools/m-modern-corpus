@@ -1,0 +1,297 @@
+Case 1.
+
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+%YDB-W-JNLBUFFDBUPD, Journal file buffer size for database file ##TEST_PATH##/mumps.dat has been adjusted from 1153 to 2312.
+%YDB-I-TEXT, The previous value was outside the allowable range of 2307 to 1048576
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+
+Journal State OFF Journal
+Journal Buffer Size 2312
+
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with .*BEFORE_IMAGES
+%YDB-W-JNLBUFFDBUPD, Journal file buffer size for database file ##TEST_PATH##/mumps.dat has been adjusted from 1153 to 2312.
+%YDB-I-TEXT, The previous value was outside the allowable range of 2307 to 1048576
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+
+Journal State [inactive] ON
+Journal Buffer Size 2312
+
+%YDB-W-JNLBUFFDBUPD, Journal file buffer size for database file ##TEST_PATH##/mumps.dat has been adjusted from 1153 to 2312.
+%YDB-I-TEXT, The previous value was outside the allowable range of 2307 to 1048576
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now OFF
+
+Journal State OFF Journal
+Journal Buffer Size 2312
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+###################################################################
+Case 2.
+
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with .*BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+
+Journal State [inactive] ON
+Journal Buffer Size 2312
+
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now DISABLED
+
+Journal State DISABLED 
+
+##FILTERED##%YDB-I-FILERENAME, File ##TEST_PATH##/mumps.mjl is renamed to ##TEST_PATH##/mumps.mjl_##TIMESTAMP##
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with .*BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+
+Journal State [inactive] ON
+Journal Buffer Size 2312
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+###################################################################
+##SUSPEND_OUTPUT EXCLUDE_V5_TESTS
+Case 3.
+
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+%GDE-I-EXECOM, Executing command file ##TEST_PATH##/setlowbuffer.gde
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+
+Journal State OFF Journal
+Journal Buffer Size 2308
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+###################################################################
+Case 4.
+
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+Created file ##TEST_PATH##/mumps.dat
+
+##TEST_AWKJournal file buffer size for database file ##TEST_PATH##/mumps.dat is now 11[0-9][0-9]
+##TEST_AWK%GTM-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with .*BEFORE_IMAGES
+%GTM-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+YDB>
+
+YDB>
+
+Journal State [inactive] ON
+Journal Buffer Size 2308
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+###################################################################
+Case 5.
+
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+Created file ##TEST_PATH##/mumps.dat
+
+##TEST_AWKJournal file buffer size for database file ##TEST_PATH##/mumps.dat is now 11[0-9][0-9]
+##TEST_AWK%GTM-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with .*BEFORE_IMAGES
+%GTM-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+%YDB-I-JNLFNF, Journal file ##TEST_PATH##/mumps.mjl not found
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with .*BEFORE_IMAGES
+%YDB-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat
+%YDB-W-JNLBUFFDBUPD, Journal file buffer size for database file ##TEST_PATH##/mumps.dat has been adjusted from 576 to 2308.
+%YDB-I-TEXT, The previous value was outside the allowable range of 2307 to 32768
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+
+Journal State [inactive] ON
+Journal Buffer Size 2308
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+###################################################################
+Case 6.
+
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+Created file ##TEST_PATH##/mumps.dat
+
+##TEST_AWKJournal file buffer size for database file ##TEST_PATH##/mumps.dat is now 11[0-9][0-9]
+##TEST_AWK%GTM-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with .*BEFORE_IMAGES
+%GTM-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+%YDB-W-JNLMINALIGN, Journal Record Alignment 1 is less than the minimum value of 4096
+%YDB-E-MUPCLIERR, Action not taken due to CLI errors
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+###################################################################
+Case 7.
+
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+Created file ##TEST_PATH##/mumps.dat
+
+##TEST_AWKJournal file buffer size for database file ##TEST_PATH##/mumps.dat is now 11[0-9][0-9]
+##TEST_AWK%GTM-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with .*BEFORE_IMAGES
+%GTM-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+%YDB-I-JNLFNF, Journal file ##TEST_PATH##/mumps.mjl not found
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with .*BEFORE_IMAGES
+%YDB-I-PREVJNLLINKCUT, Previous journal file name link set to NULL in new journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+
+Journal State [inactive] ON
+Journal Buffer Size 2308
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+###################################################################
+Case 8.
+
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+Created file ##TEST_PATH##/mumps.dat
+
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+
+
+YDB>
+
+YDB>
+
+##TEST_AWK%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for database file ##TEST_PATH##/mumps.dat with .*BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for database file ##TEST_PATH##/mumps.dat is now ON
+
+Journal State [inactive] ON
+Journal Buffer Size 2308
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+###################################################################
+##ALLOW_OUTPUT EXCLUDE_V5_TESTS
+Case 9.
+
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+
+GDE> 
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-LOADGD, Loading Global Directory file 
+	##TEST_PATH##/mumps.gld
+%GDE-I-VERIFY, Verification OK
+
+
+GDE> 
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDUPDATE, Updating Global Directory file 
+	##TEST_PATH##/mumps.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+
+Journal State OFF Journal
+Journal Buffer Size 1048575
+
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

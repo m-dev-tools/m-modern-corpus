@@ -1,0 +1,91 @@
+#!/usr/local/bin/tcsh -f
+#################################################################
+#								#
+# Copyright (c) 2018-2026 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+# This module is derived from FIS GT.M.
+#################################################################
+#
+# -------------------------------------------------------------------------------------
+# for stuff fixed in V53001A, V53002
+# -------------------------------------------------------------------------------------
+# C9E04002596 [Narayanan] Test multiple gld mapping regions to the same physical file
+# C9I02002956 [Narayanan] MUPIP INTEG does not report DBINVGBL integrity error
+# C9D12002471 [se] Test outofmemory condition for (new) correct handling.
+# C9I02002963 [Narayanan] SET $ZGBLDIR followed by TSTART fails with SIG-11
+# D9I03002674 [Kishore,SE] Name indirection may fail with NOUNDEF
+# C9E08002617 [Narayanan] GTMASSERT in get_symb_line.c in some $ETRAP testcases
+# D9I03002676 [Narayanan] Nested STACKCRIT errors & Incorrect $ZSTATUS reports
+# C9C11002181 [Narayanan] Errors should never leave GT.M in direct mode unless $ZT contains BREAK
+# C9F06002736 [Narayanan] DSE MAPS -RESTORE has issues if total_blks is multiple of 512
+# D9I05002682 [Narayanan] Update process should disallow updates to non-replicated databases
+# C9I07003006 [Kishore,NR] Assert fail in op_unwind.c line 48 if runtime error in indirection & NEW in $ET
+# C9I06003000 [Kishore,NR] Source server runs into an infinite loop while reading from journal files
+# D9I07002688 [Roger] test for warning only for non-graphic characters in a string literal at compile-time
+# D9I07002689 [Roger] test of $ZQUIT (anyway) compilation
+# D9I07002692 [Roger] test of zprint with an object-source mismatch
+# D9I07002690 [kishore] GTMASSERT in JNL_FILE_EXTEND.C;1 line 101 using V44004 at CSOB
+# C9I07003009 [roger] test that a zhelp error leaves $ecode=""
+# -------------------------------------------------------------------------------------
+#
+echo "V53002 test starts..."
+setenv subtest_list_common "C9E04002596"
+setenv subtest_list_replic "D9I05002682 C9I06003000"
+setenv subtest_list_non_replic "C9I02002956 C9D12002471 C9I02002963 D9I03002674 C9E08002617 D9I03002676 C9C11002181"
+setenv subtest_list_non_replic "$subtest_list_non_replic C9F06002736 C9I07003006 D9I07002688 D9I07002689 D9I07002692 D9I07002690"
+setenv subtest_list_non_replic "$subtest_list_non_replic C9I07003009"
+#
+if ($?test_replic == 1) then
+	setenv subtest_list "$subtest_list_common $subtest_list_replic"
+else
+	setenv subtest_list "$subtest_list_common $subtest_list_non_replic"
+endif
+setenv subtest_exclude_list ""
+# filter out a specific subtest for some servers:
+if (("hp-ux" == "$gtm_test_osname") || ("os390" == "$gtm_test_osname")) then
+	# HP-UX IA64 becomes non-responsive for long periods of time when the subtest runs
+	# So temporarily disable the subtest in HP-UX until
+	# a) A solution is found to limit vmemory (like the limit command) or
+	# b) All such resource intensive subtests are moved to manually_start test.
+	setenv subtest_exclude_list "$subtest_exclude_list C9D12002471"
+endif
+# filter out subtests that cannot pass with MM
+# C9I06003000	Has to run with BEFORE image journaling
+if ("MM" == $acc_meth) then
+	setenv subtest_exclude_list "$subtest_exclude_list C9I06003000"
+endif
+
+source $gtm_tst/com/is_libyottadb_asan_enabled.csh	# defines "gtm_test_libyottadb_asan_enabled" env var
+if ($gtm_test_libyottadb_asan_enabled) then
+	# libyottadb.so was built with address sanitizer (which also includes the leak sanitizer)
+	# That creates shadow memory to keep track of memory leaks and allocates that at a very big address.
+	# That fails with tests that limit virtual memory. Therefore disable such subtests when ASAN is enabled.
+	setenv subtest_exclude_list "$subtest_exclude_list C9D12002471"
+else if ($gtm_test_coverage_enabled) then
+	# YottaDB was built with coverage enabled. The below subtest limits virtual memory and if the correct
+	# random limit is chosen, we have seen a CLANG build of YottaDB to loop indefinitely due to a SIG-11
+	# during exit handling while trying to write to the gtm.c.gcda file (and while holding a write lock on it).
+	# This in turn has been seen to cause every other "mumps" invocation to hang due to not being able to
+	# get a write lock on the .gcda file. It is not clear if similar issues could exist with a GCC build of
+	# YottaDB that has coverage enabled. But the suspicion is that it might. Therefore disable this subtest
+	# if coverage is enabled, irrespective of whether it is a CLANG or GCC build.
+	setenv subtest_exclude_list "$subtest_exclude_list C9D12002471"
+endif
+
+if ("ENCRYPT" == "$test_encryption" ) then
+	# The below subtest is very sensitive to virtual memory usage and running with -encrypt has been seen to
+	# cause occasional failures where the out-of-memory error is at database file open time instead of later
+	# inside a gtm_malloc() call. Since that out-of-memory error code path is not important to be tested with
+	# -encrypt, we disable this subtest when run with -encrypt.
+	setenv subtest_exclude_list "$subtest_exclude_list C9D12002471"
+endif
+
+$gtm_tst/com/submit_subtest.csh
+echo "V53002 test DONE."

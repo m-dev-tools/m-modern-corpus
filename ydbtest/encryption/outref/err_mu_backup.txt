@@ -1,0 +1,62 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+YDB>
+PASS from fill1^myfill("set")
+
+YDB>
+PASS from fill1^myfill("ver")
+
+YDB>
+-------------------------------------------------------------------------------
+Backup without gtm_passwd and expect to work
+-------------------------------------------------------------------------------
+unsetenv gtm_passwd
+#####################################################
+mupip backup -bytestream DEFAULT ./back1
+%YDB-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file ##TEST_PATH##/mumps.dat. Environment variable ydb_passwd/gtm_passwd not set
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/mumps.dat backed up in file ##TEST_PATH##/back1/mumps.dat
+293 blocks saved.
+##TEST_AWK%YDB-I-BACKUPTN, Transactions from 0x[0-9A-F]* to 0x[0-9A-F]* are backed up
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+#####################################################
+mupip backup -comprehensive DEFAULT ./back2
+%YDB-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file ##TEST_PATH##/mumps.dat. Environment variable ydb_passwd/gtm_passwd not set
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/mumps.dat backed up in file ##TEST_PATH##/back2/mumps.dat
+##TEST_AWK%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x[0-9A-F]* are backed up
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+-------------------------------------------------------------------------------
+Backup with bad gtm_passwd and expect to work
+-------------------------------------------------------------------------------
+#####################################################
+mupip backup -bytestream DEFAULT ./back3
+%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/mumps.dat. Incorrect password or error while obtaining password
+
+TRANSACTION number is greater than or equal to current transaction,
+no blocks backed up from database ##TEST_PATH##/mumps.dat
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+#####################################################
+mupip backup -comprehensive DEFAULT ./back4
+%YDB-W-CRYPTKEYFETCHFAILED, Could not retrieve encryption key corresponding to file ##TEST_PATH##/mumps.dat. Incorrect password or error while obtaining password
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/mumps.dat backed up in file ##TEST_PATH##/back4/mumps.dat
+##TEST_AWK%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x[0-9A-F]* are backed up
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+-------------------------------------------------------------------------------
+Backup while parallel GTM updates without gtm_passwd and expect to error out
+-------------------------------------------------------------------------------
+unsetenv gtm_passwd
+#####################################################
+mupip backup -bytestream -online DEFAULT ./back5
+%YDB-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file ##TEST_PATH##/mumps.dat. Environment variable ydb_passwd/gtm_passwd not set
+%YDB-E-CRYPTOPFAILED, Encrypt/Decrypt operation failed for file ##TEST_PATH##/mumps.dat. Please look at prior messages related to encryption for more details
+#####################################################
+mupip backup -comprehensive DEFAULT ./back6
+%YDB-W-CRYPTINIT, Could not initialize encryption library while opening encrypted file ##TEST_PATH##/mumps.dat. Environment variable ydb_passwd/gtm_passwd not set
+%YDB-E-CRYPTOPFAILED, Encrypt/Decrypt operation failed for file ##TEST_PATH##/mumps.dat. Please look at prior messages related to encryption for more details
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

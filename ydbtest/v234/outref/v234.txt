@@ -1,0 +1,343 @@
+
+YDB>
+d ^comment
+
+break at comment line without ls
+YDB>
+d ^dzro
+
+OK from DZRO
+OK from DZRO
+YDB>
+d ^gdparm
+11223344
+YDB>
+d ^gext
+10203040506070801816141210864
+YDB>
+d ^indrex
+
+extrinsic test
+
+222222222224816
+YDB>
+d ^laberr
+%YDB-E-LABELMISSING, Label referenced but not defined: nolab
+%YDB-I-SRCNAM, in source module ##IN_TEST_PATH##/inref/laberr.m
+%YDB-E-FMLLSTMISSING, The formal list is absent from a label called with an actual list: lab1
+%YDB-I-SRCLOC, 		At column 9, line 4, source module ##IN_TEST_PATH##/inref/laberr.m
+%YDB-E-ACTLSTTOOLONG, More actual parameters than formal parameters: lab2
+%YDB-I-SRCLOC, 		At column 11, line 6, source module ##IN_TEST_PATH##/inref/laberr.m
+%YDB-E-LABELUNKNOWN, Label referenced but not defined
+		At M source location laberr+2^laberr
+
+YDB>
+d ^lzlab
+101001000100001000001000000100000001
+YDB>
+d ^mulsign
+
+11111111111111
+
+YDB>
+d ^newgo
+11223344
+YDB>
+d ^parmenew
+
+
+LAB3
+BACK FROM LCL DO LCL GO
+AA=2      AB=1      AC=2      AD=20     AE=2      AF=20     BA=1      BB=1      
+BC=1      BD=1      BE=1      BF=1      
+LAB3
+BACK FROM LCL DO EXT GO
+AA=3      AB=1      AC=3      AD=30     AE=3      AF=30     BA=1      BB=1      
+BC=1      BD=1      BE=1      BF=1      
+LAB3
+BACK FROM EXT DO LCL GO
+AA=4      AB=1      AC=4      AD=40     AE=4      AF=40     BA=1      BB=1      
+BC=1      BD=1      BE=1      BF=1      
+LAB3
+BACK FROM EXT DO EXT GO
+AA=5      AB=1      AC=5      AD=50     AE=5      AF=50     BA=1      BB=1      
+BC=1      BD=1      BE=1      BF=1      
+YDB>
+d ^qextnoa
+
+OK from qextnoa
+YDB>
+d ^sym1
+123456789
+YDB>
+d ^symtab1
+51
+YDB>
+d ^xnew
+102034
+YDB>
+d ^zbform
+
+OK from ZBFORM
+YDB>
+d ^zgext
+
+OK from ZGEXT
+YDB>
+d ^zlextgo1
+
+04/10/05
+04/10/05
+YDB>
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+##SUSPEND_OUTPUT  REPLIC
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+d ^dnnull
+
+OK from DNNULL
+OK from DNNULL
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+##ALLOW_OUTPUT  REPLIC
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+
+YDB>
+d ^dnnull
+
+OK from DNNULL
+OK from DNNULL
+YDB>
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  L F
+##ALLOW_OUTPUT  NON_REPLIC
+Test of Naked Variables causing Number of subscripts to exceed limit
+======
+Test 1
+======
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-MAXNRSUBSCRIPTS, Maximum number of subscripts exceeded
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##ALLOW_OUTPUT  NON_REPLIC
+======
+Test 2
+======
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+
+Caution: Database Block Certification Has Been Enabled
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-MAXNRSUBSCRIPTS, Maximum number of subscripts exceeded
+
+YDB>
+%YDB-E-GVNAKED, Illegal naked global reference
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##ALLOW_OUTPUT  NON_REPLIC
+======
+Test 3
+======
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-MAXNRSUBSCRIPTS, Maximum number of subscripts exceeded
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##ALLOW_OUTPUT  NON_REPLIC
+======
+Test 4
+======
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-MAXNRSUBSCRIPTS, Maximum number of subscripts exceeded
+
+YDB>
+%YDB-E-GVNAKED, Illegal naked global reference
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##ALLOW_OUTPUT  NON_REPLIC
+======
+Test 5
+======
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+
+YDB>
+
+YDB>
+%YDB-E-MAXNRSUBSCRIPTS, Maximum number of subscripts exceeded
+
+YDB>
+##SUSPEND_OUTPUT  NON_REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+DATABASE EXTRACT PASSED
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

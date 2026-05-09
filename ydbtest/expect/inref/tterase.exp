@@ -1,0 +1,220 @@
+#!/usr/bin/expect -f
+#################################################################
+#								#
+# Copyright (c) 2013-2016 Fidelity National Information		#
+# Services, Inc. and/or its subsidiaries. All rights reserved.	#
+#								#
+# Copyright (c) 2018 YottaDB LLC and/or its subsidiaries.	#
+# All rights reserved.						#
+#								#
+#	This source code contains the intellectual property	#
+#	of its copyright holder(s), and is made available	#
+#	under a license.  If you do not know the terms of	#
+#	the license, please stop and do not read further.	#
+#								#
+#################################################################
+#
+# Test GTM-7675 fixes
+#
+set timeout 60
+spawn /usr/local/bin/tcsh -f
+source $::env(gtm_tst)/com/expectinit.exp
+
+match_max 100000
+
+# expectinit.exp sets columns at hardcoded 132 whereas we have lines > 132 below so override that by setting cols to 256
+send -- "stty cols 256\r"
+expect -- "SHELL"
+
+send -- "uname\r"
+expect -- "SHELL"
+
+# Test starts here:
+send -- "\$ydb_dist/mumps -run tterase\r"
+#case:(ESCAPE:EDIT:EMPTERM)
+expect "Enter ERASE special terminal input character on empty read buffer\r"
+send -- ""
+expect "PASS\r"
+expect "Enter BACKSPACE key on empty read buffer\r"
+send -- ""
+expect "PASS\r"
+expect "Enter DELETE key on empty read buffer\r"
+send -- "\[3~"
+expect "PASS\r"
+#case:(ESCAPE:EDIT:EMPTERM)
+expect "Enter ERASE special terminal input character on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter ERASE special terminal input character followed by newline character\r"
+send -- "GTMODODOD\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter BACKSPACE followed by newline character\r"
+send -- "GTMODODOD\r"
+expect "PASS\r"
+expect "Enter DELETE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\[3~\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter DELETE followed by newline character\r"
+send -- "GTMODODOD\[3~\r"
+expect "PASS\r"
+#case:(ESCAPE:EDIT:NOEMPTERM)
+expect "Enter ERASE special terminal input character on empty read buffer followed by newline character\r"
+send -- "\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on empty read buffer followed by newline character\r"
+send -- "\r"
+expect "PASS\r"
+expect "Enter DELETE key on empty read buffer followed by newline character\r"
+send -- "\[3~\r"
+expect "PASS\r"
+#case:(ESCAPE:EDIT:NOEMPTERM)
+expect "Enter ERASE special terminal input character on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter ERASE special terminal input character followed by newline character\r"
+send -- "GTMODODOD\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter BACKSPACE followed by newline character\r"
+send -- "GTMODODOD\r"
+expect "PASS\r"
+expect "Enter DELETE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\[3~\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter DELETE followed by newline character\r"
+send -- "GTMODODOD\[3~\r"
+expect "PASS\r"
+#case:(ESCAPE:NOEDIT:EMPTERM)
+expect "Enter ERASE special terminal input character on empty read buffer\r"
+send -- ""
+expect "PASS\r"
+expect "Enter BACKSPACE key on empty read buffer\r"
+send -- ""
+expect "PASS\r"
+expect "Enter DELETE key on empty read buffer\r"
+send -- "\[3~"
+expect "PASS\r"
+#case:(ESCAPE:NOEDIT:EMPTERM)
+expect "Enter ERASE special terminal input character on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter DELETE key on nonempty read buffer - Use string GTMM -\r"
+send -- "GTMM\[3~"
+expect "PASS\r"
+#case:(ESCAPE:NOEDIT:NOEMPTERM)
+expect "Enter ERASE special terminal input character on empty read buffer followed by newline character\r"
+send -- "\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on empty read buffer followed by newline character\r"
+send -- "\r"
+expect "PASS\r"
+expect "Enter DELETE key on empty read buffer\r"
+send -- "\[3~"
+expect "PASS\r"
+#case:(ESCAPE:NOEDIT:NOEMPTERM)
+expect "Enter ERASE special terminal input character on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter DELETE key on nonempty read buffer - Use string GTMM -\r"
+send -- "GTMM\[3~"
+expect "PASS\r"
+#case:(NOESCAPE:EDIT:EMPTERM)
+expect "Enter ERASE special terminal input character on empty read buffer\r"
+send -- ""
+expect "PASS\r"
+expect "Enter BACKSPACE key on empty read buffer\r"
+send -- ""
+expect "PASS\r"
+expect "Enter DELETE key on empty read buffer\r"
+send -- "\[3~"
+expect "PASS\r"
+#case:(NOESCAPE:EDIT:EMPTERM)
+expect "Enter ERASE special terminal input character on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter ERASE special terminal input character followed by newline character\r"
+send -- "GTMODODOD\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter BACKSPACE followed by newline character\r"
+send -- "GTMODODOD\r"
+expect "PASS\r"
+expect "Enter DELETE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\[3~\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter DELETE followed by newline character\r"
+send -- "GTMODODOD\[3~\r"
+expect "PASS\r"
+#case:(NOESCAPE:EDIT:NOEMPTERM)
+expect "Enter ERASE special terminal input character on empty read buffer followed by newline character\r"
+send -- "\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on empty read buffer followed by newline character\r"
+send -- "\r"
+expect "PASS\r"
+expect "Enter DELETE key on empty read buffer followed by newline character\r"
+send -- "\[3~\r"
+expect "PASS\r"
+#case:(NOESCAPE:EDIT:NOEMPTERM)
+expect "Enter ERASE special terminal input character on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter ERASE special terminal input character followed by newline character\r"
+send -- "GTMODODOD\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter BACKSPACE followed by newline character\r"
+send -- "GTMODODOD\r"
+expect "PASS\r"
+expect "Enter DELETE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\[3~\r"
+expect "PASS\r"
+expect "Enter string GTM. Go to beginning by pressing LEFT arrow key thrice. Enter DELETE followed by newline character\r"
+send -- "GTMODODOD\[3~\r"
+expect "PASS\r"
+#case:(NOESCAPE:NOEDIT:EMPTERM)
+expect "Enter ERASE special terminal input character on empty read buffer\r"
+send -- ""
+expect "PASS\r"
+expect "Enter BACKSPACE key on empty read buffer\r"
+send -- ""
+expect "PASS\r"
+#case:(NOESCAPE:NOEDIT:EMPTERM)
+expect "Enter ERASE special terminal input character on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+#case:(NOESCAPE:NOEDIT:NOEMPTERM)
+expect "Enter ERASE special terminal input character on empty read buffer followed by newline character\r"
+send -- "\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on empty read buffer followed by newline character\r"
+send -- "\r"
+expect "PASS\r"
+#case:(NOESCAPE:NOEDIT:NOEMPTERM)
+expect "Enter ERASE special terminal input character on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect "Enter BACKSPACE key on nonempty read buffer - Use string GTMM - followed by newline character\r"
+send -- "GTMM\r"
+expect "PASS\r"
+expect -- "SHELL"
+send -- "exit\r"
+expect eof

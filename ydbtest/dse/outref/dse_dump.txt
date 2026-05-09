@@ -1,0 +1,239 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+##SUSPEND_OUTPUT  NON_REPLIC
+Files Created in ##REMOTE_TEST_PATH##:
+Using: ##REMOTE_SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##REMOTE_SOURCE_PATH##/mupip
+a.dat
+mumps.dat
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+##ALLOW_OUTPUT  NON_REPLIC
+
+YDB>
+
+YDB>
+TEST DSE - DUMP COMMAND
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+Block 1   Size 1C   Level 1   TN 0 V7
+
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+Block 0  Size 90  Level -1  TN 476 V7   Master Status: Free Space
+
+                       	Low order                         High order
+Block                0:	|  XXXXXXXX  XXXXX...  ........  ........  |
+Block               20:	|  ........  ........  ........  ........  |
+Block               40:	|  ........  ........  ........  ........  |
+Block               60:	|  ........  ........  ........  ........  |
+Block               80:	|  ........  ........  ........  ........  |
+Block               A0:	|  ........  ........  ........  ........  |
+Block               C0:	|  ........  ........  ........  ........  |
+Block               E0:	|  ........  ........  ........  ........  |
+Block              100:	|  ........  ........  ........  ........  |
+Block              120:	|  ........  ........  ........  ........  |
+Block              140:	|  ........  ........  ........  ........  |
+Block              160:	|  ........  ........  ........  ........  |
+Block              180:	|  ........  ........  ........  ........  |
+Block              1A0:	|  ........  ........  ........  ........  |
+Block              1C0:	|  ........  ........  ........  ........  |
+Block              1E0:	|  ........  ........  ........  ........  |
+
+'X' == BUSY  '.' == FREE  ':' == REUSABLE  '?' == CORRUPT
+
+DSE> %YDB-E-BLKINVALID, 0x0000000000000097 is not a valid block as database file ##TEST_PATH##/a.dat has 0x0000000000000065 total blocks
+DSE> 
+Block 45   Size 0   Level 0   TN 0 V7
+
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+Block 0  Size 90  Level -1  TN 476 V7   Master Status: Free Space
+
+                       	Low order                         High order
+Block                0:	|  XXXXXXXX  XXXXX...  ........  ........  |
+Block               20:	|  ........  ........  ........  ........  |
+Block               40:	|  ........  ........  ........  ........  |
+Block               60:	|  ........  ........  ........  ........  |
+Block               80:	|  ........  ........  ........  ........  |
+Block               A0:	|  ........  ........  ........  ........  |
+Block               C0:	|  ........  ........  ........  ........  |
+Block               E0:	|  ........  ........  ........  ........  |
+Block              100:	|  ........  ........  ........  ........  |
+Block              120:	|  ........  ........  ........  ........  |
+Block              140:	|  ........  ........  ........  ........  |
+Block              160:	|  ........  ........  ........  ........  |
+Block              180:	|  ........  ........  ........  ........  |
+Block              1A0:	|  ........  ........  ........  ........  |
+Block              1C0:	|  ........  ........  ........  ........  |
+Block              1E0:	|  ........  ........  ........  ........  |
+
+'X' == BUSY  '.' == FREE  ':' == REUSABLE  '?' == CORRUPT
+
+DSE> DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+Block 0  Size 90  Level -1  TN 476 V7   Master Status: Free Space
+
+DSE> 
+                       	Low order                         High order
+Block                0:	|  XXXXXXXX  XXXXX...  ........  ........  |
+Block               20:	|  ........  ........  ........  ........  |
+Block               40:	|  ........  ........  ........  ........  |
+Block               60:	|  ........  ........  ........  ........  |
+Block               80:	|  ........  ........  ........  ........  |
+Block               A0:	|  ........  ........  ........  ........  |
+Block               C0:	|  ........  ........  ........  ........  |
+Block               E0:	|  ........  ........  ........  ........  |
+Block              100:	|  ........  ........  ........  ........  |
+Block              120:	|  ........  ........  ........  ........  |
+Block              140:	|  ........  ........  ........  ........  |
+Block              160:	|  ........  ........  ........  ........  |
+Block              180:	|  ........  ........  ........  ........  |
+Block              1A0:	|  ........  ........  ........  ........  |
+Block              1C0:	|  ........  ........  ........  ........  |
+Block              1E0:	|  ........  ........  ........  ........  |
+
+'X' == BUSY  '.' == FREE  ':' == REUSABLE  '?' == CORRUPT
+
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> %YDB-E-CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
+DSE> %YDB-E-CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
+DSE> %YDB-E-CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
+DSE> %YDB-E-CANTBITMAP, Can't perform this operation on a bit map (block at a 200 hexadecimal boundary)
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+Block 4   Size A7   Level 1   TN 476 V7
+
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> %YDB-E-CLIERR, Unrecognized option : COUN
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> %YDB-E-CLIERR, Unrecognized option : NOHEADER
+DSE> %YDB-E-CLIERR, Unrecognized option : HEADER
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+Block 1   Size 1C   Level 1   TN 0 V7
+
+Block 2   Size 29   Level 0   TN 1 V7
+
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> Error: record less than 1
+DSE> Error: last record in blk is 1
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> %YDB-E-CLIERR, Unrecognized option : REC
+DSE> %YDB-E-CLIERR, Unrecognized option : OFF
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> 
+Rec:2  Blk 3  Off 23  Size A  Cmpc 9  Key ^aglobal(2,72)
+
+Rec:3  Blk 3  Off 2D  Size B  Cmpc 9  Key ^aglobal(3,108)
+
+DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> Error: offset less than blk header
+DSE> 
+Rec:1  Blk 1  Off 10  Size C  Cmpc 0  Ptr 2  Key *
+
+DSE> DSE> Error: offset greater than blk size of 1C
+DSE> 
+Rec:1  Blk 3  Off 10  Size 13  Cmpc 0  Key ^aglobal(1,36)
+
+Rec:2  Blk 3  Off 23  Size A  Cmpc 9  Key ^aglobal(2,72)
+
+DSE> DSE> DSE> 
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> Error:  must open an output file before dump.
+DSE> Error:  must open an output file before dump.
+DSE> DSE> 
+TEST-I-PASS. dse dump in glo format worked as expected
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> DSE> Error:  must open an output file before dump.
+DSE> DSE> 
+YDB>
+
+YDB>
+
+File  	##TEST_PATH##/a.dat
+Region	AREG
+
+DSE> 
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> 
+Block 5   Size 1D   Level 0   TN 8 V7
+
+Rec:1  Blk 5  Off 10  Size D  Cmpc 0  Key ^NULLGBL
+##TEST_AWK      10 : \|  D  0  0 .. 4E 55 4C 4C 47 42 4C  0  0                     \|
+##TEST_AWK           \|  \.  \.  \.  .  N  U  L  L  G  B  L  \.  \.                     \|
+
+DSE> 
+1 ZWR records written.
+TEST-I-PASS. dse dump -bl=5 of glo and zwr worked as expected
+##SUSPEND_OUTPUT  REPLIC
+##SOURCE_PATH##/mupip
+##SUSPEND_OUTPUT  NON_REPLIC
+##ALLOW_OUTPUT  REPLIC
+Shutting down Passive Source Server and Receiver Server in ##REMOTE_TEST_PATH##
+Shutting down Primary Source Server Server in ##TEST_PATH##
+##SOURCE_PATH##/mupip
+##ALLOW_OUTPUT  NON_REPLIC
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+##SUSPEND_OUTPUT  NON_REPLIC
+##REMOTE_SOURCE_PATH##/mupip
+##REMOTE_SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

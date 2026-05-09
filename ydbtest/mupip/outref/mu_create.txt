@@ -1,0 +1,34 @@
+MUPIP CREATE
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/create.gld
+%GDE-I-EXECOM, Executing command file ##TEST_PATH##/tempcr.com
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/create.gld
+#
+# Create with a bad region
+#
+%YDB-E-NOREGION, REGION not found: FREELUNCH
+%YDB-E-MUPCLIERR, Action not taken due to CLI errors
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/create1.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/create2.dat created
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/create.dat created
+##SUSPEND_OUTPUT HOST_OS390_S390
+%YDB-E-DBOPNERR, Error opening database file ##TEST_PATH##/create1.dat
+%SYSTEM-E-ENO17, File exists
+%YDB-E-DBOPNERR, Error opening database file ##TEST_PATH##/create2.dat
+%SYSTEM-E-ENO17, File exists
+##SUSPEND_OUTPUT HOST_ALL
+##ALLOW_OUTPUT HOST_OS390_S390
+%YDB-E-DBOPNERR, Error opening database file ##TEST_PATH##/create1.dat
+: EDC5117I File exists. (errno2=0x05620063)
+%YDB-E-DBOPNERR, Error opening database file ##TEST_PATH##/create2.dat
+: EDC5117I File exists. (errno2=0x05620063)
+##ALLOW_OUTPUT HOST_ALL
+%YDB-F-DBNOCRE, Not all specified database files, or their associated journal files were created
+PASS from fill1^myfill("set")
+PASS from fill1^myfill("ver")
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

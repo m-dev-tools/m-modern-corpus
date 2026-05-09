@@ -1,0 +1,191 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+Files Created in ##FILTERED##_REMOTE_TEST_PATH_/instance2:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+TEST CASE 1: Small value for verify-depth should issue an appropriate error.
+
+==Executing MULTISITE_REPLIC 'STARTSRC INST1 INST2 RP'==
+==Executing MULTISITE_REPLIC 'STARTRCV INST1 INST2'==
+----------
+Error W-TLSHANDSHAKE seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+%YDB-W-TLSHANDSHAKE, Connection to remote side using TLS/SSL protocol failed
+----------
+----------
+Error YDB-I-TEXT seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+##TEST_AWK%YDB-I-TEXT, ;error:.*:SSL routines:(tls_process_server_certificate|ssl3_get_server_certificate|):certificate verify failed
+----------
+----------
+Error W-TLSHANDSHAKE seen in ##FILTERED##RCVR_##TIMESTAMP##.log as expected:
+%YDB-W-TLSHANDSHAKE, Connection to remote side using TLS/SSL protocol failed
+----------
+----------
+Error YDB-I-TEXT seen in ##FILTERED##RCVR_##TIMESTAMP##.log as expected:
+##TEST_AWK%YDB-I-TEXT, ;error:(14094418|0A000418):SSL routines:(ssl3_read_bytes|):tlsv1 alert unknown ca
+----------
+
+TEST-I-PASSED, TLSHANDSHAKE is found in replication logs as expected.
+
+==Executing MULTISITE_REPLIC 'STOP INST1 INST2'==
+Shutting down Passive Source Server and Receiver Server in ##FILTERED##_REMOTE_TEST_PATH_/instance2
+Shutting down Primary Source Server Server in ##TEST_PATH##
+
+TEST CASE 2: Bad private key should issue an appropriate error.
+
+==Executing MULTISITE_REPLIC 'STARTSRC INST1 INST2 RP'==
+==Executing MULTISITE_REPLIC 'STARTRCV INST1 INST2'==
+----------
+Error W-TLSCONVSOCK seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+%YDB-W-TLSCONVSOCK, Failed to convert Unix TCP/IP socket to TLS/SSL aware socket
+----------
+----------
+Error YDB-I-TEXT seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+##TEST_AWK%YDB-I-TEXT, Failed to read private key ##TEST_PATH##/demoCA/private/client.key. Reason: error:.*:(PEM|DECODER) routines:(PEM_read_bio|get_header_and_data|PEM_read_bio_ex|):(bad end line|unsupported|bad base64 decode)
+----------
+==Executing MULTISITE_REPLIC 'STOP INST1 INST2'==
+Shutting down Passive Source Server and Receiver Server in ##FILTERED##_REMOTE_TEST_PATH_/instance2
+Shutting down Primary Source Server Server in ##TEST_PATH##
+
+TEST CASE 3: Test that specifying neither CAfile nor CApath leads to an error due to failure in certificate validation
+
+==Executing MULTISITE_REPLIC 'STARTSRC INST1 INST2 RP'==
+==Executing MULTISITE_REPLIC 'STARTRCV INST1 INST2'==
+----------
+Error W-TLSHANDSHAKE seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+%YDB-W-TLSHANDSHAKE, Connection to remote side using TLS/SSL protocol failed
+----------
+----------
+Error YDB-I-TEXT seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+##TEST_AWK%YDB-I-TEXT, ;error:.*:SSL routines:(tls_process_server_certificate|ssl3_get_server_certificate|):certificate verify failed
+----------
+----------
+Error W-TLSHANDSHAKE seen in ##FILTERED##RCVR_##TIMESTAMP##.log as expected:
+%YDB-W-TLSHANDSHAKE, Connection to remote side using TLS/SSL protocol failed
+----------
+----------
+Error YDB-I-TEXT seen in ##FILTERED##RCVR_##TIMESTAMP##.log as expected:
+##TEST_AWK%YDB-I-TEXT, ;error:(14094418|0A000418):SSL routines:(ssl3_read_bytes|):tlsv1 alert unknown ca
+----------
+
+TEST-I-PASSED, TLSHANDSHAKE is found in replication logs as expected.
+
+==Executing MULTISITE_REPLIC 'STOP INST1 INST2'==
+Shutting down Passive Source Server and Receiver Server in ##FILTERED##_REMOTE_TEST_PATH_/instance2
+Shutting down Primary Source Server Server in ##TEST_PATH##
+
+TEST CASE 4: Test that specifying a bad password issues appropriate error
+
+==Executing MULTISITE_REPLIC 'STARTSRC INST1 INST2 RP'==
+==Executing MULTISITE_REPLIC 'STARTRCV INST1 INST2'==
+----------
+Error W-TLSCONVSOCK seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+%YDB-W-TLSCONVSOCK, Failed to convert Unix TCP/IP socket to TLS/SSL aware socket
+----------
+----------
+Error YDB-I-TEXT seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+##TEST_AWK%YDB-I-TEXT, Failed to read private key ##TEST_PATH##/demoCA/private/client.key. Reason: error:.*(bad decrypt|wrong tag|header too long|unsupported)
+----------
+==Executing MULTISITE_REPLIC 'STOP INST1 INST2'==
+Shutting down Passive Source Server and Receiver Server in ##FILTERED##_REMOTE_TEST_PATH_/instance2
+Shutting down Primary Source Server Server in ##TEST_PATH##
+
+TEST CASE 5: Test that expired certificates issues appropriate errors.
+
+==Executing MULTISITE_REPLIC 'STARTSRC INST1 INST2 RP'==
+==Executing MULTISITE_REPLIC 'STARTRCV INST1 INST2'==
+##SUSPEND_OUTPUT TLS1.3MINUS
+TEST-I-PASS, Found a TLSIOERROR or REPLNOTLS message in source server log file as expected
+##ALLOW_OUTPUT TLS1.3MINUS
+##SUSPEND_OUTPUT TLS1.3PLUS
+----------
+Error W-TLSHANDSHAKE seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+%YDB-W-TLSHANDSHAKE, Connection to remote side using TLS/SSL protocol failed
+----------
+----------
+Error YDB-I-TEXT seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+%YDB-I-TEXT, error:14094415:SSL routines:ssl3_read_bytes:sslv3 alert certificate expired
+----------
+##ALLOW_OUTPUT TLS1.3PLUS
+----------
+Error W-TLSHANDSHAKE seen in ##FILTERED##RCVR_##TIMESTAMP##.log as expected:
+%YDB-W-TLSHANDSHAKE, Connection to remote side using TLS/SSL protocol failed
+----------
+----------
+Error YDB-I-TEXT seen in ##FILTERED##RCVR_##TIMESTAMP##.log as expected:
+##TEST_AWK%YDB-I-TEXT, ;error:.*:SSL routines:(tls_process_client_certificate|ssl3_get_client_certificate|):certificate verify failed
+----------
+
+TEST-I-PASSED, TLSHANDSHAKE is found in replication logs as expected.
+
+==Executing MULTISITE_REPLIC 'STOP INST1 INST2'==
+Shutting down Passive Source Server and Receiver Server in ##FILTERED##_REMOTE_TEST_PATH_/instance2
+Shutting down Primary Source Server Server in ##TEST_PATH##
+##SUSPEND_OUTPUT OPENSSL3MINUS
+
+TEST CASE 6: Test that not specifying both dh512 and dh1024 parameters does NOT issue any error.
+This used to issue a TLSCONVSOCK error but that stopped after GTM-F158404 in GT.M V7.0-004
+
+# Randomly remove dh512 OR dh1024 OR both from the config file.
+# We expect the source and receiver server to still connect fine.
+==Executing MULTISITE_REPLIC 'START INST1 INST2 RP'==
+Starting Primary Source Server in ##TEST_PATH##
+Starting Passive Source Server and Receiver Server in ##FILTERED##_REMOTE_TEST_PATH_/instance2
+==Executing MULTISITE_REPLIC 'RUN INST1 ##TEST_COM_PATH##/simpleinstanceupdate.csh 10'==
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+==Executing MULTISITE_REPLIC 'SYNC INST1 INST2'==
+==Executing MULTISITE_REPLIC 'STOP INST1 INST2'==
+Shutting down Passive Source Server and Receiver Server in ##FILTERED##_REMOTE_TEST_PATH_/instance2
+Shutting down Primary Source Server Server in ##TEST_PATH##
+##ALLOW_OUTPUT OPENSSL3MINUS
+
+TEST CASE 7: Test that revoked certificates issues appropriate errors.
+
+==Executing MULTISITE_REPLIC 'STARTSRC INST1 INST2 RP'==
+==Executing MULTISITE_REPLIC 'STARTRCV INST1 INST2'==
+----------
+Error W-TLSHANDSHAKE seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+%YDB-W-TLSHANDSHAKE, Connection to remote side using TLS/SSL protocol failed
+----------
+----------
+Error YDB-I-TEXT seen in ##FILTERED##SRC_##TIMESTAMP##.log as expected:
+##TEST_AWK%YDB-I-TEXT, ;error:.*:SSL routines:(tls_process_server_certificate|ssl3_get_server_certificate|):certificate verify failed
+----------
+----------
+Error W-TLSHANDSHAKE seen in ##FILTERED##RCVR_##TIMESTAMP##.log as expected:
+%YDB-W-TLSHANDSHAKE, Connection to remote side using TLS/SSL protocol failed
+----------
+----------
+Error YDB-I-TEXT seen in ##FILTERED##RCVR_##TIMESTAMP##.log as expected:
+##TEST_AWK%YDB-I-TEXT, ;error:(14094418|0A000418):SSL routines:(ssl3_read_bytes|):tlsv1 alert unknown ca
+----------
+
+TEST-I-PASSED, TLSHANDSHAKE is found in replication logs as expected.
+
+==Executing MULTISITE_REPLIC 'STOP INST1 INST2'==
+Shutting down Passive Source Server and Receiver Server in ##FILTERED##_REMOTE_TEST_PATH_/instance2
+Shutting down Primary Source Server Server in ##TEST_PATH##
+==Executing MULTISITE_REPLIC 'SYNC ALL_LINKS'==
+==Executing MULTISITE_REPLIC 'STOP ALL_LINKS OFF'==
+==Executing MULTISITE_REPLIC 'EXTRACT ALL'==
+DATABASE EXTRACT PASSED
+==Executing MULTISITE_REPLIC 'RUN INST1 $gtm_tst/com/dbcheck_base.csh '==
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+==Executing MULTISITE_REPLIC 'RUN INST2 $gtm_tst/com/dbcheck_base.csh '==
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

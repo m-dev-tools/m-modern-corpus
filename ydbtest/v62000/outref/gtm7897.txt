@@ -1,0 +1,447 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+##TEST_PATH##/rw_files/mumps.gld
+Using: ##SOURCE_PATH##/mupip
+##FILTERED##GTM_TEST_DEBUGINFO.*
+
+Load data
+
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+
+Switch to Read-Only
+
+
+Try integ fast
+
+
+Try integ noonline region
+
+
+Try integ noonline file
+
+
+Try integ online region
+
+
+Try mumps read
+
+
+Try mumps write
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+
+Try backup
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try extract
+
+
+Try extract with freeze
+
+Cannot freeze the database
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try freeze
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-FREEZEERR, Error while trying to freeze region DEFAULT
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-FREEZEERR, Error while trying to unfreeze region DEFAULT
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try extend
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+
+Try integ tn_reset
+
+----------
+Error DBRDONLY|DBTNRESET seen in integ_tn_reset_1.out as expected:
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-DBTNRESET, Cannot reset transaction number for this region
+----------
+
+Try reorg
+
+Fill Factor:: Index blocks 100%: Data blocks 100%
+   
+Global: GBL (region DEFAULT)
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-W-REORGINC, Reorg was incomplete.  Not all globals were reorged.
+
+Try rundown
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-W-MUNOTALLSEC, WARNING: not all global sections accessed were successfully rundown
+
+Try set file
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try set region
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Pass #1 Complete
+
+
+Enable Journaling
+
+
+Try integ fast
+
+
+Try integ noonline region
+
+
+Try integ noonline file
+
+
+Try integ online region
+
+
+Try mumps read
+
+
+Try mumps write
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+
+Try backup
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try extract
+
+
+Try extract with freeze
+
+Cannot freeze the database
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try freeze
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-FREEZEERR, Error while trying to freeze region DEFAULT
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-FREEZEERR, Error while trying to unfreeze region DEFAULT
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try extend
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+
+Try integ tn_reset
+
+----------
+Error DBRDONLY|DBTNRESET seen in integ_tn_reset_2.out as expected:
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-DBTNRESET, Cannot reset transaction number for this region
+----------
+
+Try reorg
+
+Fill Factor:: Index blocks 100%: Data blocks 100%
+   
+Global: GBL (region DEFAULT)
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-W-REORGINC, Reorg was incomplete.  Not all globals were reorged.
+
+Try rundown
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-W-MUNOTALLSEC, WARNING: not all global sections accessed were successfully rundown
+
+Try set file
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try set region
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try journal extract
+
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-W-DBCOLLREQ, JOURNAL EXTRACT proceeding without collation information for globals in database. Missing Database file ##TEST_PATH##/rw_files/mumps.dat
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file mumps.2 created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+Try journal recover
+
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-E-FILENOTFND, File ##TEST_PATH##/rw_files/mumps.dat not found
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+Try journal verify
+
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+Try journal show
+
+
+Pass #2 Complete
+
+
+Enable Replication
+
+
+Try integ fast
+
+
+Try integ noonline region
+
+
+Try integ noonline file
+
+
+Try integ online region
+
+
+Try mumps read
+
+
+Try mumps write
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+
+Try backup
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try extract
+
+
+Try extract with freeze
+
+Cannot freeze the database
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try freeze
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-FREEZEERR, Error while trying to freeze region DEFAULT
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-FREEZEERR, Error while trying to unfreeze region DEFAULT
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try extend
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+
+Try integ tn_reset
+
+----------
+Error DBRDONLY|DBTNRESET seen in integ_tn_reset_3.out as expected:
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-DBTNRESET, Cannot reset transaction number for this region
+----------
+
+Try reorg
+
+Fill Factor:: Index blocks 100%: Data blocks 100%
+   
+Global: GBL (region DEFAULT)
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-W-REORGINC, Reorg was incomplete.  Not all globals were reorged.
+
+Try rundown
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-W-MUNOTALLSEC, WARNING: not all global sections accessed were successfully rundown
+
+Try set file
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try set region
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try journal extract
+
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-W-DBCOLLREQ, JOURNAL EXTRACT proceeding without collation information for globals in database. Missing Database file ##TEST_PATH##/rw_files/mumps.dat
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file mumps.3 created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+Try journal recover
+
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-E-FILENOTFND, File ##TEST_PATH##/rw_files/mumps.dat not found
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+Try journal verify
+
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+Try journal show
+
+
+Pass #3 Complete
+
+
+Freeze Region
+
+Region DEFAULT is now FROZEN
+All requested regions frozen
+
+Try integ fast
+
+
+Try integ noonline region
+
+
+Try integ noonline file
+
+
+Try integ online region
+
+
+Try mumps read
+
+
+Try mumps write
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+
+Try backup
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try extract
+
+
+Try extract with freeze
+
+%YDB-I-FREEZE, Region: DEFAULT is already frozen
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try freeze
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-FREEZEERR, Error while trying to freeze region DEFAULT
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-FREEZEERR, Error while trying to unfreeze region DEFAULT
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try extend
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+
+Try integ tn_reset
+
+----------
+Error DBRDONLY|DBTNRESET seen in integ_tn_reset_4.out as expected:
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-E-DBTNRESET, Cannot reset transaction number for this region
+----------
+
+Try reorg
+
+Fill Factor:: Index blocks 100%: Data blocks 100%
+   
+Global: GBL (region DEFAULT)
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-W-REORGINC, Reorg was incomplete.  Not all globals were reorged.
+
+Try rundown
+
+%YDB-E-DBRDONLY, Database file ##TEST_PATH##/ro_mount/mumps.dat read only
+%YDB-W-MUNOTALLSEC, WARNING: not all global sections accessed were successfully rundown
+
+Try set file
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try set region
+
+%YDB-E-DBPRIVERR, No privilege for attempted update operation for file: ##TEST_PATH##/ro_mount/mumps.dat
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions
+
+Try journal extract
+
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-W-DBCOLLREQ, JOURNAL EXTRACT proceeding without collation information for globals in database. Missing Database file ##TEST_PATH##/rw_files/mumps.dat
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-I-FILECREATE, Journal extract file mumps.4 created
+%YDB-S-JNLSUCCESS, Extract successful
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+Try journal recover
+
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+%YDB-E-FILENOTFND, File ##TEST_PATH##/rw_files/mumps.dat not found
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+Try journal verify
+
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Forward processing started at ... ... .. ..:..:.. 20..
+%YDB-S-JNLSUCCESS, Verify successful
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+
+Try journal show
+
+
+Pass #4 Complete
+
+Region DEFAULT is now UNFROZEN
+All requested regions unfrozen
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+
+Done.

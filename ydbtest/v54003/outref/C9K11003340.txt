@@ -1,0 +1,51 @@
+Task 1. Starting deferred timer execution test...
+--------------------------------------------
+Starting MUMPS process in the foreground...
+
+YDB>
+
+YDB>
+
+YDB>
+OP_HANG: will sleep for 20 seconds
+TIMER_HANDLER: deferred a timer
+OP_HANG: done sleeping
+TIMER_HANDLER: handled a timer
+TIMER_HANDLER: handled a timer
+
+YDB>
+TIMER_HANDLER: handled a timer
+TIMER_HANDLER: handled a timer
+
+YDB>
+CANCEL_ALL_TIMERS:
+ Timer pops handled: 4
+ Timers canceled: 0
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+
+Task 2. Starting deferred timer cancel test...
+--------------------------------------------
+Starting MUMPS process in the background...
+Issuing a MUPIP STOP to MUMPS process...
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+OP_HANG: will sleep for 20 seconds
+OP_HANG: done sleeping
+%YDB-F-FORCEDHALT, Image HALTed by MUPIP STOP
+DEFERRED_SIGNAL_HANDLER: will sleep for 20 seconds
+TIMER_HANDLER: deferred a timer
+DEFERRED_SIGNAL_HANDLER: done sleeping
+CANCEL_ALL_TIMERS:
+ Timer pops handled: 0
+ Timers canceled: 2
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

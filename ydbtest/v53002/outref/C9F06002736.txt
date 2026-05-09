@@ -1,0 +1,59 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE> ##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+
+YDB>
+
+YDB>
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE> ##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+  Endian Format              ##FILTERED####ENDIAN##  Commit Wait Spin Count                  16
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE>   Endian Format              ##FILTERED####ENDIAN##  Commit Wait Spin Count                 128
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> %YDB-E-CLIERR, Unrecognized value: -1, A non-negative decimal or hexadecimal integer required
+DSE>   Endian Format              ##FILTERED####ENDIAN##  Commit Wait Spin Count                 128
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE>   Endian Format              ##FILTERED####ENDIAN##  Commit Wait Spin Count                 512
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> %YDB-E-CLIERR, Unrecognized value: -120, A non-negative decimal or hexadecimal integer required
+DSE>   Endian Format              ##FILTERED####ENDIAN##  Commit Wait Spin Count                 512
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE>   Endian Format              ##FILTERED####ENDIAN##  Commit Wait Spin Count                   0
+
+File  	##TEST_PATH##/mumps.dat
+Region	DEFAULT
+
+DSE> DSE>   Endian Format              ##FILTERED####ENDIAN##  Commit Wait Spin Count                  16
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

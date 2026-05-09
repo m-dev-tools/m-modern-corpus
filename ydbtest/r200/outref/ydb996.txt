@@ -1,0 +1,26 @@
+# -----------------------
+# Test passing a LISTENing TCP socket to a child through a LOCAL socket works
+# -----------------------
+# Open LISTENING TCP socket and give it a name [handle1]
+# Move LISTENING TCP socket [handle1] to socketpool device
+# JOB off child to pass the LISTENING TCP socket
+# Open new LISTENING LOCAL socket file named [socket2] and give it a handle name [handle2]
+# Wait for connection from child on socket [socket2]
+# Pass the LISTENING TCP socket through [socket2]
+# Connect to LISTENING TCP socket that has been passed to child
+# Read data writen by child process from the connected TCP socket
+# Display data, written by child, in the parent process
+# Expect to see 5 lines of data and an empty 6th line
+cmdop(1)="This is the child writing Line 1 out of 5 lines"
+cmdop(2)="This is the child writing Line 2 out of 5 lines"
+cmdop(3)="This is the child writing Line 3 out of 5 lines"
+cmdop(4)="This is the child writing Line 4 out of 5 lines"
+cmdop(5)="This is the child writing Line 5 out of 5 lines"
+cmdop(6)=""
+# Wait for child pid to terminate before returning from parent
+# -----------------------
+# Test passing a LISTENing TCP socket to a child through JOB command STDIN issues SOCKNAMERR error
+# Before YDB@99c64bd4, this used to cause a SIG-11 in the child process created by the JOB command
+# -----------------------
+##TEST_PATH##/child2.mje
+%YDB-E-GETSOCKNAMERR, Getting the socket name failed from getsockname(): (errno==107) Transport endpoint is not connected

@@ -1,0 +1,31 @@
+Test case: jnlcycle
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+MUPIP set -journal=enable,on,before -reg '*'
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-JNLSTATE, Journaling state for region DEFAULT is now ON
+
+YDB>
+
+YDB>
+rm -f mumps.mjl
+MUPIP backup DEFAULT back.dat
+%YDB-I-JNLCREATE, Journal file ##TEST_PATH##/mumps.mjl created for region DEFAULT with BEFORE_IMAGES
+%YDB-I-BACKUPDBFILE, DB file ##TEST_PATH##/mumps.dat backed up in file ##TEST_PATH##/back.dat
+%YDB-I-BACKUPTN, Transactions from 0x0000000000000001 to 0x000000000000000B are backed up
+%YDB-I-BACKUPSUCCESS, Backup completed successfully
+MUPIP journal -show=head -for mumps.mjl
+ Prev journal file name 
+MUPIP journal -recover -back -since=0 0:0:1  '*'
+##FILTERED##%YDB-I-MUJNLSTAT, Initial processing started at ... ... .. ..:..:.. 20..
+##FILTERED##%YDB-I-MUJNLSTAT, Backward processing started at ... ... .. ..:..:.. 20..
+##TEST_AWK.*%YDB-E-NOPREVLINK, Journal file ##TEST_PATH##/mumps.mjl has a null previous link
+%YDB-E-MUNOACTION, MUPIP unable to perform requested action
+##FILTERED##%YDB-I-MUJNLSTAT, End processing at ... ... .. ..:..:.. 20..
+End of test
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.

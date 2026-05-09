@@ -1,0 +1,101 @@
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
+
+
+Integ of region DEFAULT
+
+No errors detected by integ.
+
+Type           Blocks         Records          % Used      Adjacent
+
+Directory           2               2           0.793            NA
+Index               7            1160          72.192             1
+##SUSPEND_OUTPUT 4G_ABOVE_DB_BLKS
+Data             1154            1920          75.356          1152
+##ALLOW_OUTPUT 4G_ABOVE_DB_BLKS
+##SUSPEND_OUTPUT 4G_BELOW_DB_BLKS
+Data             1154            1920          75.356          1151
+##ALLOW_OUTPUT 4G_BELOW_DB_BLKS
+##SUSPEND_OUTPUT 4G_ABOVE_DB_BLKS
+Free              137              NA              NA            NA
+##ALLOW_OUTPUT 4G_ABOVE_DB_BLKS
+##SUSPEND_OUTPUT 4G_BELOW_DB_BLKS
+Free       4286578314              NA              NA            NA
+##ALLOW_OUTPUT 4G_BELOW_DB_BLKS
+##SUSPEND_OUTPUT 4G_ABOVE_DB_BLKS
+Total            1300            3082              NA          1153
+##ALLOW_OUTPUT 4G_ABOVE_DB_BLKS
+##SUSPEND_OUTPUT 4G_BELOW_DB_BLKS
+Total      4286579477            3082              NA          1152
+##ALLOW_OUTPUT 4G_BELOW_DB_BLKS
+[Spanning Nodes:384 ; Blocks:1536]
+### -format=zwr ###
+%YDB-I-RECORDSTAT, ^var:	  Key cnt: 384  max subsc len: 59  max rec len: 9004  max node len: 4080
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 384  max subsc len: 59  max rec len: 9004  max node len: 4080
+YottaDB MUPIP EXTRACT ##SOURCE_REALPATH##/mupip extract -override extr3.zwr
+##FILTERED##..-...-....  ..:..:.. ZWR
+Beginning LOAD at record number: 3
+
+LOAD TOTAL		Key Cnt: 384  Max Subsc Len: 59  Max Data Len: 9004
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 386
+### -format=go ###
+%YDB-I-RECORDSTAT, ^var:	  Key cnt: 384  max subsc len: 59  max rec len: 9004  max node len: 4080
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 384  max subsc len: 59  max rec len: 9004  max node len: 4080
+YottaDB MUPIP EXTRACT ##SOURCE_REALPATH##/mupip extract -override -format=go extr3.go
+##FILTERED##..-...-....  ..:..:..
+Beginning LOAD at record number: 3
+
+LOAD TOTAL		Key Cnt: 384  Max Subsc Len: 59  Max Data Len: 9004
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 770
+### -format=bin ###
+%YDB-I-RECORDSTAT, ^var:	  Key cnt: 384  max subsc len: 59  max rec len: 9004  max node len: 4080
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 384  max subsc len: 59  max rec len: 9004  max node len: 4080
+Label = ##FILTERED##GDS BINARY EXTRACT LEVEL ...................................YottaDB MUPIP EXTRACT           
+
+Beginning LOAD at record number: 2
+
+LOAD TOTAL		Key Cnt: 384  Max Subsc Len: 59  Max Data Len: 9004
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 1154
+%GDE-I-GDUSEDEFS, Using defaults for Global Directory 
+	##TEST_PATH##/mumps.gld
+
+GDE> 
+GDE> 
+GDE> 
+%GDE-I-VERIFY, Verification OK
+
+%GDE-I-GDCREATE, Creating Global Directory file 
+	##TEST_PATH##/mumps.gld
+%YDB-I-DBFILECREATED, Database file ##TEST_PATH##/mumps.dat created
+%YDB-I-RECORDSTAT, ^a:	  Key cnt: 24  max subsc len: 16  max rec len: 1048576  max node len: 496
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 24  max subsc len: 16  max rec len: 1048576  max node len: 496
+YottaDB MUPIP EXTRACT ##SOURCE_REALPATH##/mupip extract -override extr.zwr
+##FILTERED##..-...-....  ..:..:.. ZWR
+Beginning LOAD at record number: 3
+
+LOAD TOTAL		Key Cnt: 24  Max Subsc Len: 16  Max Data Len: 1048576
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 26
+%YDB-I-RECORDSTAT, ^a:	  Key cnt: 24  max subsc len: 16  max rec len: 1048576  max node len: 496
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 24  max subsc len: 16  max rec len: 1048576  max node len: 496
+YottaDB MUPIP EXTRACT ##SOURCE_REALPATH##/mupip extract -override -format=go extr.go
+##FILTERED##..-...-....  ..:..:..
+Beginning LOAD at record number: 3
+
+LOAD TOTAL		Key Cnt: 24  Max Subsc Len: 16  Max Data Len: 1048576
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 50
+%YDB-I-RECORDSTAT, ^a:	  Key cnt: 24  max subsc len: 16  max rec len: 1048576  max node len: 496
+%YDB-I-RECORDSTAT, TOTAL:	  Key cnt: 24  max subsc len: 16  max rec len: 1048576  max node len: 496

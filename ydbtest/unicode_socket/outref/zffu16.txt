@@ -1,0 +1,9 @@
+setenv gtm_chset UTF-8
+unset echo
+ENTERING SOCKET ZFFU16
+
+YDB>
+zffu16 PASSed
+
+YDB>
+LEAVING SOCKET ZFFU16

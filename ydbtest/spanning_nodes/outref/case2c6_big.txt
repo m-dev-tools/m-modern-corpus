@@ -1,0 +1,8 @@
+Label = GDS BINARY EXTRACT LEVEL 6201208081519530000512104857600000640000001GT.M MUPIP EXTRACT              
+
+Beginning LOAD at record number: 2
+
+%YDB-E-PREMATEOF, Premature end of file detected
+LOAD TOTAL		Key Cnt: 1  Max Subsc Len: 3  Max Data Len: 1
+%YDB-I-LOADRECCNT, Last EXTRACT record processed by LOAD: 6
+%YDB-E-MUNOFINISH, MUPIP unable to finish all requested actions

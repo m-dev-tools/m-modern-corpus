@@ -1,0 +1,29 @@
+# Enable WHITE BOX TESTING
+Files Created in ##TEST_PATH##:
+Using: ##SOURCE_PATH##/mumps -run GDE
+mumps.gld
+Using: ##SOURCE_PATH##/mupip
+mumps.dat
+# Do some updates in background
+
+YDB>
+
+YDB>
+Do some deep updates into journal file
+
+YDB>
+
+YDB>
+Switch to journal file
+
+YDB>
+
+YDB>
+
+YDB>
+
+YDB>
+SUBTEST PASS
+##SOURCE_PATH##/mupip
+##SOURCE_PATH##/mupip integ -REG *
+No errors detected by integ.
