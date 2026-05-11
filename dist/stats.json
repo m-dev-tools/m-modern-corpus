@@ -1,0 +1,24 @@
+{
+  "generated_from": "tools/gen-manifest.py over corpus subdirectories",
+  "license_breakdown": {
+    "AGPL-3.0": {
+      "loc": 255224,
+      "routine_count": 4070,
+      "subdir_count": 2
+    },
+    "Apache-2.0": {
+      "loc": 12529,
+      "routine_count": 59,
+      "subdir_count": 2
+    },
+    "LicenseRef-mixed-per-component": {
+      "loc": 60669,
+      "routine_count": 86,
+      "subdir_count": 1
+    }
+  },
+  "schema_version": "1",
+  "subdir_count": 5,
+  "total_loc": 328422,
+  "total_routines": 4215
+}

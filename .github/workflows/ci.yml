@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Manifest drift gate
+        # Regenerates dist/manifest.json + dist/stats.json from the corpus
+        # subdirectories and asserts no diff. Catches: someone refreshed
+        # a subdir snapshot but forgot `make manifest`; tools/gen-manifest.py
+        # changed without re-running it; hand-edits to dist/*.json. The
+        # Phase-0 repo.meta.json contract names both files via exposes.*
+        # — drift here breaks the org-level smoke test.
+        run: make check-manifest
+
+      - name: docs/ prose-only gate
+        # Cross-repo guardrail: docs/ holds only human-readable prose.
+        # This repo has no docs/ today; the gate is trivially green
+        # unless someone adds a non-prose file under a future docs/.
+        # Engine-free find-based check, same target name as the tier-1
+        # repos so a contributor finds it predictable.
+        run: make check-docs-prose

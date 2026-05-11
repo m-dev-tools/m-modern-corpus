@@ -1,0 +1,40 @@
+{
+  "schema_version": "1",
+  "subdirs": [
+    {
+      "license": "LicenseRef-mixed-per-component",
+      "loc": 60669,
+      "name": "ewd",
+      "routine_count": 86,
+      "upstream": "https://github.com/robtweed/EWD"
+    },
+    {
+      "license": "Apache-2.0",
+      "loc": 4967,
+      "name": "m-web-server",
+      "routine_count": 23,
+      "upstream": "https://github.com/shabiel/M-Web-Server"
+    },
+    {
+      "license": "Apache-2.0",
+      "loc": 7562,
+      "name": "mgsql",
+      "routine_count": 36,
+      "upstream": "https://github.com/chrisemunt/mgsql"
+    },
+    {
+      "license": "AGPL-3.0",
+      "loc": 3305,
+      "name": "ydbocto-aux",
+      "routine_count": 21,
+      "upstream": "https://github.com/YottaDB/YDBOcto"
+    },
+    {
+      "license": "AGPL-3.0",
+      "loc": 251919,
+      "name": "ydbtest",
+      "routine_count": 4049,
+      "upstream": "https://github.com/YottaDB/YDBTest"
+    }
+  ]
+}

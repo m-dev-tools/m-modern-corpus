@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/m-dev-tools/.github/main/profile/repo.meta.schema.json",
+  "id": "tool:m-modern-corpus",
+  "repo": "https://github.com/m-dev-tools/m-modern-corpus",
+  "role": "Validation corpus — modern open-source M source for lint/parser regression testing",
+  "language": ["m"],
+  "license": "LicenseRef-mixed-per-subdir",
+  "agent_instructions": "AGENTS.md",
+  "verified_on": "2026-05-10",
+  "exposes": {
+    "manifest": "dist/manifest.json",
+    "stats":    "dist/stats.json",
+    "licenses": "LICENSES.md"
+  },
+  "verification_commands": ["make manifest", "make check-manifest"],
+  "status": "active",
+  "notes": "Data-only repo. Snapshot collection; not auto-synced. See LICENSES.md for per-subdir license terms (the top-level `license` field is a LicenseRef-* placeholder)."
+}
