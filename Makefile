@@ -2,13 +2,24 @@
 # here is regenerating the discovery artifacts in dist/ from the
 # corpus contents, gated for drift on every push.
 
-.PHONY: manifest check-manifest check-docs-prose help
+.PHONY: manifest check-manifest check-docs-prose \
+        corpus-status corpus-fetch corpus-list corpus-verify help
 
 help:
-	@echo "Targets:"
+	@echo "Manifest / discovery:"
 	@echo "  manifest         regenerate dist/manifest.json + dist/stats.json"
 	@echo "  check-manifest   regen + git diff (CI drift gate)"
 	@echo "  check-docs-prose enforce docs/ is prose-only (cross-repo guardrail)"
+	@echo
+	@echo "Corpus snapshots:"
+	@echo "  corpus-status    show which subdirs are present vs missing"
+	@echo "  corpus-list      print the upstream provenance table (sources.tsv)"
+	@echo "  corpus-fetch     clone any missing subdirs (idempotent, no-op when complete)"
+	@echo "  corpus-verify    diff each subdir vs upstream HEAD (drift report, read-only)"
+	@echo
+	@echo "  For deliberate snapshot refresh, invoke the script directly:"
+	@echo "    tools/fetch-corpus.sh refresh <subdir>"
+	@echo "    tools/fetch-corpus.sh refresh --all"
 
 # Regenerate the discovery artifacts from corpus contents.
 manifest:
@@ -20,6 +31,21 @@ check-manifest: manifest
 	@git diff --exit-code dist/ \
 	  || { echo "ERROR: dist/ drift — run 'make manifest' and commit."; exit 1; }
 	@echo "check-manifest: clean"
+
+# Corpus discovery / download — thin wrappers over tools/fetch-corpus.sh.
+# The script is the source of truth; these targets exist so the repo's
+# entry points are visible from `make help`.
+corpus-status:
+	@tools/fetch-corpus.sh status
+
+corpus-list:
+	@tools/fetch-corpus.sh list
+
+corpus-fetch:
+	@tools/fetch-corpus.sh fetch
+
+corpus-verify:
+	@tools/fetch-corpus.sh verify
 
 # Guardrail: docs/ holds only human-readable prose. Non-prose artifacts
 # (data, output, metadata, examples) belong elsewhere. Same target name

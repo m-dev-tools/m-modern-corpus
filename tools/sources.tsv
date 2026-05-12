@@ -1,0 +1,24 @@
+# m-modern-corpus — upstream provenance table (single source of truth).
+#
+# Read by:
+#   * tools/fetch-corpus.sh — clones / refreshes the snapshots.
+#   * tools/gen-manifest.py — emits dist/manifest.json + dist/stats.json.
+#
+# Authoritative for `subdir → upstream URL → SPDX license` mapping.
+# LICENSES.md is the human-readable mirror; per-subdir LICENSE / COPYING /
+# NOTICE files inside each subdir remain the legal source of truth for that
+# subdir's specific terms.
+#
+# Format: TAB-separated. Comment lines start with `#` and are ignored.
+# Columns: subdir<TAB>upstream_clone_url<TAB>license_spdx<TAB>description
+#
+# license_spdx uses SPDX identifiers. `LicenseRef-mixed-per-component` is
+# the SPDX-permitted marker for subdirs whose components carry different
+# licenses (see e.g. ewd/ewdMgr/COPYING vs ewd/iwd/jqt/LICENSE.txt).
+#
+# subdir	upstream_clone_url	license_spdx	description
+ewd	https://github.com/robtweed/EWD	LicenseRef-mixed-per-component	EWD framework (Rob Tweed)
+m-web-server	https://github.com/shabiel/M-Web-Server	Apache-2.0	M Web Server (Sam Habiel)
+mgsql	https://github.com/chrisemunt/mgsql	Apache-2.0	mgsql (Chris Munt)
+ydbocto-aux	https://github.com/YottaDB/YDBOcto	AGPL-3.0	YDB Octo SQL engine
+ydbtest	https://github.com/YottaDB/YDBTest	AGPL-3.0	YDB regression test routines

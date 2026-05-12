@@ -2,10 +2,11 @@
 """Generate dist/manifest.json + dist/stats.json from the corpus subdirectories.
 
 Inputs (live filesystem state):
-  - The five top-level corpus subdirectories (ewd, m-web-server, mgsql,
-    ydbocto-aux, ydbtest), each containing `.m` source from one upstream.
-  - The subdir → upstream → license mapping table below, kept in sync
-    with the human-readable summary in `LICENSES.md`.
+  - The top-level corpus subdirectories, each containing `.m` source from
+    one upstream.
+  - tools/sources.tsv — the subdir → upstream URL → license mapping
+    (shared with tools/fetch-corpus.sh; single source of truth).
+  - LICENSES.md — the human-readable mirror of sources.tsv.
 
 Outputs:
   - dist/manifest.json — array of {name, upstream, license, routine_count, loc}
@@ -26,40 +27,32 @@ import json
 import sys
 from pathlib import Path
 
-# Subdir → (upstream URL, SPDX-ish license identifier).
-#
-# Kept in sync with the table in LICENSES.md. When refreshing a subdir
-# snapshot from upstream, update this table if the upstream's license
-# changes.
-#
-# `LicenseRef-mixed-per-component` is used for `ewd/`, whose components
-# carry different licenses (see ewd/ewdMgr/COPYING, ewd/iwd/jqt/LICENSE.txt,
-# embedded headers in the _*.m files). SPDX permits LicenseRef-* for
-# non-standard / composite identifiers.
-SUBDIR_LICENSES: dict[str, tuple[str, str]] = {
-    "ewd": (
-        "https://github.com/robtweed/EWD",
-        "LicenseRef-mixed-per-component",
-    ),
-    "m-web-server": (
-        "https://github.com/shabiel/M-Web-Server",
-        "Apache-2.0",
-    ),
-    "mgsql": (
-        "https://github.com/chrisemunt/mgsql",
-        "Apache-2.0",
-    ),
-    "ydbocto-aux": (
-        "https://github.com/YottaDB/YDBOcto",
-        "AGPL-3.0",
-    ),
-    "ydbtest": (
-        "https://github.com/YottaDB/YDBTest",
-        "AGPL-3.0",
-    ),
-}
-
 SCHEMA_VERSION = "1"
+
+
+def load_sources(sources_tsv: Path) -> dict[str, tuple[str, str]]:
+    """Parse tools/sources.tsv → {subdir: (upstream_url, license_spdx)}.
+
+    The TSV is the shared source of truth with tools/fetch-corpus.sh.
+    Comment lines (`#…`) and blanks are skipped. Columns are:
+    subdir<TAB>upstream_clone_url<TAB>license_spdx<TAB>description.
+    """
+    out: dict[str, tuple[str, str]] = {}
+    for lineno, raw in enumerate(sources_tsv.read_text().splitlines(), start=1):
+        line = raw.rstrip()
+        if not line or line.lstrip().startswith("#"):
+            continue
+        parts = line.split("\t")
+        if len(parts) < 3:
+            print(
+                f"ERROR: {sources_tsv}:{lineno}: expected ≥3 TAB-separated "
+                f"columns, got {len(parts)}",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+        subdir, url, license_spdx = parts[0], parts[1], parts[2]
+        out[subdir] = (url, license_spdx)
+    return out
 
 
 def count_subdir(root: Path, name: str) -> tuple[int, int]:
@@ -76,11 +69,11 @@ def count_subdir(root: Path, name: str) -> tuple[int, int]:
     return routine_count, loc
 
 
-def build_manifest(root: Path) -> list[dict]:
+def build_manifest(root: Path, sources: dict[str, tuple[str, str]]) -> list[dict]:
     """Build the per-subdir manifest array."""
     entries: list[dict] = []
-    for name in sorted(SUBDIR_LICENSES):
-        upstream, license_id = SUBDIR_LICENSES[name]
+    for name in sorted(sources):
+        upstream, license_id = sources[name]
         if not (root / name).is_dir():
             print(
                 f"ERROR: declared subdir {name!r} not present at {root / name}",
@@ -139,9 +132,21 @@ def main(argv: list[str]) -> int:
         default=Path(__file__).resolve().parents[1],
         help="Repo root (defaults to the parent of tools/).",
     )
+    parser.add_argument(
+        "--sources",
+        type=Path,
+        default=None,
+        help="Path to sources.tsv (defaults to <root>/tools/sources.tsv).",
+    )
     args = parser.parse_args(argv[1:])
 
-    manifest_entries = build_manifest(args.root)
+    sources_tsv = args.sources or (args.root / "tools" / "sources.tsv")
+    if not sources_tsv.is_file():
+        print(f"ERROR: sources table not found at {sources_tsv}", file=sys.stderr)
+        return 2
+    sources = load_sources(sources_tsv)
+
+    manifest_entries = build_manifest(args.root, sources)
     manifest_payload = {
         "schema_version": SCHEMA_VERSION,
         "subdirs": manifest_entries,

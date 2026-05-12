@@ -19,21 +19,34 @@ authoritative.
 ## Snapshot policy
 
 Snapshots are reproduced verbatim. They are **not auto-synced** as
-the upstream projects evolve. To refresh a snapshot, delete the
-subdirectory and re-clone from the upstream URL above:
+the upstream projects evolve. To refresh a snapshot, use the
+reproducibility script:
 
 ```bash
-rm -rf <subdir>
-git clone <upstream-url> <subdir>
-rm -rf <subdir>/.git    # snapshot semantics — see README
+tools/fetch-corpus.sh refresh <subdir>     # one subdir
+tools/fetch-corpus.sh refresh --all        # every subdir
 ```
+
+The script clones the upstream URL declared for `<subdir>` in
+[`tools/sources.tsv`](tools/sources.tsv), strips the inner `.git/`, and
+records `{HEAD SHA, fetched_at}` in [`dist/sources.lock.json`](dist/sources.lock.json).
+Commit the diff (snapshot content + lockfile + regenerated `dist/manifest.json`)
+in one change so the provenance is preserved.
 
 ## Acquisition
 
-The original snapshots were acquired by cloning each upstream URL and
+The initial snapshots were acquired by cloning each upstream URL and
 then removing the inner `.git/` directories so each subdirectory is a
 plain set of files rather than a nested git repo. This matches the
-repository's "snapshot collection" framing in the README.
+repository's "snapshot collection" framing in the README. The fetch
+script above codifies that recipe and is the supported entrypoint for
+all subsequent refreshes.
+
+The single source of truth for the `subdir → upstream → license` mapping
+is [`tools/sources.tsv`](tools/sources.tsv); the table above is the
+human-readable mirror, and the per-subdir LICENSE / COPYING / NOTICE
+files remain the legal source of truth for each subdir's specific
+terms.
 
 The repository as a whole carries no umbrella license — its content
 is governed entirely by the per-subdirectory licenses cited above.
